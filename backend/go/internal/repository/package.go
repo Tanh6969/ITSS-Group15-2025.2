@@ -19,10 +19,7 @@ func (r *packageRepository) Create(pkg *entity.MembershipPackage) error {
 	if pkg.CategoryID == 0 {
 		categoryID = nil
 	}
-	var categoryID interface{} = pkg.CategoryID
-	if pkg.CategoryID == 0 {
-		categoryID = nil
-	}
+
 	query := `INSERT INTO "MembershipPackage" (category_id, package_name, duration_days, price) VALUES ($1, $2, $3, $4) RETURNING id`
 	return r.db.QueryRow(query, categoryID, pkg.PackageName, pkg.DurationDays, pkg.Price).Scan(&pkg.ID)
 }
