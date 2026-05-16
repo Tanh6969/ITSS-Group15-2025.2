@@ -8,7 +8,9 @@
       "Bash(taskkill /PID 41548 /F)",
       "PowerShell(Stop-Process -Name \"app\" -Force -ErrorAction SilentlyContinue)",
       "Bash(./gym-management.exe)",
-      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8080/notifications)"
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:8080/notifications)",
+      "PowerShell(Stop-Process -Name \"gym-management\" -Force -ErrorAction SilentlyContinue)",
+      "PowerShell(Start-Process -FilePath \"e:\\\\New folder\\\\ProjectGym\\\\ITSS-Group15-2025.2\\\\backend\\\\go\\\\gym-management.exe\" -WorkingDirectory \"e:\\\\New folder\\\\ProjectGym\\\\ITSS-Group15-2025.2\\\\backend\\\\go\" -WindowStyle Hidden)"
     ]
   }
 }

@@ -45,9 +45,13 @@ func NewRouter(
 		return mw(handler)
 	}
 
-	// These routes must be registered BEFORE subrouters, because ownerManager has wildcard
-	// routes (e.g. /members/{id}, /members/{memberId}/subscriptions) that would match and
-	// block member/PT users with 403 before they could reach allRoles.
+	// These routes must be registered BEFORE subrouters.
+	// ownerManager subrouter has routes (e.g. GET /members, GET /feedbacks, POST /subscriptions)
+	// whose middleware (isOwnerManager) will 403 PT/MEMBER users before they can reach allRoles.
+	// Pre-registering here with isAnyRole lets them match first.
+	authenticated.Handle("/members", auth(isAnyRole, memberHandler.GetAll)).Methods("GET")
+	authenticated.Handle("/feedbacks", auth(isAnyRole, feedbackHandler.GetAll)).Methods("GET")
+	authenticated.Handle("/subscriptions", auth(isAnyRole, subscriptionHandler.Create)).Methods("POST")
 	authenticated.Handle("/pt-details/me", auth(isAnyRole, ptDetailHandler.GetMe)).Methods("GET")
 	authenticated.Handle("/pt-details/me", auth(isAnyRole, ptDetailHandler.UpdateMe)).Methods("PUT")
 	authenticated.Handle("/members/me/subscriptions", auth(isAnyRole, subscriptionHandler.GetMySubscriptions)).Methods("GET")

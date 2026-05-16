@@ -15,9 +15,13 @@ const formatDate = (dateStr) => {
   return new Date(`${dateStr.slice(0, 10)}T00:00:00`).toLocaleDateString('vi-VN');
 };
 
-// List endpoint returns { name }, detail endpoint returns { full_name }
 const getMemberName = (member, memberId) =>
   member?.full_name || member?.name || `Hội viên #${memberId}`;
+
+const STATUS_MEMBER = {
+  active:   { text: 'Còn hạn', cls: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' },
+  inactive: { text: 'Hết hạn', cls: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' },
+};
 
 const StudentList = () => {
   const [selectedStudentId, setSelectedStudentId] = useState(null);
@@ -89,12 +93,16 @@ const StudentList = () => {
                 <TableRow>
                   <TableHead>Tên Học Viên</TableHead>
                   <TableHead>Mục tiêu</TableHead>
-                  <TableHead>Ngày bắt đầu</TableHead>
-                  <TableHead>Trạng thái</TableHead>
+                  <TableHead>Gói tập</TableHead>
+                  <TableHead>Hết hạn</TableHead>
+                  <TableHead>Ngày bắt đầu PT</TableHead>
+                  <TableHead>Hội viên</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {students.map(({ memberId, member, firstSessionDate, roadmapGoal }) => (
+                {students.map(({ memberId, member, firstSessionDate, roadmapGoal }) => {
+                  const memberStatus = STATUS_MEMBER[member?.status] ?? { text: member?.status || '—', cls: 'bg-gray-100 text-gray-600' };
+                  return (
                   <TableRow
                     key={memberId}
                     className="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors"
@@ -106,19 +114,26 @@ const StudentList = () => {
                       </span>
                       <div className="text-xs text-gray-500 font-normal">{member?.phone ?? '—'}</div>
                     </TableCell>
+                    <TableCell className="text-gray-700 dark:text-gray-300 max-w-[180px]">
+                      <span className="line-clamp-2">{roadmapGoal || '—'}</span>
+                    </TableCell>
                     <TableCell className="text-gray-700 dark:text-gray-300">
-                      {roadmapGoal || '—'}
+                      {member?.package || '—'}
+                    </TableCell>
+                    <TableCell className="text-gray-600 dark:text-gray-400">
+                      {formatDate(member?.expiryDate)}
                     </TableCell>
                     <TableCell className="text-gray-600 dark:text-gray-400">
                       {formatDate(firstSessionDate)}
                     </TableCell>
                     <TableCell>
-                      <span className="inline-block px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
-                        Đã xác nhận
+                      <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-medium ${memberStatus.cls}`}>
+                        {memberStatus.text}
                       </span>
                     </TableCell>
                   </TableRow>
-                ))}
+                  );
+                })}
               </TableBody>
             </Table>
           </div>
