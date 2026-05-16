@@ -1,0 +1,5 @@
+.evn
+.env
+go/.env
+go/*.exe
+go/gym-management
