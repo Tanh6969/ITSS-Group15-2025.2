@@ -55,102 +55,52 @@ const PackageDetail = () => {
         </button>
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{packageData.package_name}</h1>
-          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">ID: {packageData.id}</p>
+
         </div>
       </div>
 
-      {/* Content */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Left Column - Basic Info */}
-        <div className="space-y-6">
-          {/* Pricing Card */}
-          <div className="bg-white dark:bg-gray-950 rounded-xl shadow-sm ring-1 ring-gray-900/5 dark:ring-gray-800 p-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Thông tin giá</h2>
-            <div className="space-y-4">
-              <div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Giá gói tập</p>
-                <p className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">
-                  {formatPriceVND ? formatPriceVND(packageData.price) : `${packageData.price.toLocaleString('vi-VN')} đ`}
-                </p>
-              </div>
-              <div className="pt-4 border-t border-gray-200 dark:border-gray-800">
-                <p className="text-sm text-gray-500 dark:text-gray-400">Thời hạn</p>
-                <p className="text-lg font-semibold text-gray-900 dark:text-white">
-                  {getDurationDisplay(packageData.duration_days)}
-                </p>
-              </div>
+      {/* Content - title: value rows, centered and fit to content */}
+      <div>
+        <div className="bg-white dark:bg-gray-950 rounded-xl shadow-sm ring-1 ring-gray-900/5 dark:ring-gray-800 p-4 w-fit ml-0 min-w-[220px]">
+          <div className="flex flex-col gap-3 items-start text-left">
+            <div className="flex items-center gap-2 justify-start">
+              <span className="text-xs text-gray-500 dark:text-gray-400">Giá:</span>
+              <span className="text-lg font-semibold text-emerald-600 dark:text-emerald-400">{formatPriceVND ? formatPriceVND(packageData.price) : `${packageData.price.toLocaleString('vi-VN')} đ`}</span>
             </div>
-          </div>
 
-          {/* Status Card */}
-          <div className="bg-white dark:bg-gray-950 rounded-xl shadow-sm ring-1 ring-gray-900/5 dark:ring-gray-800 p-6">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Trạng thái</h2>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 justify-start">
+              <span className="text-xs text-gray-500 dark:text-gray-400">Thời hạn:</span>
+              <span className="text-sm font-medium text-gray-900 dark:text-white">{getDurationDisplay(packageData.duration_days)}</span>
+            </div>
+
+            <div className="flex items-center gap-2 justify-start">
+              <span className="text-xs text-gray-500 dark:text-gray-400">Trạng thái:</span>
               {packageData.is_active ? (
-                <>
-                  <CheckCircle size={24} className="text-green-600" />
-                  <span className="inline-flex items-center rounded-full bg-green-50 px-3 py-1 text-sm font-semibold text-green-700 ring-1 ring-inset ring-green-600/20 dark:bg-green-900/30 dark:text-green-400">
-                    ✓ Đang bán
-                  </span>
-                </>
+                <><CheckCircle size={16} className="text-green-600" /><span className="text-sm font-semibold text-green-700 dark:text-green-300">Đang bán</span></>
               ) : (
-                <>
-                  <XCircle size={24} className="text-red-600" />
-                  <span className="inline-flex items-center rounded-full bg-red-50 px-3 py-1 text-sm font-semibold text-red-700 ring-1 ring-inset ring-red-600/20 dark:bg-red-900/30 dark:text-red-400">
-                    ✗ Tạm dừng bán
-                  </span>
-                </>
+                <><XCircle size={16} className="text-red-600" /><span className="text-sm font-semibold text-red-700 dark:text-red-300">Tạm dừng</span></>
               )}
             </div>
-          </div>
-        </div>
 
-        {/* Right Column - Additional Info */}
-        <div className="space-y-6">
-          {/* Category Card */}
-          <div className="bg-white dark:bg-gray-950 rounded-xl shadow-sm ring-1 ring-gray-900/5 dark:ring-gray-800 p-6">
-            <div className="flex items-center gap-2 mb-4">
-              <Tag size={20} className="text-blue-600 dark:text-blue-400" />
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Danh mục dịch vụ</h2>
+            <div className="flex items-center gap-2 justify-start">
+              <span className="text-xs text-gray-500 dark:text-gray-400">Mã gói:</span>
+              <span className="text-sm font-medium text-gray-900 dark:text-white">{packageData?.id}</span>
             </div>
-            <div className="space-y-4">
-              <div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Tên danh mục</p>
-                <p className="text-base font-medium text-gray-900 dark:text-white">
-                  {categoryData?.category_name || 'Đang tải...'}
-                </p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Mô tả lợi ích</p>
-                <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">
-                  {categoryData?.benefits_description || 'Đang tải...'}
-                </p>
-              </div>
-              {categoryData?.allowed_gender && (
-                <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Giới tính cho phép</p>
-                  <p className="text-base font-medium text-gray-900 dark:text-white">
-                    {categoryData.allowed_gender === 'both' ? 'Nam và Nữ' : categoryData.allowed_gender}
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
 
-          {/* Package Details Card */}
-          <div className="bg-white dark:bg-gray-950 rounded-xl shadow-sm ring-1 ring-gray-900/5 dark:ring-gray-800 p-6">
-            <div className="flex items-center gap-2 mb-4">
-              <Package size={20} className="text-purple-600 dark:text-purple-400" />
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Thông tin gói</h2>
+            <div className="flex items-center gap-2 justify-start">
+              <span className="text-xs text-gray-500 dark:text-gray-400">Tên gói:</span>
+              <span className="text-sm font-medium text-gray-900 dark:text-white">{packageData?.package_name}</span>
             </div>
-            <div className="space-y-4">
-              <div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Mã gói</p>
-                <p className="text-base font-medium text-gray-900 dark:text-white">{packageData?.id}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Độ dài gói (ngày)</p>
-                <p className="text-base font-medium text-gray-900 dark:text-white">{packageData?.duration_days} ngày</p>
+
+            <div className="flex items-center gap-2 justify-start">
+              <span className="text-xs text-gray-500 dark:text-gray-400">Danh mục:</span>
+              <span className="text-sm font-medium text-gray-900 dark:text-white">{categoryData?.category_name || '—'}</span>
+            </div>
+
+            <div className="w-full max-w-xl mt-2">
+              <div className="flex items-start justify-start gap-2">
+                <span className="text-xs text-gray-500 dark:text-gray-400">Mô tả:</span>
+                <div className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed text-left">{categoryData?.benefits_description || 'Không có mô tả.'}</div>
               </div>
             </div>
           </div>

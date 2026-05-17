@@ -19,26 +19,30 @@ const MemberListView = () => {
     const [currentPage, setCurrentPage] = useState(1);
 
     // Fetch data from API
-    const { data: apiResponse = {}, isLoading, isError } = useMembers(currentPage, 10);
+    const { data: memberResponse, isLoading, isError } = useMembers(currentPage, 10);
 
-    // Handle both paginated response and direct array
-    const members = Array.isArray(apiResponse.data) ? apiResponse.data : (Array.isArray(apiResponse) ? apiResponse : []);
+    // Normalize response to an array of members safely
+    const members = Array.isArray(memberResponse)
+        ? memberResponse
+        : (memberResponse && Array.isArray(memberResponse.data))
+            ? memberResponse.data
+            : [];
 
-    // Filter members
-    const filteredMembers = members.filter(member => {
-        // Guard against undefined values
+    // Filter members with defensive checks
+    const filteredMembers = members.filter((member) => {
         if (!member) return false;
 
-        const name = member.name || '';
-        const phone = member.phone || '';
-        const id = member.id || 0;
+        const name = (member.name || member.full_name || '').toString();
+        const phone = (member.phone || '').toString();
+        const id = (member.id || member.ID || '').toString();
 
+        const q = searchTerm.toLowerCase();
         const matchSearch =
-            name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            phone.toString().includes(searchTerm) ||
-            id.toString().includes(searchTerm);
+            name.toLowerCase().includes(q) ||
+            phone.includes(searchTerm) ||
+            id.includes(searchTerm);
 
-        const matchStatus = statusFilter === 'all' || member.status === statusFilter;
+        const matchStatus = statusFilter === 'all' || (member.status || member.Status) === statusFilter;
 
         return matchSearch && matchStatus;
     });
@@ -155,10 +159,10 @@ const MemberListView = () => {
                                 <div className="flex items-center justify-between">
                                     <div className="flex-1">
                                         <div className="flex items-center gap-3">
-                                            <img 
-                                              src={(member.gender || '').toLowerCase() === 'nữ' ? '/src/assets/nu_ava.jpg' : '/src/assets/nam_ava.jpg'} 
-                                              alt="avatar" 
-                                              className="h-10 w-10 rounded-full object-cover border border-gray-200 dark:border-gray-700"
+                                            <img
+                                                src={(member.gender || '').toLowerCase() === 'nữ' ? '/src/assets/nu_ava.jpg' : '/src/assets/nam_ava.jpg'}
+                                                alt="avatar"
+                                                className="h-10 w-10 rounded-full object-cover border border-gray-200 dark:border-gray-700"
                                             />
                                             <div className="min-w-0 flex-1">
                                                 <h3 className="font-medium text-gray-900 dark:text-white">{getMemberName(member)}</h3>

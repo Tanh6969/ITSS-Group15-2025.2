@@ -124,7 +124,11 @@ CREATE TABLE "TrainingBooking" (
   "requested_start" timestamp,
   "requested_end" timestamp,
   "training_plan_note" text,
-  "status" varchar
+  "status" varchar,
+  "intensity" varchar,
+  "roadmap_goal" text,
+  "member_free_schedule" text,
+  "rejection_reason" text DEFAULT ''
 );
 
 CREATE TABLE "TrainingSession" (
