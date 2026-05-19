@@ -34,7 +34,11 @@ export const useChangePassword = () => {
       toast.success('Đổi mật khẩu thành công!');
     },
     onError: (error) => {
-      toast.error(error?.response?.data || error?.message || 'Đổi mật khẩu thất bại');
+      const msg =
+        typeof error?.response?.data === 'string'
+          ? error.response.data.trim()
+          : error?.message || 'Đổi mật khẩu thất bại';
+      toast.error(msg);
     },
   });
 };

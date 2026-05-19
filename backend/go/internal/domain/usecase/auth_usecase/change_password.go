@@ -6,14 +6,11 @@ import (
 )
 
 func (u *authUsecase) ChangePassword(ctx context.Context, input ChangePasswordInput) error {
-	if input.AccountID <= 0 {
-		return ErrInvalidInput
-	}
-	if input.OldPassword == "" || input.NewPassword == "" {
-		return ErrInvalidInput
+	if input.AccountID <= 0 || input.OldPassword == "" || input.NewPassword == "" {
+		return errors.New("Vui lòng nhập đầy đủ thông tin")
 	}
 	if len(input.NewPassword) < 6 {
-		return errors.New("new password must be at least 6 characters")
+		return errors.New("Mật khẩu mới phải có ít nhất 6 ký tự")
 	}
 
 	account, err := u.repo.GetAccountByID(ctx, input.AccountID)
@@ -22,7 +19,11 @@ func (u *authUsecase) ChangePassword(ctx context.Context, input ChangePasswordIn
 	}
 
 	if account.Password != input.OldPassword {
-		return errors.New("old password is incorrect")
+		return errors.New("Mật khẩu cũ không đúng")
+	}
+
+	if input.OldPassword == input.NewPassword {
+		return errors.New("Mật khẩu mới không được trùng mật khẩu cũ")
 	}
 
 	return u.repo.UpdatePassword(ctx, input.AccountID, input.NewPassword, false)

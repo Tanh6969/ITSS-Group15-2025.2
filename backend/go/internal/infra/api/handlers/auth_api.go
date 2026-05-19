@@ -126,13 +126,13 @@ func toAuthResponse(result *auth_usecase.AuthResult) *dto.AuthResponse {
 func (h *AuthHandler) ChangePassword(w http.ResponseWriter, r *http.Request) {
 	user, ok := middleware.GetAuthenticatedUser(r)
 	if !ok {
-		http.Error(w, auth_usecase.ErrUnauthorized.Error(), http.StatusUnauthorized)
+		http.Error(w, "Phiên đăng nhập không hợp lệ", http.StatusUnauthorized)
 		return
 	}
 
 	var req dto.ChangePasswordRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, "invalid request body", http.StatusBadRequest)
+		http.Error(w, "Dữ liệu không hợp lệ", http.StatusBadRequest)
 		return
 	}
 
@@ -142,7 +142,11 @@ func (h *AuthHandler) ChangePassword(w http.ResponseWriter, r *http.Request) {
 		NewPassword: req.NewPassword,
 	})
 	if err != nil {
-		writeAuthError(w, err)
+		if errors.Is(err, auth_usecase.ErrUnauthorized) {
+			http.Error(w, "Không tìm thấy tài khoản", http.StatusUnauthorized)
+		} else {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+		}
 		return
 	}
 

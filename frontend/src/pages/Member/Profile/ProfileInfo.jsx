@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { User, Phone, Mail, MapPin, Edit3, ShieldCheck, Calendar, Loader2, Target, Clock } from 'lucide-react';
+import { User, Phone, Mail, MapPin, Edit3, ShieldCheck, Calendar, Loader2, Target, Clock, Lock, Eye, EyeOff, ChevronDown, ChevronUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Button from '@/components/Common/Button';
 import { memberService } from '@/services/memberService';
+import { useChangePassword } from '@/hooks/mutations/useAuthMutations';
 import useAuthStore from '@/store/useAuthStore';
 import { toast } from '@/utils/toast';
 
@@ -10,6 +11,11 @@ const ProfileInfo = () => {
   const { user } = useAuthStore();
   const [member, setMember] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showPwForm, setShowPwForm] = useState(false);
+  const [pwForm, setPwForm] = useState({ oldPassword: '', newPassword: '', confirmPassword: '' });
+  const [pwShow, setPwShow] = useState({ old: false, new: false, confirm: false });
+  const [pwError, setPwError] = useState('');
+  const changePwMutation = useChangePassword();
 
   useEffect(() => {
     const fetchMemberData = async () => {
@@ -144,6 +150,92 @@ const ProfileInfo = () => {
             </p>
           </div>
         </div>
+      </div>
+
+      {/* Đổi mật khẩu */}
+      <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-950">
+        <button
+          type="button"
+          onClick={() => { setShowPwForm(v => !v); setPwError(''); setPwForm({ oldPassword: '', newPassword: '', confirmPassword: '' }); }}
+          className="flex w-full items-center justify-between px-6 py-5 sm:px-8"
+        >
+          <div className="flex items-center gap-3">
+            <div className="rounded-xl bg-gray-50 p-2.5 text-gray-500 dark:bg-gray-900">
+              <Lock className="h-5 w-5" />
+            </div>
+            <div className="text-left">
+              <p className="text-sm font-semibold text-gray-900 dark:text-white">Đổi mật khẩu</p>
+              <p className="text-xs text-gray-400 dark:text-gray-500">Cập nhật mật khẩu đăng nhập</p>
+            </div>
+          </div>
+          {showPwForm ? <ChevronUp className="h-4 w-4 text-gray-400" /> : <ChevronDown className="h-4 w-4 text-gray-400" />}
+        </button>
+
+        {showPwForm && (
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              setPwError('');
+              if (pwForm.newPassword.length < 6) { setPwError('Mật khẩu mới phải có ít nhất 6 ký tự'); return; }
+              if (pwForm.newPassword !== pwForm.confirmPassword) { setPwError('Mật khẩu mới và xác nhận không khớp'); return; }
+              changePwMutation.mutate(
+                { oldPassword: pwForm.oldPassword, newPassword: pwForm.newPassword },
+                { onSuccess: () => { setShowPwForm(false); setPwForm({ oldPassword: '', newPassword: '', confirmPassword: '' }); } }
+              );
+            }}
+            className="border-t border-gray-100 dark:border-gray-800 px-6 pb-6 pt-5 sm:px-8 space-y-4"
+          >
+            {pwError && (
+              <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-600 dark:border-red-900/50 dark:bg-red-900/20 dark:text-red-400">
+                {pwError}
+              </div>
+            )}
+
+            {[
+              { key: 'old', label: 'Mật khẩu hiện tại', field: 'oldPassword' },
+              { key: 'new', label: 'Mật khẩu mới', field: 'newPassword' },
+              { key: 'confirm', label: 'Xác nhận mật khẩu mới', field: 'confirmPassword' },
+            ].map(({ key, label, field }) => (
+              <div key={key} className="space-y-1.5">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">{label}</label>
+                <div className="relative">
+                  <input
+                    type={pwShow[key] ? 'text' : 'password'}
+                    value={pwForm[field]}
+                    onChange={(e) => setPwForm(prev => ({ ...prev, [field]: e.target.value }))}
+                    required
+                    placeholder="••••••••"
+                    className="w-full rounded-lg border border-gray-200 bg-gray-50 py-2.5 pl-3 pr-10 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setPwShow(prev => ({ ...prev, [key]: !prev[key] }))}
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600"
+                  >
+                    {pwShow[key] ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
+              </div>
+            ))}
+
+            <div className="flex justify-end gap-3 pt-1">
+              <button
+                type="button"
+                onClick={() => setShowPwForm(false)}
+                className="rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-800"
+              >
+                Hủy
+              </button>
+              <button
+                type="submit"
+                disabled={changePwMutation.isPending}
+                className="flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-70"
+              >
+                {changePwMutation.isPending ? <><Loader2 className="h-4 w-4 animate-spin" /> Đang xử lý...</> : 'Lưu mật khẩu'}
+              </button>
+            </div>
+          </form>
+        )}
       </div>
     </div>
   );
