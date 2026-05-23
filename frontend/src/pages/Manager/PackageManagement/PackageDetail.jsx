@@ -43,7 +43,7 @@ const PackageDetail = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
       <div className="flex items-center gap-4">
         <button
@@ -55,54 +55,64 @@ const PackageDetail = () => {
         </button>
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{packageData.package_name}</h1>
-
         </div>
       </div>
 
-      {/* Content - title: value rows, centered and fit to content */}
-      <div>
-        <div className="bg-white dark:bg-gray-950 rounded-xl shadow-sm ring-1 ring-gray-900/5 dark:ring-gray-800 p-4 w-fit ml-0 min-w-[220px]">
-          <div className="flex flex-col gap-3 items-start text-left">
-            <div className="flex items-center gap-2 justify-start">
-              <span className="text-xs text-gray-500 dark:text-gray-400">Giá:</span>
-              <span className="text-lg font-semibold text-emerald-600 dark:text-emerald-400">{formatPriceVND ? formatPriceVND(packageData.price) : `${packageData.price.toLocaleString('vi-VN')} đ`}</span>
-            </div>
+      {/* Content - Grid Layout */}
+      <div className="bg-white dark:bg-gray-950 rounded-xl shadow-sm ring-1 ring-gray-900/5 dark:ring-gray-800 p-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Giá */}
+          <div className="flex flex-col">
+            <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">Giá</span>
+            <span className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{formatPriceVND ? formatPriceVND(packageData.price) : `${packageData.price.toLocaleString('vi-VN')} đ`}</span>
+          </div>
 
-            <div className="flex items-center gap-2 justify-start">
-              <span className="text-xs text-gray-500 dark:text-gray-400">Thời hạn:</span>
-              <span className="text-sm font-medium text-gray-900 dark:text-white">{getDurationDisplay(packageData.duration_days)}</span>
-            </div>
+          {/* Thời hạn */}
+          <div className="flex flex-col">
+            <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">Thời hạn</span>
+            <span className="text-2xl font-bold text-gray-900 dark:text-white">{getDurationDisplay(packageData.duration_days)}</span>
+          </div>
 
-            <div className="flex items-center gap-2 justify-start">
-              <span className="text-xs text-gray-500 dark:text-gray-400">Trạng thái:</span>
+          {/* Trạng thái */}
+          <div className="flex flex-col">
+            <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">Trạng thái</span>
+            <div className="flex items-center gap-2">
               {packageData.is_active ? (
-                <><CheckCircle size={16} className="text-green-600" /><span className="text-sm font-semibold text-green-700 dark:text-green-300">Đang bán</span></>
+                <>
+                  <CheckCircle size={20} className="text-green-600" />
+                  <span className="text-lg font-semibold text-green-700 dark:text-green-300">Đang bán</span>
+                </>
               ) : (
-                <><XCircle size={16} className="text-red-600" /><span className="text-sm font-semibold text-red-700 dark:text-red-300">Tạm dừng</span></>
+                <>
+                  <XCircle size={20} className="text-red-600" />
+                  <span className="text-lg font-semibold text-red-700 dark:text-red-300">Tạm dừng</span>
+                </>
               )}
             </div>
+          </div>
 
-            <div className="flex items-center gap-2 justify-start">
-              <span className="text-xs text-gray-500 dark:text-gray-400">Mã gói:</span>
-              <span className="text-sm font-medium text-gray-900 dark:text-white">{packageData?.id}</span>
-            </div>
+          {/* Mã gói */}
+          <div className="flex flex-col">
+            <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">Mã gói</span>
+            <span className="text-lg font-medium text-gray-900 dark:text-white font-mono">{packageData?.id}</span>
+          </div>
 
-            <div className="flex items-center gap-2 justify-start">
-              <span className="text-xs text-gray-500 dark:text-gray-400">Tên gói:</span>
-              <span className="text-sm font-medium text-gray-900 dark:text-white">{packageData?.package_name}</span>
-            </div>
+          {/* Danh mục */}
+          <div className="flex flex-col">
+            <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">Danh mục</span>
+            <span className="text-lg font-medium text-gray-900 dark:text-white">{categoryData?.category_name || '—'}</span>
+          </div>
 
-            <div className="flex items-center gap-2 justify-start">
-              <span className="text-xs text-gray-500 dark:text-gray-400">Danh mục:</span>
-              <span className="text-sm font-medium text-gray-900 dark:text-white">{categoryData?.category_name || '—'}</span>
-            </div>
+          {/* Tên gói */}
+          <div className="flex flex-col">
+            <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">Tên gói</span>
+            <span className="text-lg font-medium text-gray-900 dark:text-white">{packageData?.package_name}</span>
+          </div>
 
-            <div className="w-full max-w-xl mt-2">
-              <div className="flex items-start justify-start gap-2">
-                <span className="text-xs text-gray-500 dark:text-gray-400">Mô tả:</span>
-                <div className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed text-left">{categoryData?.benefits_description || 'Không có mô tả.'}</div>
-              </div>
-            </div>
+          {/* Mô tả - Full Width */}
+          <div className="md:col-span-2 lg:col-span-3 flex flex-col">
+            <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">Mô tả & Quyền lợi</span>
+            <p className="text-base text-gray-700 dark:text-gray-300 leading-relaxed">{categoryData?.benefits_description || 'Không có mô tả.'}</p>
           </div>
         </div>
       </div>
