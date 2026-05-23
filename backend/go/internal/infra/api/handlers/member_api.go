@@ -242,7 +242,16 @@ func (h *MemberHandler) UpdateStatus(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Fetch and return updated member
+	member, err := h.usecase.GetMemberByIDWithDetails(id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(member)
 }
 
 func (h *MemberHandler) Delete(w http.ResponseWriter, r *http.Request) {

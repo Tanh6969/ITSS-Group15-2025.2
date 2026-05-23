@@ -139,7 +139,7 @@ SELECT DISTINCT ON (m.id)
     COALESCE(m.full_name, ''),
     COALESCE(m.phone, ''),
     COALESCE(mp.package_name, 'Chưa đăng ký') as package_name,
-    CASE WHEN s.end_date IS NOT NULL AND s.end_date >= CURRENT_DATE THEN 'active' ELSE 'inactive' END as status,
+    CASE WHEN m.is_active = false THEN 'inactive' WHEN s.end_date IS NOT NULL AND s.end_date >= CURRENT_DATE THEN 'active' ELSE 'inactive' END as status,
     COALESCE(TO_CHAR(s.end_date, 'YYYY-MM-DD'), '') as end_date,
     COALESCE(TO_CHAR(s.registration_date, 'YYYY-MM-DD'), '') as registration_date,
     COALESCE((s.end_date::date - CURRENT_DATE), 0) as sessions_remaining,
@@ -198,10 +198,10 @@ func (r *memberRepository) GetMemberByIDWithDetails(id int) (*dto.MemberDetailDT
         m.id, m.full_name, m.phone, m.email, m.gender, 
         TO_CHAR(m.dob, 'YYYY-MM-DD'), m.address,
         COALESCE(sub.package_name, 'Chưa đăng ký'),
-        CASE WHEN sub.end_date IS NOT NULL AND sub.end_date::date >= CURRENT_DATE THEN 'active' ELSE 'inactive' END,
+        CASE WHEN m.is_active = false THEN 'inactive' WHEN sub.end_date IS NOT NULL AND sub.end_date::date >= CURRENT_DATE THEN 'active' ELSE 'inactive' END,
         COALESCE(TO_CHAR(sub.end_date, 'YYYY-MM-DD'), ''),
         COALESCE(TO_CHAR(sub.registration_date, 'YYYY-MM-DD'), ''),
-        (sub.end_date IS NOT NULL AND sub.end_date::date >= CURRENT_DATE)
+        m.is_active
     FROM "Member" m
     LEFT JOIN LATERAL (
         -- Lấy subscription có ngày kết thúc xa nhất (gói hiện tại)
