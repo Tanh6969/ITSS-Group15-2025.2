@@ -50,12 +50,12 @@ const EvaluationList = () => {
   const memberMap = Object.fromEntries(members.map((m) => [m.id, m]));
 
   const pastSessions = sessions
-    .filter((s) => new Date(s.session_time) < new Date())
+    .filter((s) => new Date(s.session_time) < new Date() && bookingMap[s.booking_id] !== undefined)
     .sort((a, b) => new Date(b.session_time) - new Date(a.session_time))
     .map((s) => {
       const booking = bookingMap[s.booking_id];
       const member = booking ? memberMap[booking.member_id] : null;
-      return { ...s, memberName: member?.full_name || 'Không rõ' };
+      return { ...s, memberName: member?.full_name || member?.name || 'Không rõ' };
     });
 
   const getForm = (session) => forms[session.id] ?? defaultForm(session);
