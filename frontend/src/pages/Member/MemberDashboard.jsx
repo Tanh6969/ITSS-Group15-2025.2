@@ -126,7 +126,7 @@ const MemberDashboard = () => {
             </div>
           )}
           <Link
-            to="/member/register-package"
+            to={activePackage ? '/member/renew' : '/member/register'}
             className="inline-block text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-semibold underline"
           >
             {activePackage ? 'Gia hạn / Nâng cấp' : 'Đăng ký ngay'}
