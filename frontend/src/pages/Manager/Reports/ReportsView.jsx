@@ -155,7 +155,7 @@ const ReportsView = () => {
                         Phân tích doanh thu, hội viên, và hiệu suất
                     </p>
                 </div>
-                <Button>
+                <Button onClick={() => window.print()}>
                     <Download size={16} /> Xuất báo cáo
                 </Button>
             </div>

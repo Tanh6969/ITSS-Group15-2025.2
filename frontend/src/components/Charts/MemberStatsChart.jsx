@@ -3,7 +3,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { cn } from '@/lib/utils';
 import useThemeStore from '@/store/useThemeStore';
 
-const data = [
+const defaultData = [
   { name: 'T2', new: 40, active: 240, dropped: 20 },
   { name: 'T3', new: 30, active: 139, dropped: 10 },
   { name: 'T4', new: 20, active: 980, dropped: 50 },
@@ -13,7 +13,8 @@ const data = [
   { name: 'CN', new: 34, active: 430, dropped: 10 },
 ];
 
-const MemberStatsChart = ({ className }) => {
+const MemberStatsChart = ({ data: propData, className }) => {
+  const data = (propData && propData.length > 0) ? propData : defaultData;
   const isDark = useThemeStore((state) => state.theme === 'dark');
 
   return (

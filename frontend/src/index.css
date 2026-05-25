@@ -9,7 +9,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  
+
   #root {
     width: 100%;
     min-height: 100vh;
@@ -22,11 +22,37 @@
     background-color: #ffffff;
     color: #111827;
   }
-  
+
   :is(.dark) option,
   .dark option {
     background-color: #1f2937;
     color: #ffffff;
+  }
+}
+
+@media print {
+  /* Ẩn sidebar, header, footer khi in */
+  aside,
+  header,
+  footer {
+    display: none !important;
+  }
+
+  /* Bỏ overflow ẩn để nội dung hiển thị đầy đủ */
+  body,
+  #root,
+  .flex.h-screen,
+  .flex.flex-1.flex-col,
+  main {
+    display: block !important;
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+  }
+
+  /* Nội dung báo cáo chiếm toàn bộ trang */
+  main {
+    padding: 20px !important;
   }
 }
 

@@ -3,14 +3,15 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { cn } from '@/lib/utils';
 import useThemeStore from '@/store/useThemeStore';
 
-const data = [
+const defaultData = [
   { name: 'PT Linh', sessions: 42, score: 95 },
   { name: 'PT Minh', sessions: 35, score: 91 },
   { name: 'PT Huy', sessions: 28, score: 88 },
   { name: 'Lễ tân Thu', sessions: 10, score: 97 },
 ];
 
-const StaffPerformanceChart = ({ className }) => {
+const StaffPerformanceChart = ({ data: propData, className }) => {
+  const data = (propData && propData.length > 0) ? propData : defaultData;
   const isDark = useThemeStore((state) => state.theme === 'dark');
 
   return (
