@@ -9,6 +9,14 @@ import { useInvoices } from '@/hooks/queries/useInvoices';
 // Màu sắc cho các gói tập
 const PACKAGE_COLORS = ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#06b6d4', '#ec4899', '#14b8a6'];
 
+// Trích loại gói từ tên đầy đủ: bỏ "Gói " đầu + thời hạn ở cuối
+const extractPackageType = (name) => {
+    if (!name) return 'Khác';
+    let type = name.replace(/^Gói\s+/i, '');
+    type = type.replace(/\s+(\d+\s*tháng|tháng|nửa\s+năm|\d+\s*năm)$/i, '');
+    return type.trim() || 'Khác';
+};
+
 const ptPerformanceData = [
     { name: 'Hùng Gym', sessions: 28, rating: 4.8 },
     { name: 'Tùng PT', sessions: 24, rating: 4.7 },
@@ -107,27 +115,21 @@ const ReportsView = () => {
         });
     }, [invoicesResponse, timeframe]);
 
-    // Calculate real package distribution from invoices
+    // Phân bổ theo LOẠI gói (gộp các thời hạn khác nhau của cùng 1 loại)
     const packageDistribution = useMemo(() => {
-        const packageMap = {};
-
-        // Group invoices by package name and count them
+        const typeMap = {};
         filteredInvoices.forEach(invoice => {
-            const packageName = invoice.package || 'Khác';
-            if (!packageMap[packageName]) {
-                packageMap[packageName] = 0;
-            }
-            packageMap[packageName] += 1;
+            const type = extractPackageType(invoice.package);
+            typeMap[type] = (typeMap[type] || 0) + 1;
         });
 
-        // Convert to array and add colors
-        return Object.entries(packageMap)
-            .map(([name, count], index) => ({
-                name,
-                value: count,
-                fill: PACKAGE_COLORS[index % PACKAGE_COLORS.length]
-            }))
-            .sort((a, b) => b.value - a.value); // Sort by count descending
+        return Object.entries(typeMap)
+            .map(([name, value]) => ({ name, value }))
+            .sort((a, b) => b.value - a.value)
+            .map((item, index) => ({
+                ...item,
+                fill: PACKAGE_COLORS[index % PACKAGE_COLORS.length],
+            }));
     }, [filteredInvoices]);
 
     const totalRevenue = filteredInvoices.reduce((sum, invoice) => sum + parseFloat(invoice.amount || 0), 0);
@@ -244,23 +246,29 @@ const ReportsView = () => {
                 {/* Package Distribution */}
                 <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-950">
                     <h3 className="mb-4 font-semibold text-gray-900 dark:text-white">Phân bổ gói tập</h3>
-                    <ResponsiveContainer width="100%" height={300}>
+                    <ResponsiveContainer width="100%" height={340}>
                         <PieChart>
                             <Pie
                                 data={packageDistribution}
                                 cx="50%"
-                                cy="50%"
-                                labelLine={false}
-                                label={({ name, value }) => `${name}: ${value}`}
-                                outerRadius={80}
-                                fill="#8884d8"
+                                cy="42%"
+                                innerRadius={55}
+                                outerRadius={95}
+                                paddingAngle={3}
                                 dataKey="value"
+                                stroke="none"
                             >
                                 {packageDistribution.map((entry, index) => (
                                     <Cell key={`cell-${index}`} fill={entry.fill} />
                                 ))}
                             </Pie>
-                            <Tooltip />
+                            <Tooltip formatter={(value, name) => [`${value} giao dịch`, name]} />
+                            <Legend
+                                verticalAlign="bottom"
+                                height={48}
+                                iconType="circle"
+                                wrapperStyle={{ fontSize: '12px', paddingTop: '8px' }}
+                            />
                         </PieChart>
                     </ResponsiveContainer>
                 </div>
