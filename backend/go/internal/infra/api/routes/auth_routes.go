@@ -7,10 +7,12 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func RegisterAuthRoutes(r *mux.Router, authHandler *handlers.AuthHandler) {
+func RegisterAuthRoutes(r *mux.Router, authHandler *handlers.AuthHandler, pwdResetHandler *handlers.PasswordResetHandler) {
 	r.HandleFunc("/auth/login", authHandler.Login).Methods("POST")
 	r.HandleFunc("/auth/refresh", authHandler.Refresh).Methods("POST")
 	r.HandleFunc("/auth/logout", authHandler.Logout).Methods("POST")
+	r.HandleFunc("/auth/forgot-password", pwdResetHandler.ForgotPassword).Methods("POST")
+	r.HandleFunc("/auth/reset-password", pwdResetHandler.ResetPassword).Methods("POST")
 
 	protected := r.PathPrefix("/auth").Subrouter()
 	protected.Use(middleware.AuthJWTMiddleware)

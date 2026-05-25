@@ -27,6 +27,29 @@ func NewService() *Service {
 	}
 }
 
+func (s *Service) SendPasswordResetEmail(toEmail, fullName, resetLink string) error {
+	subject := "Đặt lại mật khẩu tài khoản ActiveGym"
+	body := fmt.Sprintf(`Xin chào %s,
+
+Chúng tôi nhận được yêu cầu đặt lại mật khẩu cho tài khoản của bạn.
+
+Vui lòng nhấp vào liên kết bên dưới để đặt lại mật khẩu (có hiệu lực trong 15 phút):
+
+%s
+
+Nếu bạn không yêu cầu đặt lại mật khẩu, hãy bỏ qua email này.
+
+Trân trọng,
+Ban quản lý ActiveGym`, fullName, resetLink)
+
+	msg := fmt.Sprintf("From: ActiveGym <%s>\r\nTo: %s\r\nSubject: %s\r\nContent-Type: text/plain; charset=UTF-8\r\n\r\n%s",
+		s.user, toEmail, subject, body)
+
+	addr := fmt.Sprintf("%s:%d", s.host, s.port)
+	auth := smtp.PlainAuth("", s.user, s.pass, s.host)
+	return smtp.SendMail(addr, auth, s.user, []string{toEmail}, []byte(msg))
+}
+
 func (s *Service) SendNewMemberCredentials(toEmail, fullName, username, password string) error {
 	subject := "Tài khoản đăng nhập phòng gym của bạn"
 	body := fmt.Sprintf(`Xin chào %s,

@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"strings"
+	"time"
 
 	"gym-management/internal/domain/adapter"
 	"gym-management/internal/domain/entity"
@@ -17,7 +18,9 @@ type authRepository struct {
 var _ adapter.AuthRepository = (*authRepository)(nil)
 
 func NewAuthRepository(db *sql.DB) adapter.AuthRepository {
-	return &authRepository{db: db}
+	repo := &authRepository{db: db}
+	db.Exec(`CREATE TABLE IF NOT EXISTS "PasswordResetToken" (id SERIAL PRIMARY KEY, account_id INT NOT NULL, token_hash VARCHAR(64) UNIQUE NOT NULL, expires_at TIMESTAMPTZ NOT NULL, used BOOLEAN NOT NULL DEFAULT FALSE, created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`)
+	return repo
 }
 
 func (r *authRepository) CreateAccount(ctx context.Context, account *entity.Account) error {
@@ -255,5 +258,52 @@ func (r *authRepository) RevokeAllRefreshTokensByAccountID(ctx context.Context, 
 		WHERE account_id = $1 AND revoked_at IS NULL
 	`
 	_, err := r.db.ExecContext(ctx, query, accountID)
+	return err
+}
+
+func (r *authRepository) SavePasswordResetToken(ctx context.Context, accountID int, tokenHash string, expiresAt time.Time) error {
+	if accountID <= 0 {
+		return errors.New("invalid account id")
+	}
+	if tokenHash == "" {
+		return errors.New("token hash cannot be empty")
+	}
+	if expiresAt.IsZero() {
+		return errors.New("expires at cannot be empty")
+	}
+
+	_, err := r.db.ExecContext(ctx,
+		`INSERT INTO "PasswordResetToken" (account_id, token_hash, expires_at) VALUES ($1, $2, $3)`,
+		accountID, tokenHash, expiresAt,
+	)
+	return err
+}
+
+func (r *authRepository) GetPasswordResetToken(ctx context.Context, tokenHash string) (*adapter.PasswordResetRecord, error) {
+	if tokenHash == "" {
+		return nil, errors.New("token hash cannot be empty")
+	}
+
+	record := &adapter.PasswordResetRecord{}
+	err := r.db.QueryRowContext(ctx,
+		`SELECT account_id, expires_at, used FROM "PasswordResetToken" WHERE token_hash = $1`,
+		tokenHash,
+	).Scan(&record.AccountID, &record.ExpiresAt, &record.Used)
+	if err != nil {
+		return nil, err
+	}
+
+	return record, nil
+}
+
+func (r *authRepository) MarkPasswordResetTokenUsed(ctx context.Context, tokenHash string) error {
+	if tokenHash == "" {
+		return errors.New("token hash cannot be empty")
+	}
+
+	_, err := r.db.ExecContext(ctx,
+		`UPDATE "PasswordResetToken" SET used = TRUE WHERE token_hash = $1`,
+		tokenHash,
+	)
 	return err
 }

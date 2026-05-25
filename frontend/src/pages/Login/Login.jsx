@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema } from '@/schemas/authSchemas';
 import { useLogin } from '@/hooks/mutations/useAuthMutations';
+import { Link } from 'react-router-dom';
 import { Dumbbell, User, Lock, Eye, EyeOff, Loader2 } from 'lucide-react';
 import gigachadVideo from '@/assets/mp_.mp4';
 
@@ -92,9 +93,9 @@ const Login = () => {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">Mật khẩu</label>
-                <a href="#" className="text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 hover:underline">
+                <Link to="/forgot-password" className="text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 hover:underline">
                   Quên mật khẩu?
-                </a>
+                </Link>
               </div>
               <div className="relative">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">

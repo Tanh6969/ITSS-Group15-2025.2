@@ -1,10 +1,12 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import MainLayout from '@/components/Layout/MainLayout';
 import TrainerLayout from '@/components/Layout/TrainerLayout';
 import PrivateRoute from './PrivateRoute';
 import RoleBasedRoute from './RoleBasedRoute';
 import Login from '@/pages/Login/Login';
+import ForgotPassword from '@/pages/Login/ForgotPassword';
+import ResetPassword from '@/pages/Login/ResetPassword';
 import OwnerDashboard from '@/pages/Owner/OwnerDashboard';
 import MemberList from '@/pages/Owner/MemberManagement/MemberList';
 import MemberFormPage from '@/pages/Owner/MemberManagement/MemberForm';
@@ -62,6 +64,14 @@ export const router = createBrowserRouter([
   {
     path: '/login',
     element: <Login />,
+  },
+  {
+    path: '/forgot-password',
+    element: <ForgotPassword />,
+  },
+  {
+    path: '/reset-password',
+    element: <ResetPassword />,
   },
   // Private Routes: Phải có Token JWT (Bọc bởi PrivateRoute)
 

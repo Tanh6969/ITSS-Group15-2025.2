@@ -27,11 +27,12 @@ func NewRouter(
 	ptDetailHandler *handlers.PTDetailHandler,
 	notificationHandler *handlers.NotificationHandler,
 	memberRegHandler *handlers.MemberRegistrationHandler,
+	pwdResetHandler *handlers.PasswordResetHandler,
 ) *mux.Router {
 	r := mux.NewRouter()
 	r.Use(middleware.LoggingMiddleware)
 	r.Use(middleware.RecoveryMiddleware)
-	RegisterAuthRoutes(r, authHandler)
+	RegisterAuthRoutes(r, authHandler, pwdResetHandler)
 
 	authenticated := r.PathPrefix("").Subrouter()
 	authenticated.Use(middleware.AuthJWTMiddleware)

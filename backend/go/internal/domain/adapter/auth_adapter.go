@@ -14,6 +14,12 @@ type RefreshTokenRecord struct {
 	RevokedAt *time.Time
 }
 
+type PasswordResetRecord struct {
+	AccountID int
+	ExpiresAt time.Time
+	Used      bool
+}
+
 type AuthRepository interface {
 	CreateAccount(ctx context.Context, account *entity.Account) error
 	FindAccountByUsername(ctx context.Context, username string) (*entity.Account, error)
@@ -26,4 +32,7 @@ type AuthRepository interface {
 	RevokeRefreshToken(ctx context.Context, tokenHash string) error
 	RotateRefreshToken(ctx context.Context, oldTokenHash string, newRecord *RefreshTokenRecord) error
 	RevokeAllRefreshTokensByAccountID(ctx context.Context, accountID int) error
+	SavePasswordResetToken(ctx context.Context, accountID int, tokenHash string, expiresAt time.Time) error
+	GetPasswordResetToken(ctx context.Context, tokenHash string) (*PasswordResetRecord, error)
+	MarkPasswordResetTokenUsed(ctx context.Context, tokenHash string) error
 }
