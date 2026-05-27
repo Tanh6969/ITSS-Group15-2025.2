@@ -4,12 +4,16 @@ import {
   MessageSquare, AlertTriangle, UserPlus,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import Button from '@/components/Common/Button';
 import StatsCard from '@/components/Dashboard/StatsCard';
 import { useMembers } from '@/hooks/queries/useMembers';
 import { useEmployees } from '@/hooks/queries/useEmployees';
 import { useTrainingBookings } from '@/hooks/queries/useTrainingBookings';
 import { useFeedbacks } from '@/hooks/queries/useFeedbacks';
+import {
+  slideUpVariants, cardVariants, staggerContainerVariants, sectionStaggerVariants,
+} from '@/lib/animations';
 
 const ManagerDashboard = () => {
   const { data: memberResponse = {} } = useMembers(1, 1000);
@@ -170,25 +174,41 @@ const ManagerDashboard = () => {
   };
 
   return (
-    <div className="space-y-6">
-
+    <motion.div
+      className="space-y-6"
+      variants={sectionStaggerVariants}
+      initial="hidden"
+      animate="visible"
+    >
       {/* Header */}
-      <div>
+      <motion.div variants={slideUpVariants}>
         <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
           Bảng Điều Khiển
         </h1>
         <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
           {now.toLocaleDateString('vi-VN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
         </p>
-      </div>
+      </motion.div>
 
-      {/* Stats – 5 cards */}
-      <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-5">
-        {stats.map(s => <StatsCard key={s.title} {...s} />)}
-      </div>
+      {/* Stats – 5 cards with stagger */}
+      <motion.div
+        variants={staggerContainerVariants}
+        className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-5"
+      >
+        {stats.map((s, i) => (
+          <motion.div
+            key={s.title}
+            variants={cardVariants}
+            custom={i}
+            whileHover={{ scale: 1.03, y: -3 }}
+          >
+            <StatsCard {...s} />
+          </motion.div>
+        ))}
+      </motion.div>
 
       {/* Main content – 2-col grid */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <motion.div variants={slideUpVariants} className="grid grid-cols-1 gap-6 lg:grid-cols-2">
 
         {/* Today's schedule */}
         <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-950">
@@ -273,10 +293,13 @@ const ManagerDashboard = () => {
             </div>
           )}
         </div>
-      </div>
+      </motion.div>
 
       {/* Quick Actions */}
-      <div className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm dark:border-gray-800 dark:bg-gray-950">
+      <motion.div
+        variants={slideUpVariants}
+        className="rounded-xl border border-gray-100 bg-white p-5 shadow-sm dark:border-gray-800 dark:bg-gray-950"
+      >
         <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500">
           Truy cập nhanh
         </p>
@@ -300,9 +323,9 @@ const ManagerDashboard = () => {
             <Button variant="outline" size="sm">Báo cáo</Button>
           </Link>
         </div>
-      </div>
+      </motion.div>
 
-    </div>
+    </motion.div>
   );
 };
 

@@ -229,6 +229,24 @@ const MemberDetailView = () => {
                                 <p className="mt-1 font-medium text-gray-900 dark:text-white">{getMemberAddress(member)}</p>
                             </div>
                         </div>
+                        {(member?.roadmap_goal || member?.member_free_schedule) && (
+                            <div className="border-t border-gray-100 pt-6 dark:border-gray-800">
+                                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                                    {member?.roadmap_goal && (
+                                        <div className="sm:col-span-2">
+                                            <p className="text-sm text-gray-500 dark:text-gray-400">Mục tiêu tập luyện</p>
+                                            <p className="mt-1 font-medium text-gray-900 dark:text-white whitespace-pre-line">{member.roadmap_goal}</p>
+                                        </div>
+                                    )}
+                                    {member?.member_free_schedule && (
+                                        <div className="sm:col-span-2">
+                                            <p className="text-sm text-gray-500 dark:text-gray-400">Lịch tập tự do</p>
+                                            <p className="mt-1 font-medium text-gray-900 dark:text-white whitespace-pre-line">{member.member_free_schedule}</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 )}
 

@@ -1,6 +1,13 @@
 import React from "react";
 import { User, Phone, Mail, Award, Dumbbell, Activity, Briefcase, Calendar } from "lucide-react";
+import { motion } from "framer-motion";
 import { useMyPTDetail } from "@/hooks/queries/useTraining";
+import { useMyEmployee, useUpdateMyEmployee } from "@/hooks/queries/useEmployees";
+import AvatarUpload from "@/components/Common/AvatarUpload";
+import { toast } from "@/utils/toast";
+import {
+  slideUpVariants, cardVariants, staggerContainerVariants, sectionStaggerVariants,
+} from "@/lib/animations";
 
 const measurementFields = [
   { key: "height", label: "Chiều cao", unit: "cm" },
@@ -15,6 +22,18 @@ const measurementFields = [
 
 const TrainerProfile = () => {
   const { data: pt, isLoading, isError } = useMyPTDetail();
+  const { data: employeeMe } = useMyEmployee();
+  const updateMeMutation = useUpdateMyEmployee();
+
+  const handleAvatarUploaded = (url) => {
+    if (!employeeMe) return;
+    updateMeMutation.mutate(
+      { ...employeeMe, avatar: url },
+      {
+        onError: () => toast.error('Lưu ảnh đại diện thất bại'),
+      }
+    );
+  };
 
   if (isLoading) {
     return (
@@ -33,9 +52,6 @@ const TrainerProfile = () => {
   }
 
   const birthYear = pt.dob ? new Date(pt.dob).getFullYear() : "—";
-  const initials = pt.full_name
-    ? pt.full_name.split(" ").slice(-2).map((w) => w[0]).join("").toUpperCase()
-    : "PT";
 
   let bodyIndex = {};
   try { bodyIndex = JSON.parse(pt.body_index || "{}"); } catch { bodyIndex = {}; }
@@ -54,14 +70,25 @@ const TrainerProfile = () => {
   ];
 
   return (
-    <div className="flex-1 p-6 flex flex-col gap-6 overflow-y-auto no-scrollbar">
-
+    <motion.div
+      className="flex-1 p-6 flex flex-col gap-6 overflow-y-auto no-scrollbar"
+      variants={sectionStaggerVariants}
+      initial="hidden"
+      animate="visible"
+    >
       {/* ── HERO ─────────────────────────────────────────── */}
-      <div className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-sm overflow-hidden shrink-0">
+      <motion.div
+        variants={slideUpVariants}
+        className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-sm overflow-hidden shrink-0"
+      >
         <div className="h-1.5 bg-gradient-to-r from-blue-500 via-indigo-500 to-violet-500" />
         <div className="p-6 flex flex-col lg:flex-row items-center lg:items-start gap-6">
-          <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-blue-900/60 dark:to-indigo-900/60 border-2 border-blue-200 dark:border-blue-800 flex items-center justify-center text-3xl font-bold text-blue-600 dark:text-blue-300 shrink-0 shadow-inner">
-            {initials}
+          <div className="shrink-0">
+            <AvatarUpload
+              avatarUrl={employeeMe?.avatar || null}
+              onUploaded={handleAvatarUploaded}
+              size="lg"
+            />
           </div>
           <div className="flex-1 text-center lg:text-left">
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 mb-2">
@@ -88,13 +115,19 @@ const TrainerProfile = () => {
             ))}
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* ── MAIN GRID ────────────────────────────────────── */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
+      <motion.div
+        variants={staggerContainerVariants}
+        className="grid grid-cols-1 lg:grid-cols-2 gap-6"
+      >
         {/* Left — Professional profile */}
-        <div className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm flex flex-col overflow-hidden">
+        <motion.div
+          variants={cardVariants}
+          custom={0}
+          className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm flex flex-col overflow-hidden"
+        >
           <h3 className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-4 shrink-0">
             <Dumbbell className="h-3.5 w-3.5" /> Hồ sơ chuyên môn
           </h3>
@@ -117,10 +150,10 @@ const TrainerProfile = () => {
               <div className="h-full flex items-center justify-center text-xs text-gray-400">Chưa có thông tin.</div>
             )}
           </div>
-        </div>
+        </motion.div>
 
         {/* Right column stacked */}
-        <div className="flex flex-col gap-6 min-h-0">
+        <motion.div variants={cardVariants} custom={1} className="flex flex-col gap-6 min-h-0">
 
           {/* Contact */}
           <div className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm">
@@ -174,18 +207,27 @@ const TrainerProfile = () => {
             </div>
           </div>
 
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
       {/* ── BODY MEASUREMENTS ────────────────────────────── */}
-      <div className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-2xl px-6 py-5 shadow-sm">
+      <motion.div
+        variants={slideUpVariants}
+        className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-2xl px-6 py-5 shadow-sm"
+      >
         <h3 className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 mb-4">
           <Activity className="h-3.5 w-3.5" /> Số đo thể hình
         </h3>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {measurementFields.map(({ key, label, unit }) => (
-            <div
+        <motion.div
+          variants={staggerContainerVariants}
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+        >
+          {measurementFields.map(({ key, label, unit }, i) => (
+            <motion.div
               key={key}
+              variants={cardVariants}
+              custom={i}
+              whileHover={{ scale: 1.04, y: -2 }}
               className="bg-gray-50 dark:bg-gray-900/50 border border-gray-100 dark:border-gray-800 rounded-xl py-3 px-3 text-center hover:border-gray-200 dark:hover:border-gray-700 transition-colors"
             >
               <div className="text-xs text-gray-500 dark:text-gray-400 mb-2 leading-tight font-medium">{label}</div>
@@ -199,12 +241,12 @@ const TrainerProfile = () => {
                   <span className="text-gray-300 dark:text-gray-600">—</span>
                 )}
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
-    </div>
+    </motion.div>
   );
 };
 

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ScheduleTabs = ({ activeTab, setActiveTab, setSelectedDate, defaultRequestDate, openScheduledTab, todayKey }) => {
+const ScheduleTabs = ({ activeTab, setActiveTab, setSelectedDate, defaultRequestDate, openScheduledTab, openEvaluationsTab, todayKey }) => {
   return (
     <div className="flex gap-2 p-4 overflow-x-auto no-scrollbar border-b border-gray-100 dark:border-gray-800">
       <button
@@ -38,6 +38,16 @@ const ScheduleTabs = ({ activeTab, setActiveTab, setSelectedDate, defaultRequest
         }`}
       >
         Yêu cầu của tôi
+      </button>
+      <button
+        onClick={openEvaluationsTab}
+        className={`px-4 py-2 rounded-lg font-semibold text-sm transition-colors whitespace-nowrap ${
+          activeTab === 'evaluations'
+            ? 'bg-blue-600 text-white'
+            : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+        }`}
+      >
+        Đánh giá buổi tập
       </button>
     </div>
   );

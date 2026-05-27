@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import Footer from './Footer';
 import useUIStore from '@/store/useUIStore';
+import { pageVariants, sidebarOverlayVariants } from '@/lib/animations';
 
 const MainLayout = () => {
   const isSidebarOpen = useUIStore((state) => state.isSidebarOpen);
@@ -39,12 +41,18 @@ const MainLayout = () => {
       <Sidebar />
       
       {/* Nền đen trong mờ mờ mờ chắn phía sau khi bật Sidebar ở trên Mobile */}
-      {isSidebarOpen && (
-        <div 
-          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden transition-opacity"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
+      <AnimatePresence>
+        {isSidebarOpen && (
+          <motion.div
+            variants={sidebarOverlayVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+      </AnimatePresence>
 
       {/* 2. Khay hiển thị Main Body (Chiếm hết diện tích còn lại) */}
       <div className="flex flex-1 flex-col overflow-hidden">
@@ -54,13 +62,18 @@ const MainLayout = () => {
         
         {/* 2.2 Khu vực Bơm Component (Outlet) của React Router (Quan Trọng Nhất) */}
         <main className="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-6 lg:p-8 bg-gray-50 dark:bg-gray-900 relative">
-          
-          {/* Dùng div giới hạn chiều dài tối đa (max-w-7xl) để web không biến dạng với màn hình quá cong/to. Kèm hiệu ứng Fade-in ảo ma. */}
-          <div className="w-full animate-in fade-in zoom-in-95 duration-500 ease-in-out pb-10">
-            {/* The Outlet is where nested routes render their element */}
-            <Outlet />
-          </div>
-          
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={pathname}
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              className="w-full pb-10"
+            >
+              <Outlet />
+            </motion.div>
+          </AnimatePresence>
         </main>
         
         {/* 2.3 Phân đoạn Copyright cuối cùng */}

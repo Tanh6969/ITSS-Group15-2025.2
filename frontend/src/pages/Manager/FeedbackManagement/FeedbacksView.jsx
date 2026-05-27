@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Search, Star, CheckCircle, Clock } from 'lucide-react';
+import { motion } from 'framer-motion';
 import Button from '@/components/Common/Button';
 import Input from '@/components/Common/Input';
 import Badge from '@/components/Common/Badge';
 import Modal from '@/components/Common/Modal';
 import { useFeedbacks } from '@/hooks/queries/useFeedbacks';
 import { useUpdateFeedbackStatus } from '@/hooks/mutations/useFeedbackMutations';
+import { slideUpVariants, cardVariants, staggerContainerVariants, sectionStaggerVariants } from '@/lib/animations';
 
 const statusConfig = {
     pending: { label: 'Chờ xử lý', color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' },
@@ -70,35 +72,38 @@ const FeedbacksView = () => {
     const stats = getStatusStats();
 
     return (
-        <div className="space-y-6">
+        <motion.div
+            className="space-y-6"
+            variants={sectionStaggerVariants}
+            initial="hidden"
+            animate="visible"
+        >
             {/* Header */}
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <motion.div variants={slideUpVariants} className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Phản Hồi Của Hội Viên</h1>
                     <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                         Quản lý các phản hồi và đánh giá từ hội viên
                     </p>
                 </div>
-            </div>
+            </motion.div>
 
             {/* Stats */}
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                <div className="rounded-lg border border-gray-100 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-950">
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Tổng phản hồi</p>
-                    <p className="mt-1 text-2xl font-bold text-gray-900 dark:text-white">{stats.total}</p>
-                </div>
-                <div className="rounded-lg border border-gray-100 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-950">
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Chưa xử lý</p>
-                    <p className="mt-1 text-2xl font-bold text-yellow-600 dark:text-yellow-400">{stats.pending}</p>
-                </div>
-                <div className="rounded-lg border border-gray-100 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-950">
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Đã xử lý</p>
-                    <p className="mt-1 text-2xl font-bold text-green-600 dark:text-green-400">{stats.resolved}</p>
-                </div>
-            </div>
+            <motion.div variants={staggerContainerVariants} className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                {[
+                    { label: 'Tổng phản hồi', value: stats.total, color: 'text-gray-900 dark:text-white' },
+                    { label: 'Chưa xử lý', value: stats.pending, color: 'text-yellow-600 dark:text-yellow-400' },
+                    { label: 'Đã xử lý', value: stats.resolved, color: 'text-green-600 dark:text-green-400' },
+                ].map(({ label, value, color }, i) => (
+                    <motion.div key={label} variants={cardVariants} custom={i} whileHover={{ scale: 1.03, y: -2 }} className="rounded-lg border border-gray-100 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-950">
+                        <p className="text-sm text-gray-500 dark:text-gray-400">{label}</p>
+                        <p className={`mt-1 text-2xl font-bold ${color}`}>{value}</p>
+                    </motion.div>
+                ))}
+            </motion.div>
 
             {/* Filters */}
-            <div className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-950">
+            <motion.div variants={slideUpVariants} className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-950">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
                     {/* Search */}
                     <div className="flex-1">
@@ -129,10 +134,10 @@ const FeedbacksView = () => {
                 <div className="mt-3 text-sm text-gray-500 dark:text-gray-400">
                     Hiển thị <span className="font-medium">{filteredFeedbacks.length}</span> phản hồi {isLoading && '(Đang tải...)'}
                 </div>
-            </div>
+            </motion.div>
 
             {/* Feedbacks List */}
-            <div className="space-y-3">
+            <motion.div variants={staggerContainerVariants} className="space-y-3">
                 {isLoading ? (
                     <div className="rounded-xl border border-gray-100 bg-white p-12 text-center shadow-sm dark:border-gray-800 dark:bg-gray-950">
                         <p className="text-gray-500 dark:text-gray-400">Đang tải dữ liệu...</p>
@@ -142,9 +147,12 @@ const FeedbacksView = () => {
                         <p className="text-gray-500 dark:text-gray-400">Không có phản hồi nào</p>
                     </div>
                 ) : (
-                    filteredFeedbacks.map((feedback) => (
-                        <div
+                    filteredFeedbacks.map((feedback, i) => (
+                        <motion.div
                             key={feedback.id}
+                            variants={cardVariants}
+                            custom={i}
+                            whileHover={{ scale: 1.01, y: -2 }}
                             onClick={() => handleViewDetail(feedback)}
                             className="rounded-lg border border-gray-100 bg-white p-4 shadow-sm hover:shadow-md hover:border-gray-200 transition-all dark:border-gray-800 dark:bg-gray-950 dark:hover:border-gray-700 cursor-pointer"
                         >
@@ -166,10 +174,10 @@ const FeedbacksView = () => {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </motion.div>
                     ))
                 )}
-            </div>
+            </motion.div>
 
             {/* Detail Modal */}
             {showDetailModal && selectedFeedback && (
@@ -295,7 +303,7 @@ const FeedbacksView = () => {
                     </div>
                 </Modal>
             )}
-        </div>
+        </motion.div>
     );
 };
 

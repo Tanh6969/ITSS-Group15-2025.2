@@ -1,5 +1,7 @@
 import React from 'react';
 import { User, ChevronRight, Clock } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { cardVariants, staggerContainerVariants } from '@/lib/animations';
 
 const PTCardList = ({ ptDetails, setSelectedTrainer, bookings = [] }) => {
   // Identify PTs who have a pending booking from this member
@@ -10,15 +12,23 @@ const PTCardList = ({ ptDetails, setSelectedTrainer, bookings = [] }) => {
 
   return (
     <div className="p-4 sm:p-6 bg-white dark:bg-gray-950">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {ptDetails.map((pt) => {
+      <motion.div
+        className="grid grid-cols-1 md:grid-cols-2 gap-4"
+        variants={staggerContainerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        {ptDetails.map((pt, index) => {
           const status = getPTStatus(pt.employee_id);
           const isPending = status === 'Pending';
 
           return (
-            <div
+            <motion.div
               key={pt.employee_id}
-              className="group bg-gray-50 dark:bg-gray-900/30 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 hover:shadow-lg hover:border-blue-200 dark:hover:border-blue-900/50 transition-all duration-300 relative overflow-hidden"
+              variants={cardVariants}
+              custom={index}
+              whileHover={{ scale: 1.02, y: -3 }}
+              className="group bg-gray-50 dark:bg-gray-900/30 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 hover:shadow-lg hover:border-blue-200 dark:hover:border-blue-900/50 transition-shadow duration-300 relative overflow-hidden"
             >
               <div className="flex gap-4">
                 <div className="relative">
@@ -75,11 +85,11 @@ const PTCardList = ({ ptDetails, setSelectedTrainer, bookings = [] }) => {
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           );
         })}
-      </div>
-      
+      </motion.div>
+
       {ptDetails.length === 0 && (
         <div className="text-center py-12">
           <div className="text-4xl mb-4">🏋️‍♂️</div>

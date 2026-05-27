@@ -58,6 +58,8 @@ import ProfileInfo from '@/pages/Member/Profile/ProfileInfo';
 import EditProfile from '@/pages/Member/Profile/EditProfile';
 import ChangePassword from '@/pages/Member/Profile/ChangePassword';
 import Schedule from '@/pages/Member/Schedule/Schedule';
+import ManagerProfile from '@/pages/Manager/Profile/ManagerProfile';
+import OwnerProfile from '@/pages/Owner/Profile/OwnerProfile';
 
 export const router = createBrowserRouter([
   // Public Route: Bất kỳ ai cũng vào được (Login, Register)
@@ -156,7 +158,8 @@ export const router = createBrowserRouter([
               { path: 'reports', element: <ReportsOverview /> },
               { path: 'reports/revenue', element: <RevenueReport /> },
               { path: 'reports/members', element: <MemberReport /> },
-              { path: 'reports/staff', element: <StaffPerformanceReport /> }
+              { path: 'reports/staff', element: <StaffPerformanceReport /> },
+              { path: 'profile', element: <OwnerProfile /> }
             ]
           },
           // Manager Area
@@ -179,7 +182,8 @@ export const router = createBrowserRouter([
               { path: 'report', element: <ReportsView /> },
               // Packages (View Only)
               { path: 'packages', element: <ManagerPackageList /> },
-              { path: 'packages/:id', element: <ManagerPackageDetail /> }
+              { path: 'packages/:id', element: <ManagerPackageDetail /> },
+              { path: 'profile', element: <ManagerProfile /> }
             ]
           }
         ]

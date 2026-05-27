@@ -19,6 +19,8 @@ const MemberForm = ({ initialData, onSubmit, isLoading }) => {
       address: '',
       gender: 'male',
       dateOfBirth: '',
+      roadmapGoal: '',
+      memberFreeSchedule: '',
     }
   });
 
@@ -71,6 +73,29 @@ const MemberForm = ({ initialData, onSubmit, isLoading }) => {
           error={errors.address?.message}
           {...register('address')}
         />
+      </div>
+
+      <div className="grid grid-cols-1 gap-4">
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm font-medium text-gray-700 dark:text-gray-200">Mục tiêu tập luyện</label>
+          <textarea
+            rows={3}
+            placeholder="Nhập mục tiêu tập luyện của hội viên..."
+            className="flex w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:bg-gray-950 dark:border-gray-800 dark:text-white resize-none"
+            {...register('roadmapGoal')}
+          />
+          {errors.roadmapGoal && <span className="text-xs font-medium text-red-500">{errors.roadmapGoal.message}</span>}
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <label className="text-sm font-medium text-gray-700 dark:text-gray-200">Lịch tập tự do</label>
+          <textarea
+            rows={3}
+            placeholder="Nhập lịch tập tự do của hội viên (ví dụ: Thứ 2, 4, 6 buổi sáng)..."
+            className="flex w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:bg-gray-950 dark:border-gray-800 dark:text-white resize-none"
+            {...register('memberFreeSchedule')}
+          />
+          {errors.memberFreeSchedule && <span className="text-xs font-medium text-red-500">{errors.memberFreeSchedule.message}</span>}
+        </div>
       </div>
 
       <div className="flex justify-end pt-4 border-t dark:border-gray-800">

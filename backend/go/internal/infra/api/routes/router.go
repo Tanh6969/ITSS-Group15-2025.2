@@ -28,6 +28,7 @@ func NewRouter(
 	notificationHandler *handlers.NotificationHandler,
 	memberRegHandler *handlers.MemberRegistrationHandler,
 	pwdResetHandler *handlers.PasswordResetHandler,
+	uploadHandler *handlers.UploadHandler,
 ) *mux.Router {
 	r := mux.NewRouter()
 	r.Use(middleware.LoggingMiddleware)
@@ -63,6 +64,13 @@ func NewRouter(
 
 	// Change password — available to all authenticated users
 	authenticated.Handle("/auth/change-password", auth(isAnyRole, authHandler.ChangePassword)).Methods("PUT")
+
+	// Avatar upload — available to all authenticated users
+	authenticated.Handle("/upload/avatar", auth(isAnyRole, uploadHandler.UploadAvatar)).Methods("POST")
+
+	// Employee self-manage (must be registered before the wildcard /employees/{id})
+	authenticated.Handle("/employees/me", auth(isAnyRole, employeeHandler.GetMe)).Methods("GET")
+	authenticated.Handle("/employees/me", auth(isAnyRole, employeeHandler.UpdateMe)).Methods("PUT")
 
 	// Facilities GET — readable by all roles (PT needs it for session evaluation)
 	authenticated.Handle("/facilities", auth(isAnyRole, facilityHandler.GetAll)).Methods("GET")

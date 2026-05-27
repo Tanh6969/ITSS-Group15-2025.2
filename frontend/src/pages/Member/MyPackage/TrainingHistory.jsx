@@ -1,7 +1,9 @@
 import React from 'react';
 import { CalendarCheck, Loader2 } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useTrainingSessions } from '@/hooks/queries/useTraining';
 import { format } from 'date-fns';
+import { slideUpVariants, cardVariants, staggerContainerVariants, sectionStaggerVariants } from '@/lib/animations';
 
 const TrainingHistory = () => {
   const { data: sessionsRes, isLoading } = useTrainingSessions();
@@ -16,22 +18,27 @@ const TrainingHistory = () => {
   }
 
   return (
-    <div className="space-y-6 max-w-lg mx-auto md:max-w-2xl pb-20 px-4">
-      <div>
+    <motion.div
+      className="space-y-6 max-w-lg mx-auto md:max-w-2xl pb-20 px-4"
+      variants={sectionStaggerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      <motion.div variants={slideUpVariants}>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Nhật ký Hoạt động</h1>
         <p className="text-gray-500 text-sm mt-1">Lịch sử các buổi tập đã xác nhận tham gia của bạn.</p>
-      </div>
+      </motion.div>
 
       {sessions.length === 0 ? (
-        <div className="text-center py-10 text-gray-500 bg-gray-50 dark:bg-gray-900/30 rounded-xl border-2 border-dashed border-gray-200 dark:border-gray-800">
+        <motion.div variants={slideUpVariants} className="text-center py-10 text-gray-500 bg-gray-50 dark:bg-gray-900/30 rounded-xl border-2 border-dashed border-gray-200 dark:border-gray-800">
           Chưa có hoạt động nào được ghi lại.
-        </div>
+        </motion.div>
       ) : (
-        <div className="space-y-4 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-gray-300 before:to-transparent dark:before:via-gray-700">
+        <motion.div variants={staggerContainerVariants} className="space-y-4 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-gray-300 before:to-transparent dark:before:via-gray-700">
           {sessions.map((item, idx) => {
             const sessionDate = new Date(item.session_time);
             return (
-              <div key={item.id || idx} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
+              <motion.div key={item.id || idx} variants={cardVariants} custom={idx} whileHover={{ scale: 1.02, y: -2 }} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
                 <div className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-white bg-blue-100 text-blue-500 shadow-sm shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 dark:bg-blue-900/40 dark:border-gray-950 z-10">
                   <CalendarCheck className="h-4 w-4" />
                 </div>
@@ -48,12 +55,12 @@ const TrainingHistory = () => {
                     </span>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       )}
-    </div>
+    </motion.div>
   );
 };
 export default TrainingHistory;

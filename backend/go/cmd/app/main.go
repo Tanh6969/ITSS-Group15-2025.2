@@ -32,6 +32,18 @@ import (
 	"gym-management/internal/repository"
 )
 
+// noListFileServer wraps http.FileServer và trả về 403 nếu request là directory listing
+func noListFileServer(root http.FileSystem) http.Handler {
+	fs := http.FileServer(root)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if len(r.URL.Path) > 0 && r.URL.Path[len(r.URL.Path)-1] == '/' {
+			http.Error(w, "forbidden", http.StatusForbidden)
+			return
+		}
+		fs.ServeHTTP(w, r)
+	})
+}
+
 // corsMiddleware cho phép frontend gọi backend từ origin khác (dev: localhost:5173)
 func corsMiddleware(next http.Handler) http.Handler {
 	// Đọc danh sách origin được phép từ env, mặc định cho phép localhost:5173
@@ -131,6 +143,7 @@ func main() {
 	notificationHandler := handlers.NewNotificationHandler(notifHub)
 	memberRegHandler := handlers.NewMemberRegistrationHandler(authRepo, memberUsecase, subscriptionUsecase, packageUsecase, emailSvc, invoiceUsecase)
 	pwdResetHandler := handlers.NewPasswordResetHandler(authRepo, emailSvc)
+	uploadHandler := handlers.NewUploadHandler()
 
 	// Auto-confirm member attendance 3 hours before session start
 	go func() {
@@ -145,7 +158,10 @@ func main() {
 	}()
 
 	// Setup routes
-	router := routes.NewRouter(authHandler, memberHandler, employeeHandler, packageHandler, equipmentHandler, feedbackHandler, invoiceHandler, roleHandler, facilityHandler, accountHandler, serviceCategoryHandler, subscriptionHandler, trainingBookingHandler, trainingSessionHandler, ptDetailHandler, notificationHandler, memberRegHandler, pwdResetHandler)
+	router := routes.NewRouter(authHandler, memberHandler, employeeHandler, packageHandler, equipmentHandler, feedbackHandler, invoiceHandler, roleHandler, facilityHandler, accountHandler, serviceCategoryHandler, subscriptionHandler, trainingBookingHandler, trainingSessionHandler, ptDetailHandler, notificationHandler, memberRegHandler, pwdResetHandler, uploadHandler)
+
+	// Serve uploaded static files (directory listing disabled)
+	router.PathPrefix("/uploads/").Handler(http.StripPrefix("/uploads/", noListFileServer(http.Dir("./uploads/"))))
 
 	// Bọc router trong CORS middleware
 	handler := corsMiddleware(router)

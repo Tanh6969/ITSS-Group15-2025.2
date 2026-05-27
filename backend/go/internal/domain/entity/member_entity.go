@@ -16,4 +16,5 @@ type Member struct {
 	PackageName        string    `json:"package_name"`
 	IsActive           bool      `json:"is_active"`
 	RegisteredAt       time.Time `json:"registered_at"`
+	Avatar             string    `json:"avatar"`
 }

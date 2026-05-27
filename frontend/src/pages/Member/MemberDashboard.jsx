@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { QrCode, Calendar, Activity, Loader2, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import useAuthStore from '@/store/useAuthStore';
 import { memberService } from '@/services/memberService';
 import { packageService } from '@/services/packageService';
 import { trainingService } from '@/services/trainingService';
 import { toast } from '@/utils/toast';
+import {
+  slideUpVariants, cardVariants, staggerContainerVariants,
+  fadeInVariants, sectionStaggerVariants,
+} from '@/lib/animations';
 
 const MemberDashboard = () => {
   const { user } = useAuthStore();
@@ -17,16 +22,13 @@ const MemberDashboard = () => {
   useEffect(() => {
     const fetchDashboardData = async () => {
       if (!user?.id) return;
-      
+
       try {
         setLoading(true);
-        // 1. Lấy thông tin member (dữ liệu từ backend trả về qua .data)
         const memberRes = await memberService.getMemberByAccountId(user.id);
         setMember(memberRes);
 
-        // 2. Lấy gói tập hiện tại
         const packagesRes = await packageService.getMemberPackages();
-        // Backend trả về { data: [...], page, total } hoặc array
         const packages = Array.isArray(packagesRes)
           ? packagesRes
           : Array.isArray(packagesRes?.data?.data)
@@ -37,7 +39,6 @@ const MemberDashboard = () => {
         const active = packages.find(pkg => pkg.status === 'active' || pkg.status === 'Active');
         setActivePackage(active);
 
-        // 3. Lấy buổi tập tiếp theo (bỏ qua nếu lỗi - không ảnh hưởng dashboard)
         try {
           const sessionsRes = await trainingService.getSessions();
           const sessions = Array.isArray(sessionsRes?.data) ? sessionsRes.data : [];
@@ -47,7 +48,7 @@ const MemberDashboard = () => {
             .sort((a, b) => new Date(a.session_time) - new Date(b.session_time));
           if (upcoming.length > 0) setNextWorkout(upcoming[0]);
         } catch {
-          // Training sessions không bắt buộc, bỏ qua lỗi
+          // Training sessions không bắt buộc
         }
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
@@ -70,14 +71,22 @@ const MemberDashboard = () => {
 
   const formatDateTime = (dateStr) => {
     const date = new Date(dateStr);
-    return date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) + ' ' + 
+    return date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) + ' ' +
            date.toLocaleDateString('vi-VN', { weekday: 'long', day: '2-digit', month: '2-digit' });
   };
 
   return (
-    <div className="space-y-6 max-w-lg mx-auto md:max-w-full pb-20">
+    <motion.div
+      className="space-y-6 max-w-lg mx-auto md:max-w-full pb-20"
+      variants={sectionStaggerVariants}
+      initial="hidden"
+      animate="visible"
+    >
       {user?.isFirstLogin && (
-        <div className="flex items-start gap-3 rounded-xl border border-yellow-200 bg-yellow-50 p-4 dark:border-yellow-800 dark:bg-yellow-900/20">
+        <motion.div
+          variants={fadeInVariants}
+          className="flex items-start gap-3 rounded-xl border border-yellow-200 bg-yellow-50 p-4 dark:border-yellow-800 dark:bg-yellow-900/20"
+        >
           <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold text-yellow-800 dark:text-yellow-300">Bạn đang dùng mật khẩu tạm thời</p>
@@ -89,17 +98,23 @@ const MemberDashboard = () => {
           >
             Đổi ngay
           </Link>
-        </div>
+        </motion.div>
       )}
-      <div className="flex flex-col gap-2">
+
+      <motion.div variants={slideUpVariants} className="flex flex-col gap-2">
         <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
           Xin chào, {member?.full_name || user?.username} 👋
         </h1>
         <p className="text-sm text-gray-500 dark:text-gray-400">
           Member ID: MEM-{member?.id || '...'}
         </p>
-      </div>
-      <div className="rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 p-6 shadow-lg text-white text-center relative overflow-hidden">
+      </motion.div>
+
+      <motion.div
+        variants={slideUpVariants}
+        whileHover={{ scale: 1.01 }}
+        className="rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 p-6 shadow-lg text-white text-center relative overflow-hidden"
+      >
         <div className="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-white opacity-10 rounded-full blur-xl"></div>
         <h2 className="font-medium text-blue-100 mb-4 tracking-wider text-sm">THẺ HỘI VIÊN ĐIỆN TỬ</h2>
         <div className="bg-white p-4 rounded-xl inline-block mx-auto mb-4 shadow-sm">
@@ -107,11 +122,18 @@ const MemberDashboard = () => {
         </div>
         <p className="font-mono text-xl tracking-widest font-bold">MEM-{member?.id || '000000'}</p>
         <p className="text-sm text-blue-200 mt-2">Đưa mã này vào máy quét tại Quầy Lễ Tân</p>
-      </div>
+      </motion.div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {/* Package Expiration Rectangle */}
-        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-800 dark:bg-gray-950">
+      <motion.div
+        variants={staggerContainerVariants}
+        className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+      >
+        <motion.div
+          variants={cardVariants}
+          custom={0}
+          whileHover={{ scale: 1.02, y: -3 }}
+          className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-800 dark:bg-gray-950"
+        >
           <Calendar className="h-8 w-8 text-blue-500 mb-3" />
           <p className="text-xs font-bold text-gray-500 dark:text-gray-400 mb-2 uppercase tracking-wide">GÓI TẬP HIỆN TẠI</p>
           <p className="font-bold text-gray-900 dark:text-white text-base mb-3 line-clamp-2">
@@ -131,10 +153,14 @@ const MemberDashboard = () => {
           >
             {activePackage ? 'Gia hạn / Nâng cấp' : 'Đăng ký ngay'}
           </Link>
-        </div>
+        </motion.div>
 
-        {/* Next Schedule Rectangle */}
-        <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-800 dark:bg-gray-950">
+        <motion.div
+          variants={cardVariants}
+          custom={1}
+          whileHover={{ scale: 1.02, y: -3 }}
+          className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-800 dark:bg-gray-950"
+        >
           <Activity className="h-8 w-8 text-green-500 mb-3" />
           <p className="text-xs font-bold text-gray-500 dark:text-gray-400 mb-2 uppercase tracking-wide">BUỔI TẬP TIẾP THEO</p>
           {nextWorkout ? (
@@ -145,7 +171,6 @@ const MemberDashboard = () => {
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
                 {nextWorkout.pt_feedback ? 'Có hướng dẫn mới' : 'Buổi tập cá nhân'}
               </p>
-              
               {nextWorkout.member_confirmed ? (
                 <div className="flex items-center gap-2 text-xs text-green-600 font-bold bg-green-50 dark:bg-green-900/20 px-3 py-1.5 rounded-lg w-fit mb-3">
                   <CheckCircle2 className="h-4 w-4" /> Đã xác nhận tham gia
@@ -173,9 +198,10 @@ const MemberDashboard = () => {
           >
             Xem lịch chi tiết
           </Link>
-        </div>
-      </div>
-    </div>
+        </motion.div>
+      </motion.div>
+    </motion.div>
   );
 };
+
 export default MemberDashboard;

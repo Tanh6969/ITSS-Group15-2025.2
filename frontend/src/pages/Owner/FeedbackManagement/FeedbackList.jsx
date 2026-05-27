@@ -1,11 +1,13 @@
 import React, { useMemo, useState } from 'react';
 import { Star, MessageSquare, ChevronLeft, ChevronRight, Edit } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useFeedbacks } from '@/hooks/queries/useFeedbacks';
 import { useUpdateFeedbackStatus } from '@/hooks/mutations/useFeedbackMutations';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/Common/Table';
 import Input from '@/components/Common/Input';
 import Button from '@/components/Common/Button';
 import Modal from '@/components/Common/Modal';
+import { slideUpVariants, sectionStaggerVariants } from '@/lib/animations';
 
 const FeedbackList = () => {
   const [page, setPage] = useState(1);
@@ -113,8 +115,13 @@ const FeedbackList = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="space-y-4">
+    <motion.div
+      className="space-y-6"
+      variants={sectionStaggerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      <motion.div variants={slideUpVariants} className="space-y-4">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Phản hồi Hội viên</h1>
@@ -178,9 +185,9 @@ const FeedbackList = () => {
             <p className="mt-2 text-3xl font-bold text-gray-900 dark:text-white">{totalItems}</p>
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-950">
+      <motion.div variants={slideUpVariants} className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-950">
         {isLoading ? (
           <div className="p-8 text-center text-gray-500">Đang tải đánh giá...</div>
         ) : isError ? (
@@ -278,7 +285,7 @@ const FeedbackList = () => {
             </div>
           </div>
         )}
-      </div>
+      </motion.div>
 
       {/* Edit Feedback Modal */}
       <Modal
@@ -319,7 +326,7 @@ const FeedbackList = () => {
           </div>
         </div>
       </Modal>
-    </div>
+    </motion.div>
   );
 };
 

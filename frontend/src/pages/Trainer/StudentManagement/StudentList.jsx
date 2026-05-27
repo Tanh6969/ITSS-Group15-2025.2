@@ -1,8 +1,10 @@
 import React, { useMemo, useState } from 'react';
 import { X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/Common/Table';
 import { useTrainingBookings } from '@/hooks/queries/useTraining';
 import { useMembers } from '@/hooks/queries/useMembers';
+import { slideUpVariants, sectionStaggerVariants, modalOverlayVariants, modalContentVariants } from '@/lib/animations';
 
 const STATUS_LABEL = {
   Accepted: { text: 'Đã xác nhận', cls: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' },
@@ -76,12 +78,18 @@ const StudentList = () => {
 
   return (
     <div className="flex-1 overflow-y-auto px-6 py-6">
-      <div className="space-y-6">
-        <div>
+      <motion.div
+        className="space-y-6"
+        variants={sectionStaggerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <motion.div variants={slideUpVariants}>
           <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Danh sách Học Viên</h1>
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Những học viên đã từng tập luyện với bạn.</p>
-        </div>
+        </motion.div>
 
+        <motion.div variants={slideUpVariants}>
         {isLoading ? (
           <div className="py-20 text-center text-sm text-gray-500 dark:text-gray-400">Đang tải...</div>
         ) : students.length === 0 ? (
@@ -138,15 +146,22 @@ const StudentList = () => {
             </Table>
           </div>
         )}
-      </div>
+        </motion.div>
+      </motion.div>
 
+      <AnimatePresence>
       {selectedStudentId != null && (
-        <div
+        <motion.div
           className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+          variants={modalOverlayVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
           onClick={() => setSelectedStudentId(null)}
         >
-          <div
+          <motion.div
             className="bg-white dark:bg-gray-950 rounded-xl border border-gray-200 dark:border-gray-800 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+            variants={modalContentVariants}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-800 sticky top-0 bg-white dark:bg-gray-950">
@@ -215,9 +230,10 @@ const StudentList = () => {
                 Đóng
               </button>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       )}
+      </AnimatePresence>
     </div>
   );
 };

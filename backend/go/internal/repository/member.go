@@ -20,13 +20,13 @@ func (r *memberRepository) Create(member *entity.Member) error {
 	if member.AccountID == 0 {
 		accountID = nil
 	}
-	query := `INSERT INTO "Member" (full_name, phone, email, gender, dob, address, account_id, is_active) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id`
-	return r.db.QueryRow(query, member.FullName, member.Phone, member.Email, member.Gender, member.DOB, member.Address, accountID, member.IsActive).Scan(&member.ID)
+	query := `INSERT INTO "Member" (full_name, phone, email, gender, dob, address, account_id, is_active, roadmap_goal, member_free_schedule) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id`
+	return r.db.QueryRow(query, member.FullName, member.Phone, member.Email, member.Gender, member.DOB, member.Address, accountID, member.IsActive, member.RoadmapGoal, member.MemberFreeSchedule).Scan(&member.ID)
 }
 
 func (r *memberRepository) GetByID(id int) (*entity.Member, error) {
 	member := &entity.Member{}
-	query := `SELECT m.id, COALESCE(m.full_name, ''), COALESCE(m.phone, ''), COALESCE(m.email, ''), COALESCE(m.gender, ''), COALESCE(m.dob, CURRENT_DATE), COALESCE(m.address, ''), COALESCE(m.roadmap_goal, ''), COALESCE(m.member_free_schedule, ''), COALESCE(m.account_id, 0), COALESCE(m.is_active, true), COALESCE(p.package_name, ''), COALESCE(s.registration_date, CURRENT_DATE)
+	query := `SELECT m.id, COALESCE(m.full_name, ''), COALESCE(m.phone, ''), COALESCE(m.email, ''), COALESCE(m.gender, ''), COALESCE(m.dob, CURRENT_DATE), COALESCE(m.address, ''), COALESCE(m.roadmap_goal, ''), COALESCE(m.member_free_schedule, ''), COALESCE(m.account_id, 0), COALESCE(m.is_active, true), COALESCE(p.package_name, ''), COALESCE(s.registration_date, CURRENT_DATE), COALESCE(m.avatar, '')
 	FROM "Member" m
 	LEFT JOIN (
 		SELECT DISTINCT ON (member_id) member_id, package_id, registration_date
@@ -35,12 +35,12 @@ func (r *memberRepository) GetByID(id int) (*entity.Member, error) {
 	) s ON m.id = s.member_id
 	LEFT JOIN "MembershipPackage" p ON s.package_id = p.id
 	WHERE m.id = $1`
-	err := r.db.QueryRow(query, id).Scan(&member.ID, &member.FullName, &member.Phone, &member.Email, &member.Gender, &member.DOB, &member.Address, &member.RoadmapGoal, &member.MemberFreeSchedule, &member.AccountID, &member.IsActive, &member.PackageName, &member.RegisteredAt)
+	err := r.db.QueryRow(query, id).Scan(&member.ID, &member.FullName, &member.Phone, &member.Email, &member.Gender, &member.DOB, &member.Address, &member.RoadmapGoal, &member.MemberFreeSchedule, &member.AccountID, &member.IsActive, &member.PackageName, &member.RegisteredAt, &member.Avatar)
 	return member, err
 }
 
 func (r *memberRepository) GetAll() ([]*entity.Member, error) {
-	query := `SELECT m.id, COALESCE(m.full_name, ''), COALESCE(m.phone, ''), COALESCE(m.email, ''), COALESCE(m.gender, ''), COALESCE(m.dob, CURRENT_DATE), COALESCE(m.address, ''), COALESCE(m.roadmap_goal, ''), COALESCE(m.member_free_schedule, ''), COALESCE(m.account_id, 0), COALESCE(m.is_active, true), COALESCE(p.package_name, ''), COALESCE(s.registration_date, CURRENT_DATE)
+	query := `SELECT m.id, COALESCE(m.full_name, ''), COALESCE(m.phone, ''), COALESCE(m.email, ''), COALESCE(m.gender, ''), COALESCE(m.dob, CURRENT_DATE), COALESCE(m.address, ''), COALESCE(m.roadmap_goal, ''), COALESCE(m.member_free_schedule, ''), COALESCE(m.account_id, 0), COALESCE(m.is_active, true), COALESCE(p.package_name, ''), COALESCE(s.registration_date, CURRENT_DATE), COALESCE(m.avatar, '')
 	FROM "Member" m
 	LEFT JOIN (
 		SELECT DISTINCT ON (member_id) member_id, package_id, registration_date
@@ -56,7 +56,7 @@ func (r *memberRepository) GetAll() ([]*entity.Member, error) {
 	var members []*entity.Member
 	for rows.Next() {
 		member := &entity.Member{}
-		err := rows.Scan(&member.ID, &member.FullName, &member.Phone, &member.Email, &member.Gender, &member.DOB, &member.Address, &member.RoadmapGoal, &member.MemberFreeSchedule, &member.AccountID, &member.IsActive, &member.PackageName, &member.RegisteredAt)
+		err := rows.Scan(&member.ID, &member.FullName, &member.Phone, &member.Email, &member.Gender, &member.DOB, &member.Address, &member.RoadmapGoal, &member.MemberFreeSchedule, &member.AccountID, &member.IsActive, &member.PackageName, &member.RegisteredAt, &member.Avatar)
 		if err != nil {
 			return nil, err
 		}
@@ -77,7 +77,7 @@ func (r *memberRepository) GetAllPaginated(page, limit int) ([]*entity.Member, i
 	// Calculate offset
 	offset := (page - 1) * limit
 
-	query := `SELECT m.id, COALESCE(m.full_name, ''), COALESCE(m.phone, ''), COALESCE(m.email, ''), COALESCE(m.gender, ''), COALESCE(m.dob, CURRENT_DATE), COALESCE(m.address, ''), COALESCE(m.roadmap_goal, ''), COALESCE(m.member_free_schedule, ''), COALESCE(m.account_id, 0), COALESCE(m.is_active, true), COALESCE(p.package_name, ''), COALESCE(s.registration_date, CURRENT_DATE)
+	query := `SELECT m.id, COALESCE(m.full_name, ''), COALESCE(m.phone, ''), COALESCE(m.email, ''), COALESCE(m.gender, ''), COALESCE(m.dob, CURRENT_DATE), COALESCE(m.address, ''), COALESCE(m.roadmap_goal, ''), COALESCE(m.member_free_schedule, ''), COALESCE(m.account_id, 0), COALESCE(m.is_active, true), COALESCE(p.package_name, ''), COALESCE(s.registration_date, CURRENT_DATE), COALESCE(m.avatar, '')
 	FROM "Member" m
 	LEFT JOIN (
 		SELECT DISTINCT ON (member_id) member_id, package_id, registration_date
@@ -95,7 +95,7 @@ func (r *memberRepository) GetAllPaginated(page, limit int) ([]*entity.Member, i
 	var members []*entity.Member
 	for rows.Next() {
 		member := &entity.Member{}
-		err := rows.Scan(&member.ID, &member.FullName, &member.Phone, &member.Email, &member.Gender, &member.DOB, &member.Address, &member.RoadmapGoal, &member.MemberFreeSchedule, &member.AccountID, &member.IsActive, &member.PackageName, &member.RegisteredAt)
+		err := rows.Scan(&member.ID, &member.FullName, &member.Phone, &member.Email, &member.Gender, &member.DOB, &member.Address, &member.RoadmapGoal, &member.MemberFreeSchedule, &member.AccountID, &member.IsActive, &member.PackageName, &member.RegisteredAt, &member.Avatar)
 		if err != nil {
 			return nil, 0, err
 		}
@@ -113,8 +113,8 @@ func (r *memberRepository) Update(member *entity.Member) error {
 	if member.AccountID == 0 {
 		accountID = nil
 	}
-	query := `UPDATE "Member" SET full_name = $1, phone = $2, email = $3, gender = $4, dob = $5, address = $6, roadmap_goal = $7, member_free_schedule = $8, account_id = $9, is_active = $10 WHERE id = $11`
-	_, err := r.db.Exec(query, member.FullName, member.Phone, member.Email, member.Gender, member.DOB, member.Address, member.RoadmapGoal, member.MemberFreeSchedule, accountID, member.IsActive, member.ID)
+	query := `UPDATE "Member" SET full_name = $1, phone = $2, email = $3, gender = $4, dob = $5, address = $6, roadmap_goal = $7, member_free_schedule = $8, account_id = $9, is_active = $10, avatar = $11 WHERE id = $12`
+	_, err := r.db.Exec(query, member.FullName, member.Phone, member.Email, member.Gender, member.DOB, member.Address, member.RoadmapGoal, member.MemberFreeSchedule, accountID, member.IsActive, member.Avatar, member.ID)
 	return err
 }
 
@@ -143,7 +143,8 @@ SELECT DISTINCT ON (m.id)
     COALESCE(TO_CHAR(s.end_date, 'YYYY-MM-DD'), '') as end_date,
     COALESCE(TO_CHAR(s.registration_date, 'YYYY-MM-DD'), '') as registration_date,
     COALESCE((s.end_date::date - CURRENT_DATE), 0) as sessions_remaining,
-    COALESCE(m.roadmap_goal, '') as roadmap_goal
+    COALESCE(m.roadmap_goal, '') as roadmap_goal,
+    COALESCE(m.avatar, '') as avatar
 FROM "Member" m
 LEFT JOIN "Subscription" s ON m.id = s.member_id
 LEFT JOIN "MembershipPackage" mp ON s.package_id = mp.id
@@ -159,10 +160,10 @@ ORDER BY m.id DESC, s.registration_date DESC
 	var members []*dto.MemberListItemDTO
 	for rows.Next() {
 		var id int
-		var fullName, phone, packageName, status, endDate, startDate, roadmapGoal string
+		var fullName, phone, packageName, status, endDate, startDate, roadmapGoal, avatar string
 		var sessionsRemaining int
 
-		err := rows.Scan(&id, &fullName, &phone, &packageName, &status, &endDate, &startDate, &sessionsRemaining, &roadmapGoal)
+		err := rows.Scan(&id, &fullName, &phone, &packageName, &status, &endDate, &startDate, &sessionsRemaining, &roadmapGoal, &avatar)
 		if err != nil {
 			return nil, err
 		}
@@ -177,6 +178,7 @@ ORDER BY m.id DESC, s.registration_date DESC
 			JoinDate:          startDate,
 			SessionsRemaining: sessionsRemaining,
 			RoadmapGoal:       roadmapGoal,
+			Avatar:            avatar,
 		}
 
 		members = append(members, member)
@@ -194,14 +196,17 @@ func (r *memberRepository) GetMemberByIDWithDetails(id int) (*dto.MemberDetailDT
 	memberDetail := &dto.MemberDetailDTO{}
 
 	query := `
-    SELECT 
-        m.id, m.full_name, m.phone, m.email, m.gender, 
+    SELECT
+        m.id, m.full_name, m.phone, m.email, m.gender,
         TO_CHAR(m.dob, 'YYYY-MM-DD'), m.address,
         COALESCE(sub.package_name, 'Chưa đăng ký'),
         CASE WHEN m.is_active = false THEN 'inactive' WHEN sub.end_date IS NOT NULL AND sub.end_date::date >= CURRENT_DATE THEN 'active' ELSE 'inactive' END,
         COALESCE(TO_CHAR(sub.end_date, 'YYYY-MM-DD'), ''),
         COALESCE(TO_CHAR(sub.registration_date, 'YYYY-MM-DD'), ''),
-        m.is_active
+        m.is_active,
+        COALESCE(m.avatar, ''),
+        COALESCE(m.roadmap_goal, ''),
+        COALESCE(m.member_free_schedule, '')
     FROM "Member" m
     LEFT JOIN LATERAL (
         -- Lấy subscription có ngày kết thúc xa nhất (gói hiện tại)
@@ -227,6 +232,9 @@ func (r *memberRepository) GetMemberByIDWithDetails(id int) (*dto.MemberDetailDT
 		&memberDetail.ExpiryDate,
 		&memberDetail.JoinDate,
 		&memberDetail.IsActive,
+		&memberDetail.Avatar,
+		&memberDetail.RoadmapGoal,
+		&memberDetail.MemberFreeSchedule,
 	)
 
 	return memberDetail, err
@@ -235,8 +243,8 @@ func (r *memberRepository) GetMemberByIDWithDetails(id int) (*dto.MemberDetailDT
 // GetByAccountID - lấy thông tin member theo account_id
 func (r *memberRepository) GetByAccountID(accountID int) (*entity.Member, error) {
 	member := &entity.Member{}
-	query := `SELECT id, COALESCE(full_name, ''), COALESCE(phone, ''), COALESCE(email, ''), COALESCE(gender, ''), COALESCE(dob, CURRENT_DATE), COALESCE(address, ''), COALESCE(roadmap_goal, ''), COALESCE(member_free_schedule, ''), account_id, is_active FROM "Member" WHERE account_id = $1`
-	err := r.db.QueryRow(query, accountID).Scan(&member.ID, &member.FullName, &member.Phone, &member.Email, &member.Gender, &member.DOB, &member.Address, &member.RoadmapGoal, &member.MemberFreeSchedule, &member.AccountID, &member.IsActive)
+	query := `SELECT id, COALESCE(full_name, ''), COALESCE(phone, ''), COALESCE(email, ''), COALESCE(gender, ''), COALESCE(dob, CURRENT_DATE), COALESCE(address, ''), COALESCE(roadmap_goal, ''), COALESCE(member_free_schedule, ''), account_id, is_active, COALESCE(avatar, '') FROM "Member" WHERE account_id = $1 ORDER BY id ASC LIMIT 1`
+	err := r.db.QueryRow(query, accountID).Scan(&member.ID, &member.FullName, &member.Phone, &member.Email, &member.Gender, &member.DOB, &member.Address, &member.RoadmapGoal, &member.MemberFreeSchedule, &member.AccountID, &member.IsActive, &member.Avatar)
 	if err != nil {
 		return nil, err
 	}

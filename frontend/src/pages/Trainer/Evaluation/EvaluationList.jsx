@@ -1,10 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ClipboardList, CheckCircle2, Clock, Save, User, Building2, X } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useTrainingSessions, useTrainingBookings } from '@/hooks/queries/useTraining';
 import { useAllMembers } from '@/hooks/queries/useMembers';
 import { useUpdateTrainingSession } from '@/hooks/mutations/useTrainingMutations';
 import { useFacilities } from '@/hooks/queries/useFacilities';
 import { cn } from '@/lib/utils';
+import { slideUpVariants } from '@/lib/animations';
 
 const FIELDS = [
   { key: 'pt_feedback', label: 'Nhận xét buổi tập', placeholder: 'Buổi tập diễn ra như thế nào...' },
@@ -104,7 +106,12 @@ const EvaluationList = () => {
   }
 
   return (
-    <div className="flex-1 p-4 lg:p-6 w-full overflow-hidden flex flex-col">
+    <motion.div
+      className="flex-1 p-4 lg:p-6 w-full overflow-hidden flex flex-col"
+      variants={slideUpVariants}
+      initial="hidden"
+      animate="visible"
+    >
       <div
         className="flex-1 flex flex-col lg:flex-row bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden shadow-sm min-h-0"
         style={{ minHeight: '520px' }}
@@ -352,7 +359,7 @@ const EvaluationList = () => {
           )}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

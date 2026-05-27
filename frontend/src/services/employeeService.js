@@ -31,4 +31,12 @@ export const employeeService = {
   updateEmployeeStatus: async (id, status) => {
     return axios.put(`/employees/${id}`, { status });
   },
+
+  getMe: async () => {
+    return axios.get('/employees/me');
+  },
+
+  updateMe: async (data) => {
+    return axios.put('/employees/me', data);
+  },
 };

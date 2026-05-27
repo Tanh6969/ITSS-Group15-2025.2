@@ -20,6 +20,7 @@ type EmployeeRequest struct {
 	Position  string  `json:"position"`
 	Salary    float64 `json:"salary"`
 	AccountID int     `json:"account_id"`
+	Avatar    string  `json:"avatar"`
 }
 
 type EmployeeResponse struct {
@@ -29,6 +30,7 @@ type EmployeeResponse struct {
 	Position  string  `json:"position"`
 	Salary    float64 `json:"salary"`
 	AccountID int     `json:"account_id"`
+	Avatar    string  `json:"avatar"`
 }
 
 type EquipmentRequest struct {
@@ -90,6 +92,7 @@ type MemberRequest struct {
 	DOB       time.Time `json:"dob"`
 	Address   string    `json:"address"`
 	AccountID int       `json:"account_id"`
+	Avatar    string    `json:"avatar"`
 }
 
 type MemberResponse struct {
@@ -101,6 +104,7 @@ type MemberResponse struct {
 	DOB       time.Time `json:"dob"`
 	Address   string    `json:"address"`
 	AccountID int       `json:"account_id"`
+	Avatar    string    `json:"avatar"`
 }
 
 type PackageRequest struct {

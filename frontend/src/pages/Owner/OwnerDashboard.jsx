@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { ArrowUpRight, Users, ShieldCheck, Briefcase } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import Button from '@/components/Common/Button';
 import StatsCard from '@/components/Dashboard/StatsCard';
 import RevenueChart from '@/components/Charts/RevenueChart';
@@ -13,6 +14,9 @@ import { useMembers } from '@/hooks/queries/useMembers';
 import { useTransactions } from '@/hooks/queries/useTransactions';
 import { useEmployees } from '@/hooks/queries/useEmployees';
 import { useTrainingBookings } from '@/hooks/queries/useTraining';
+import {
+  slideUpVariants, cardVariants, staggerContainerVariants, sectionStaggerVariants,
+} from '@/lib/animations';
 
 const parseArr = (raw) => {
   if (!raw) return [];
@@ -42,7 +46,6 @@ const OwnerDashboard = () => {
   const curMonth = now.getMonth();
   const curYear = now.getFullYear();
 
-  // ── Stats cards ────────────────────────────────────────────
   const monthRevenue = useMemo(() =>
     transactions
       .filter(t => { const d = new Date(t.date); return d.getMonth() === curMonth && d.getFullYear() === curYear; })
@@ -69,7 +72,6 @@ const OwnerDashboard = () => {
     { title: 'Nhân sự', value: String(employees.length), icon: Briefcase, trend: 'neutral', trendValue: 'Tổng cộng' },
   ];
 
-  // ── Revenue chart (last 7 months) ─────────────────────────
   const revenueChartData = useMemo(() => {
     const result = [];
     for (let i = 6; i >= 0; i--) {
@@ -83,7 +85,6 @@ const OwnerDashboard = () => {
     return result;
   }, [transactions, curMonth, curYear]);
 
-  // ── Member stats chart (last 7 months) ────────────────────
   const memberChartData = useMemo(() => {
     const result = [];
     for (let i = 6; i >= 0; i--) {
@@ -110,7 +111,6 @@ const OwnerDashboard = () => {
     return result;
   }, [transactions, members, curMonth, curYear]);
 
-  // ── Package distribution ───────────────────────────────────
   const packageData = useMemo(() => {
     const counts = {};
     transactions.forEach(t => {
@@ -123,7 +123,6 @@ const OwnerDashboard = () => {
       .slice(0, 6);
   }, [transactions]);
 
-  // ── Package sold chart ─────────────────────────────────────
   const packageSoldData = useMemo(() => {
     const counts = {};
     transactions.forEach(t => {
@@ -136,7 +135,6 @@ const OwnerDashboard = () => {
       .slice(0, 6);
   }, [transactions]);
 
-  // ── Staff performance chart ────────────────────────────────
   const staffChartData = useMemo(() => {
     const trainerSessionMap = {};
     bookings.filter(b => b.status === 'Accepted').forEach(b => {
@@ -150,8 +148,14 @@ const OwnerDashboard = () => {
   }, [employees, bookings]);
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <motion.div
+      className="space-y-6"
+      variants={sectionStaggerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      {/* Header */}
+      <motion.div variants={slideUpVariants} className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Tổng quan Chủ phòng tập</h1>
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
@@ -161,29 +165,49 @@ const OwnerDashboard = () => {
         <Link to="/owner/reports" className="flex items-center justify-center">
           <Button variant="outline" size="lg">Xem báo cáo tổng hợp</Button>
         </Link>
-      </div>
+      </motion.div>
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {statsCards.map((card) => (
-          <StatsCard key={card.title} title={card.title} value={card.value} icon={card.icon} trend={card.trend} trendValue={card.trendValue} />
+      {/* Stats cards – staggered */}
+      <motion.div
+        variants={staggerContainerVariants}
+        className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"
+      >
+        {statsCards.map((card, i) => (
+          <motion.div
+            key={card.title}
+            variants={cardVariants}
+            custom={i}
+            whileHover={{ scale: 1.03, y: -3 }}
+          >
+            <StatsCard
+              title={card.title}
+              value={card.value}
+              icon={card.icon}
+              trend={card.trend}
+              trendValue={card.trendValue}
+            />
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+      {/* Charts row 1 */}
+      <motion.div variants={slideUpVariants} className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         <RevenueChart data={revenueChartData} title="Doanh thu 7 tháng gần nhất" description="Tổng doanh thu theo tháng từ giao dịch thực tế" />
         <RetentionChart />
-      </div>
+      </motion.div>
 
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+      {/* Charts row 2 */}
+      <motion.div variants={slideUpVariants} className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         <MemberStatsChart data={memberChartData} />
         <PackagePerformanceChart data={packageSoldData} />
-      </div>
+      </motion.div>
 
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+      {/* Charts row 3 */}
+      <motion.div variants={slideUpVariants} className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         <EquipmentStatusChart />
         <PerformanceChart data={packageData} />
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 

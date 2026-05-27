@@ -11,6 +11,7 @@ export const menus = {
     { title: "Phản hồi", path: "/owner/feedbacks", icon: "MessageSquare" },
     { title: "Tài khoản", path: "/owner/accounts", icon: "KeyRound" },
     { title: "Báo cáo", path: "/owner/reports", icon: "BarChartBig" },
+    { title: "Hồ sơ cá nhân", path: "/owner/profile", icon: "User" },
   ],
   [ROLES.MANAGER]: [
     { title: "Tổng quan", path: "/manager/dashboard", icon: "LayoutDashboard" },
@@ -20,6 +21,7 @@ export const menus = {
     { title: "Phản hồi", path: "/manager/feedbacks", icon: "MessageSquare" },
     { title: "Gói tập", path: "/manager/packages", icon: "Package" },
     { title: "Báo cáo", path: "/manager/report", icon: "BarChartBig" },
+    { title: "Hồ sơ cá nhân", path: "/manager/profile", icon: "User" },
   ],
   [ROLES.TRAINER]: [
     { title: "Thông tin cá nhân", path: "/trainer/profile", icon: "User" },

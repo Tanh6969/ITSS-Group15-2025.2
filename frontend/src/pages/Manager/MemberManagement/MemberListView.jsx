@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Search, Filter, ChevronRight, UserPlus } from 'lucide-react';
+import { motion } from 'framer-motion';
 import Button from '@/components/Common/Button';
 import Input from '@/components/Common/Input';
 import Badge from '@/components/Common/Badge';
 import { useMembers } from '@/hooks/queries/useMembers';
+import { slideUpVariants, cardVariants, staggerContainerVariants, sectionStaggerVariants } from '@/lib/animations';
 
 const statusConfig = {
     active: { label: 'Đang hoạt động', color: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' },
@@ -96,9 +98,14 @@ const MemberListView = () => {
     const getMemberStatus = (member) => member?.status || 'inactive';
 
     return (
-        <div className="space-y-6">
+        <motion.div
+            className="space-y-6"
+            variants={sectionStaggerVariants}
+            initial="hidden"
+            animate="visible"
+        >
             {/* Header */}
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <motion.div variants={slideUpVariants} className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Quản Lý Hội Viên</h1>
                     <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
@@ -112,10 +119,10 @@ const MemberListView = () => {
                     <UserPlus className="h-4 w-4" />
                     Tạo tài khoản hội viên
                 </button>
-            </div>
+            </motion.div>
 
             {/* Filters */}
-            <div className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-950">
+            <motion.div variants={slideUpVariants} className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-950">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
                     {/* Search */}
                     <div className="flex-1">
@@ -152,17 +159,18 @@ const MemberListView = () => {
                 <div className="mt-3 text-sm text-gray-500 dark:text-gray-400">
                     Hiển thị <span className="font-medium">{filteredMembers.length}</span> trong <span className="font-medium">{members.length}</span> hội viên
                 </div>
-            </div>
+            </motion.div>
 
             {/* Members List */}
-            <div className="space-y-3">
+            <motion.div variants={staggerContainerVariants} className="space-y-3">
                 {filteredMembers.length === 0 ? (
                     <div className="rounded-xl border border-gray-100 bg-white p-12 text-center shadow-sm dark:border-gray-800 dark:bg-gray-950">
                         <p className="text-gray-500 dark:text-gray-400">Không tìm thấy hội viên nào</p>
                     </div>
                 ) : (
-                    filteredMembers.map((member) => (
-                        <Link key={member.id} to={`/manager/members/${member.id}`}>
+                    filteredMembers.map((member, i) => (
+                        <motion.div key={member.id} variants={cardVariants} custom={i} whileHover={{ scale: 1.01, y: -2 }}>
+                        <Link to={`/manager/members/${member.id}`}>
                             <div className="rounded-lg border border-gray-100 bg-white p-4 shadow-sm transition-all hover:shadow-md hover:border-gray-200 dark:border-gray-800 dark:bg-gray-950 dark:hover:border-gray-700">
                                 <div className="flex items-center justify-between">
                                     <div className="flex-1">
@@ -214,10 +222,11 @@ const MemberListView = () => {
                                 </div>
                             </div>
                         </Link>
+                        </motion.div>
                     ))
                 )}
-            </div>
-        </div>
+            </motion.div>
+        </motion.div>
     );
 };
 

@@ -10,4 +10,6 @@ export const memberSchema = z.object({
     errorMap: () => ({ message: "Vui lòng chọn giới tính hợp lệ" })
   }),
   dateOfBirth: z.string().optional(),
+  roadmapGoal: z.string().optional(),
+  memberFreeSchedule: z.string().optional(),
 });

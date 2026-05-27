@@ -1,10 +1,12 @@
 import React, { useMemo, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Plus, Eye, Edit, ChevronLeft, ChevronRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useMembers } from '@/hooks/queries/useMembers';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/Common/Table';
 import Button from '@/components/Common/Button';
 import Input from '@/components/Common/Input';
+import { slideUpVariants, sectionStaggerVariants } from '@/lib/animations';
 
 const MemberList = () => {
   const navigate = useNavigate();
@@ -63,8 +65,13 @@ const MemberList = () => {
   }, [searchTerm, sortedMembers]);
 
   return (
-    <div className="space-y-6 relative">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <motion.div
+      className="space-y-6 relative"
+      variants={sectionStaggerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      <motion.div variants={slideUpVariants} className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Danh sách Hội viên</h1>
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
@@ -76,9 +83,9 @@ const MemberList = () => {
             Thêm hội viên
           </Button>
         </Link>
-      </div>
+      </motion.div>
 
-      <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-950">
+      <motion.div variants={slideUpVariants} className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-950">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Tìm kiếm hội viên</h2>
@@ -200,8 +207,8 @@ const MemberList = () => {
             </div>
           </div>
         )}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 

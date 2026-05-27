@@ -1,11 +1,13 @@
 import React, { useMemo, useState } from 'react';
 import { Plus, Trash2, Eye, EyeOff, ChevronLeft, ChevronRight, KeyRound, ShieldCheck } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useAccounts } from '@/hooks/queries/useAccounts';
 import { useCreateAccount, useDeleteAccount, useRevealPassword } from '@/hooks/mutations/useAccountMutation';
 import Button from '@/components/Common/Button';
 import Modal from '@/components/Common/Modal';
 import Input from '@/components/Common/Input';
 import { toast } from '@/utils/toast';
+import { slideUpVariants, sectionStaggerVariants } from '@/lib/animations';
 
 const ROLE_MAP = { 1: 'OWNER', 2: 'MANAGER', 3: 'PT', 4: 'MEMBER' };
 const ROLE_BADGE = {
@@ -121,9 +123,14 @@ const AccountList = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <motion.div
+      className="space-y-6"
+      variants={sectionStaggerVariants}
+      initial="hidden"
+      animate="visible"
+    >
       {/* Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <motion.div variants={slideUpVariants} className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Quản lý Tài khoản Nhân viên</h1>
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
@@ -133,9 +140,10 @@ const AccountList = () => {
         <Button leftIcon={<Plus className="h-4 w-4" />} onClick={() => setCreateModal(true)}>
           Thêm tài khoản
         </Button>
-      </div>
+      </motion.div>
 
       {/* Table */}
+      <motion.div variants={slideUpVariants}>
       {isLoading ? (
         <div className="text-center py-10 text-gray-500">Đang tải...</div>
       ) : (
@@ -214,6 +222,7 @@ const AccountList = () => {
           </div>
         </div>
       )}
+      </motion.div>
 
       {/* Modal: Thêm tài khoản */}
       <Modal isOpen={createModal} onClose={() => { setCreateModal(false); setCreateErrors({}); }} title="Thêm tài khoản mới">
@@ -315,7 +324,7 @@ const AccountList = () => {
           )}
         </div>
       </Modal>
-    </div>
+    </motion.div>
   );
 };
 

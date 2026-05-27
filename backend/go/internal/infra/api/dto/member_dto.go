@@ -11,20 +11,24 @@ type MemberListItemDTO struct {
 	JoinDate          string `json:"joinDate"`          // từ Subscription.start_date
 	SessionsRemaining int    `json:"sessionsRemaining"` // số ngày còn lại = end_date - today
 	RoadmapGoal       string `json:"roadmap_goal"`      // từ Member.roadmap_goal
+	Avatar            string `json:"avatar"`
 }
 
 // MemberDetailDTO - dữ liệu chi tiết member
 type MemberDetailDTO struct {
-	ID         int    `json:"id"`
-	FullName   string `json:"full_name"`
-	Phone      string `json:"phone"`
-	Email      string `json:"email"`
-	Gender     string `json:"gender"`
-	DOB        string `json:"dob"`
-	Address    string `json:"address"`
-	Package    string `json:"package"`
-	Status     string `json:"status"`
-	ExpiryDate string `json:"expiryDate"`
-	JoinDate   string `json:"joinDate"`
-	IsActive   bool   `json:"is_active"`
+	ID                 int    `json:"id"`
+	FullName           string `json:"full_name"`
+	Phone              string `json:"phone"`
+	Email              string `json:"email"`
+	Gender             string `json:"gender"`
+	DOB                string `json:"dob"`
+	Address            string `json:"address"`
+	Package            string `json:"package"`
+	Status             string `json:"status"`
+	ExpiryDate         string `json:"expiryDate"`
+	JoinDate           string `json:"joinDate"`
+	IsActive           bool   `json:"is_active"`
+	Avatar             string `json:"avatar"`
+	RoadmapGoal        string `json:"roadmap_goal"`
+	MemberFreeSchedule string `json:"member_free_schedule"`
 }

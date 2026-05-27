@@ -29,9 +29,11 @@ const MemberFormPage = () => {
             phoneNumber: data.phone || data.Phone || '',
             email: data.email || data.Email || '',
             address: data.address || data.Address || '',
-            gender: data.gender || data.Gender || 'Nam',
+            gender: data.gender || data.Gender || 'male',
             dateOfBirth: data.dob || data.DOB ? (data.dob || data.DOB).split('T')[0] : '',
             status: data.is_active || data.status === 'active' ? 'active' : 'inactive',
+            roadmapGoal: data.roadmap_goal || '',
+            memberFreeSchedule: data.member_free_schedule || '',
           });
         })
         .catch(err => {
@@ -54,7 +56,9 @@ const MemberFormPage = () => {
       gender: data.gender,
       dob: data.dateOfBirth ? new Date(data.dateOfBirth).toISOString() : new Date().toISOString(),
       is_active: data.status === 'active',
-      account_id: 0 // Mock account ID or from context if available
+      account_id: 0,
+      roadmap_goal: data.roadmapGoal || '',
+      member_free_schedule: data.memberFreeSchedule || '',
     };
 
     if (isEditing) {

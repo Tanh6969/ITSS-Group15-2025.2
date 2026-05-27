@@ -1,11 +1,13 @@
 import React, { useMemo, useState } from 'react';
 import { Plus, Users, MapPin, Edit, Eye, Trash2, ChevronLeft, ChevronRight, Power, PowerOff } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { useFacilities } from '@/hooks/queries/useFacilities';
 import { useDeleteFacility, useUpdateFacilityStatus } from '@/hooks/mutations/useFacilityMutation';
 import Button from '@/components/Common/Button';
 import Modal from '@/components/Common/Modal';
 import { toast } from '@/utils/toast';
+import { slideUpVariants, sectionStaggerVariants } from '@/lib/animations';
 
 const RoomList = () => {
   const [page, setPage] = useState(1);
@@ -81,8 +83,13 @@ const RoomList = () => {
   }, [rooms]);
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <motion.div
+      className="space-y-6"
+      variants={sectionStaggerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      <motion.div variants={slideUpVariants} className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Quản lý Khu vực / Phòng Tập</h1>
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
@@ -94,7 +101,7 @@ const RoomList = () => {
             Thêm phân khu mới
           </Button>
         </Link>
-      </div>
+      </motion.div>
 
       {isLoading ? (
         <div className="text-center py-8 text-gray-500">Đang tải...</div>
@@ -227,7 +234,7 @@ const RoomList = () => {
           </div>
         </div>
       </Modal>
-    </div>
+    </motion.div>
   );
 };
 

@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Eye } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { usePackages } from '@/hooks/queries/usePackages';
 import { useServiceCategories } from '@/hooks/queries/useServiceCategories';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/Common/Table';
 import { formatPriceVND } from '@/utils/formatters';
+import { slideUpVariants, sectionStaggerVariants } from '@/lib/animations';
 
 const PackageList = () => {
   const navigate = useNavigate();
@@ -43,17 +45,22 @@ const PackageList = () => {
   };
 
   return (
-    <div className="space-y-6 relative">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <motion.div
+      className="space-y-6 relative"
+      variants={sectionStaggerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      <motion.div variants={slideUpVariants} className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Danh sách Gói tập</h1>
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
             Xem các dịch vụ gói tập do Gym cung cấp.
           </p>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="rounded-xl overflow-hidden bg-white shadow-sm ring-1 ring-gray-900/5 dark:bg-gray-950 dark:ring-gray-800">
+      <motion.div variants={slideUpVariants} className="rounded-xl overflow-hidden bg-white shadow-sm ring-1 ring-gray-900/5 dark:bg-gray-950 dark:ring-gray-800">
         {isLoading ? (
           <div className="p-8 text-center text-gray-500">Đang tải biểu giá...</div>
         ) : isError && !packages ? (
@@ -113,8 +120,8 @@ const PackageList = () => {
             </TableBody>
           </Table>
         )}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 

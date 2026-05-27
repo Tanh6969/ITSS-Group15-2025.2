@@ -25,20 +25,20 @@ func (r *employeeRepository) Create(employee *entity.Employee) error {
 
 func (r *employeeRepository) GetByID(id int) (*entity.Employee, error) {
 	employee := &entity.Employee{}
-	query := `SELECT id, COALESCE(full_name, ''), COALESCE(phone, ''), COALESCE(position, ''), COALESCE(salary, 0), COALESCE(account_id, 0), COALESCE(gender, ''), COALESCE(dob, CURRENT_DATE), COALESCE(email, ''), COALESCE(address, '') FROM "Employee" WHERE id = $1`
-	err := r.db.QueryRow(query, id).Scan(&employee.ID, &employee.FullName, &employee.Phone, &employee.Position, &employee.Salary, &employee.AccountID, &employee.Gender, &employee.DOB, &employee.Email, &employee.Address)
+	query := `SELECT id, COALESCE(full_name, ''), COALESCE(phone, ''), COALESCE(position, ''), COALESCE(salary, 0), COALESCE(account_id, 0), COALESCE(gender, ''), COALESCE(dob, CURRENT_DATE), COALESCE(email, ''), COALESCE(address, ''), COALESCE(avatar, '') FROM "Employee" WHERE id = $1`
+	err := r.db.QueryRow(query, id).Scan(&employee.ID, &employee.FullName, &employee.Phone, &employee.Position, &employee.Salary, &employee.AccountID, &employee.Gender, &employee.DOB, &employee.Email, &employee.Address, &employee.Avatar)
 	return employee, err
 }
 
 func (r *employeeRepository) GetByAccountID(accountID int) (*entity.Employee, error) {
 	employee := &entity.Employee{}
-	query := `SELECT id, COALESCE(full_name, ''), COALESCE(phone, ''), COALESCE(position, ''), COALESCE(salary, 0), COALESCE(account_id, 0), COALESCE(gender, ''), COALESCE(dob, CURRENT_DATE), COALESCE(email, ''), COALESCE(address, '') FROM "Employee" WHERE account_id = $1`
-	err := r.db.QueryRow(query, accountID).Scan(&employee.ID, &employee.FullName, &employee.Phone, &employee.Position, &employee.Salary, &employee.AccountID, &employee.Gender, &employee.DOB, &employee.Email, &employee.Address)
+	query := `SELECT id, COALESCE(full_name, ''), COALESCE(phone, ''), COALESCE(position, ''), COALESCE(salary, 0), COALESCE(account_id, 0), COALESCE(gender, ''), COALESCE(dob, CURRENT_DATE), COALESCE(email, ''), COALESCE(address, ''), COALESCE(avatar, '') FROM "Employee" WHERE account_id = $1`
+	err := r.db.QueryRow(query, accountID).Scan(&employee.ID, &employee.FullName, &employee.Phone, &employee.Position, &employee.Salary, &employee.AccountID, &employee.Gender, &employee.DOB, &employee.Email, &employee.Address, &employee.Avatar)
 	return employee, err
 }
 
 func (r *employeeRepository) GetAll() ([]*entity.Employee, error) {
-	rows, err := r.db.Query(`SELECT id, COALESCE(full_name, ''), COALESCE(phone, ''), COALESCE(position, ''), COALESCE(salary, 0), COALESCE(account_id, 0), COALESCE(gender, ''), COALESCE(dob, CURRENT_DATE), COALESCE(email, ''), COALESCE(address, '') FROM "Employee"`)
+	rows, err := r.db.Query(`SELECT id, COALESCE(full_name, ''), COALESCE(phone, ''), COALESCE(position, ''), COALESCE(salary, 0), COALESCE(account_id, 0), COALESCE(gender, ''), COALESCE(dob, CURRENT_DATE), COALESCE(email, ''), COALESCE(address, ''), COALESCE(avatar, '') FROM "Employee"`)
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +46,7 @@ func (r *employeeRepository) GetAll() ([]*entity.Employee, error) {
 	var employees []*entity.Employee
 	for rows.Next() {
 		employee := &entity.Employee{}
-		err := rows.Scan(&employee.ID, &employee.FullName, &employee.Phone, &employee.Position, &employee.Salary, &employee.AccountID, &employee.Gender, &employee.DOB, &employee.Email, &employee.Address)
+		err := rows.Scan(&employee.ID, &employee.FullName, &employee.Phone, &employee.Position, &employee.Salary, &employee.AccountID, &employee.Gender, &employee.DOB, &employee.Email, &employee.Address, &employee.Avatar)
 		if err != nil {
 			return nil, err
 		}
@@ -68,7 +68,7 @@ func (r *employeeRepository) GetAllPaginated(page, limit int) ([]*entity.Employe
 	offset := (page - 1) * limit
 
 	// Get paginated data - simple query
-	query := `SELECT id, COALESCE(full_name, ''), COALESCE(phone, ''), COALESCE(position, ''), COALESCE(salary, 0), COALESCE(account_id, 0), COALESCE(gender, ''), COALESCE(dob, CURRENT_DATE), COALESCE(email, ''), COALESCE(address, '') FROM "Employee" ORDER BY id DESC LIMIT $1 OFFSET $2`
+	query := `SELECT id, COALESCE(full_name, ''), COALESCE(phone, ''), COALESCE(position, ''), COALESCE(salary, 0), COALESCE(account_id, 0), COALESCE(gender, ''), COALESCE(dob, CURRENT_DATE), COALESCE(email, ''), COALESCE(address, ''), COALESCE(avatar, '') FROM "Employee" ORDER BY id DESC LIMIT $1 OFFSET $2`
 	rows, err := r.db.Query(query, limit, offset)
 	if err != nil {
 		return nil, 0, err
@@ -78,7 +78,7 @@ func (r *employeeRepository) GetAllPaginated(page, limit int) ([]*entity.Employe
 	var employees []*entity.Employee
 	for rows.Next() {
 		employee := &entity.Employee{}
-		err := rows.Scan(&employee.ID, &employee.FullName, &employee.Phone, &employee.Position, &employee.Salary, &employee.AccountID, &employee.Gender, &employee.DOB, &employee.Email, &employee.Address)
+		err := rows.Scan(&employee.ID, &employee.FullName, &employee.Phone, &employee.Position, &employee.Salary, &employee.AccountID, &employee.Gender, &employee.DOB, &employee.Email, &employee.Address, &employee.Avatar)
 		if err != nil {
 			return nil, 0, err
 		}
@@ -92,8 +92,8 @@ func (r *employeeRepository) Update(employee *entity.Employee) error {
 	if employee.AccountID == 0 {
 		accountID = nil
 	}
-	query := `UPDATE "Employee" SET full_name = $1, phone = $2, position = $3, salary = $4, account_id = $5, gender = $6, dob = $7, email = $8, address = $9 WHERE id = $10`
-	_, err := r.db.Exec(query, employee.FullName, employee.Phone, employee.Position, employee.Salary, accountID, employee.Gender, employee.DOB, employee.Email, employee.Address, employee.ID)
+	query := `UPDATE "Employee" SET full_name = $1, phone = $2, position = $3, salary = $4, account_id = $5, gender = $6, dob = $7, email = $8, address = $9, avatar = $10 WHERE id = $11`
+	_, err := r.db.Exec(query, employee.FullName, employee.Phone, employee.Position, employee.Salary, accountID, employee.Gender, employee.DOB, employee.Email, employee.Address, employee.Avatar, employee.ID)
 	return err
 }
 

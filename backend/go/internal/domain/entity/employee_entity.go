@@ -13,4 +13,5 @@ type Employee struct {
 	DOB       time.Time `json:"dob"`
 	Email     string    `json:"email"`
 	Address   string    `json:"address"`
+	Avatar    string    `json:"avatar"`
 }

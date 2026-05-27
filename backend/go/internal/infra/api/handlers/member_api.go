@@ -69,19 +69,8 @@ func (h *MemberHandler) GetByAccountID(w http.ResponseWriter, r *http.Request) {
 
 	member, err := h.usecase.GetMemberByAccountID(id)
 	if err != nil {
-		// Auto create a default member profile if not found (for demo purposes)
-		newMember := &entity.Member{
-			AccountID: id,
-			FullName:  "",
-			Gender:    "Khác",
-			Phone:     "",
-		}
-		createErr := h.usecase.CreateMember(newMember)
-		if createErr != nil {
-			http.Error(w, err.Error(), http.StatusNotFound)
-			return
-		}
-		member = newMember
+		http.Error(w, "member not found", http.StatusNotFound)
+		return
 	}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(member)

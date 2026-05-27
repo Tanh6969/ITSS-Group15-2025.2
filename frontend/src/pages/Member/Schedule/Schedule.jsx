@@ -7,6 +7,7 @@ import { useCreateBooking, useConfirmAttendance } from '@/hooks/mutations/useTra
 import ScheduleTabs from './components/ScheduleTabs';
 import CalendarView from './components/CalendarView';
 import WorkoutList from './components/WorkoutList';
+import EvaluationView from './components/EvaluationView';
 import TrainerModal from './components/Modals/TrainerModal';
 import BookingModal from './components/Modals/BookingModal';
 import WorkoutDetailModal from './components/Modals/WorkoutDetailModal';
@@ -116,6 +117,35 @@ const Schedule = () => {
     return map;
   }, [bookings, ptDetails]);
 
+  const completedSessionsMap = useMemo(() => {
+    const map = {};
+    bookings
+      .filter((b) => b.status === 'Completed')
+      .forEach((b) => {
+        const dk = b.requested_start.slice(0, 10);
+        const pt = ptDetails.find((p) => p.employee_id === b.pt_id);
+        const ptName = pt?.full_name || `PT #${b.pt_id}`;
+        const session = sessions.find((s) => s.booking_id === b.id);
+        if (!map[dk]) map[dk] = [];
+        map[dk].push({
+          sessionId: session?.id ?? null,
+          bookingId: b.id,
+          startTime: b.requested_start.slice(11, 16),
+          endTime: b.requested_end.slice(11, 16),
+          ptName,
+          trainingPlanNote: b.training_plan_note || '',
+          intensity: b.intensity || '',
+          roadmapGoal: b.roadmap_goal || '',
+          attendanceStatus: session?.attendance_status || 'Absent',
+          ptFeedback: session?.pt_feedback || '',
+          physicalCondition: session?.physical_condition || '',
+          sessionResult: session?.session_result || '',
+          nutritionAdvice: session?.nutrition_advice || '',
+        });
+      });
+    return map;
+  }, [bookings, ptDetails, sessions]);
+
   const ptBookingData = useMemo(() => {
     if (!selectedDate) return {};
     return {
@@ -188,7 +218,9 @@ const Schedule = () => {
       ? scheduledWorkouts
       : activeTab === 'booking'
         ? ptBookingData
-        : requestsWorkouts;
+        : activeTab === 'evaluations'
+          ? completedSessionsMap
+          : requestsWorkouts;
 
   const prevMonth = () =>
     setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1));
@@ -213,6 +245,18 @@ const Schedule = () => {
     setCurrentDate(new Date(nextWorkout.dateTime.getFullYear(), nextWorkout.dateTime.getMonth(), 1));
   };
 
+  const openEvaluationsTab = () => {
+    setActiveTab('evaluations');
+    const dates = Object.keys(completedSessionsMap).sort().reverse();
+    if (dates.length > 0) {
+      const latest = dates[0];
+      setSelectedDate(latest);
+      setCurrentDate(new Date(`${latest}T00:00:00`));
+    } else {
+      setSelectedDate(todayKey);
+    }
+  };
+
   const getCalendarDotClass = (item) => {
     if (activeTab === 'scheduled') {
       return item.status === 'Đã xác nhận' ? 'bg-green-500' : 'bg-blue-400';
@@ -221,6 +265,9 @@ const Schedule = () => {
       if (item.status === 'Đã xác nhận') return 'bg-green-500';
       if (item.status === 'Chờ xác nhận') return 'bg-yellow-400';
       return 'bg-red-400';
+    }
+    if (activeTab === 'evaluations') {
+      return item.attendanceStatus === 'Present' ? 'bg-green-500' : 'bg-red-400';
     }
     return item.isBookable ? 'bg-blue-400' : 'bg-gray-400';
   };
@@ -289,6 +336,7 @@ const Schedule = () => {
             setSelectedDate={setSelectedDate}
             defaultRequestDate={defaultRequestDate}
             openScheduledTab={openScheduledTab}
+            openEvaluationsTab={openEvaluationsTab}
             todayKey={todayKey}
           />
           <div className="flex-1">
@@ -317,6 +365,13 @@ const Schedule = () => {
               ptDetails={ptDetails}
               setSelectedTrainer={setSelectedTrainer}
               bookings={bookings}
+            />
+          ) : activeTab === 'evaluations' ? (
+            <EvaluationView
+              selectedDate={selectedDate}
+              selectedDateObject={selectedDateObject}
+              dayNames={dayNames}
+              sessions={selectedWorkouts}
             />
           ) : (
             <WorkoutList

@@ -1,10 +1,12 @@
 import React, { useMemo, useState } from 'react';
 import { Search, Eye } from 'lucide-react';
+import { motion } from 'framer-motion';
 import Button from '@/components/Common/Button';
 import Input from '@/components/Common/Input';
 import Badge from '@/components/Common/Badge';
 import Modal from '@/components/Common/Modal';
 import { useTransactions } from '@/hooks/queries/useTransactions';
+import { slideUpVariants, cardVariants, staggerContainerVariants, sectionStaggerVariants } from '@/lib/animations';
 
 const transactionTypeConfig = {
     registration: { label: 'Đăng ký mới', color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' },
@@ -157,32 +159,35 @@ const TransactionsView = () => {
     }
 
     return (
-        <div className="space-y-6">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <motion.div
+            className="space-y-6"
+            variants={sectionStaggerVariants}
+            initial="hidden"
+            animate="visible"
+        >
+            <motion.div variants={slideUpVariants} className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Quản lý giao dịch</h1>
                     <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                         Dữ liệu thanh toán từ bảng Invoice, liên kết hội viên và gói tập
                     </p>
                 </div>
-            </div>
+            </motion.div>
 
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                <div className="rounded-lg border border-gray-100 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-950">
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Tổng giao dịch</p>
-                    <p className="mt-1 text-2xl font-bold text-gray-900 dark:text-white">{stats.total}</p>
-                </div>
-                <div className="rounded-lg border border-gray-100 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-950">
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Hoàn thành</p>
-                    <p className="mt-1 text-2xl font-bold text-green-600 dark:text-green-400">{stats.completed}</p>
-                </div>
-                <div className="rounded-lg border border-gray-100 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-950">
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Tổng doanh thu</p>
-                    <p className="mt-1 text-2xl font-bold text-blue-600 dark:text-blue-400">{formatAmount(stats.revenue)}</p>
-                </div>
-            </div>
+            <motion.div variants={staggerContainerVariants} className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                {[
+                    { label: 'Tổng giao dịch', value: stats.total, color: 'text-gray-900 dark:text-white' },
+                    { label: 'Hoàn thành', value: stats.completed, color: 'text-green-600 dark:text-green-400' },
+                    { label: 'Tổng doanh thu', value: formatAmount(stats.revenue), color: 'text-blue-600 dark:text-blue-400' },
+                ].map(({ label, value, color }, i) => (
+                    <motion.div key={label} variants={cardVariants} custom={i} whileHover={{ scale: 1.03, y: -2 }} className="rounded-lg border border-gray-100 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-950">
+                        <p className="text-sm text-gray-500 dark:text-gray-400">{label}</p>
+                        <p className={`mt-1 text-2xl font-bold ${color}`}>{value}</p>
+                    </motion.div>
+                ))}
+            </motion.div>
 
-            <div className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-950">
+            <motion.div variants={slideUpVariants} className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-950">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
                     <div className="flex-1">
                         <div className="relative">
@@ -222,9 +227,9 @@ const TransactionsView = () => {
                 <div className="mt-3 text-sm text-gray-500 dark:text-gray-400">
                     Hiển thị <span className="font-medium">{filteredTransactions.length}</span> trong <span className="font-medium">{transactions.length}</span> giao dịch
                 </div>
-            </div>
+            </motion.div>
 
-            <div className="overflow-x-auto rounded-xl border border-gray-100 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-950">
+            <motion.div variants={slideUpVariants} className="overflow-x-auto rounded-xl border border-gray-100 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-950">
                 <table className="w-full">
                     <thead className="border-b border-gray-100 bg-gray-50 dark:border-gray-800 dark:bg-gray-900">
                         <tr>
@@ -283,7 +288,7 @@ const TransactionsView = () => {
                         )}
                     </tbody>
                 </table>
-            </div>
+            </motion.div>
 
             {showDetailModal && selectedTransaction && (
                 <Modal
@@ -346,7 +351,7 @@ const TransactionsView = () => {
                     </div>
                 </Modal>
             )}
-        </div>
+        </motion.div>
     );
 };
 

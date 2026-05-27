@@ -8,6 +8,7 @@ import (
 	"gym-management/internal/domain/entity"
 	"gym-management/internal/domain/usecase/employee_usecase"
 	"gym-management/internal/infra/api/dto"
+	"gym-management/internal/infra/api/middleware"
 
 	"github.com/gorilla/mux"
 )
@@ -105,4 +106,53 @@ func (h *EmployeeHandler) Delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.WriteHeader(http.StatusOK)
+}
+
+func (h *EmployeeHandler) GetMe(w http.ResponseWriter, r *http.Request) {
+	user, ok := middleware.GetAuthenticatedUser(r)
+	if !ok {
+		http.Error(w, "unauthorized", http.StatusUnauthorized)
+		return
+	}
+	employee, err := h.usecase.GetEmployeeByAccountID(user.AccountID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(employee)
+}
+
+func (h *EmployeeHandler) UpdateMe(w http.ResponseWriter, r *http.Request) {
+	user, ok := middleware.GetAuthenticatedUser(r)
+	if !ok {
+		http.Error(w, "unauthorized", http.StatusUnauthorized)
+		return
+	}
+	existing, err := h.usecase.GetEmployeeByAccountID(user.AccountID)
+	if err != nil {
+		http.Error(w, "employee record not found", http.StatusNotFound)
+		return
+	}
+	var req entity.Employee
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "invalid request", http.StatusBadRequest)
+		return
+	}
+	// Only allow updating personal fields; preserve privileged fields
+	existing.FullName = req.FullName
+	existing.Phone = req.Phone
+	existing.Email = req.Email
+	existing.Gender = req.Gender
+	existing.DOB = req.DOB
+	existing.Address = req.Address
+	if req.Avatar != "" {
+		existing.Avatar = req.Avatar
+	}
+	if err := h.usecase.UpdateEmployee(existing); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(existing)
 }

@@ -1,6 +1,7 @@
 ﻿import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, CalendarDays, Activity, DollarSign, Clock } from 'lucide-react';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 import Button from '@/components/Common/Button';
 import { useMemberDetails, useMemberSubscriptionHistory } from '@/hooks/queries/useMembers';
 
@@ -65,9 +66,9 @@ const MemberDetail = () => {
         {/* Info Card */}
         <div className="col-span-1 rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-950">
           <div className="flex flex-col items-center border-b border-gray-100 pb-6 dark:border-gray-800">
-            <img 
-              src={(member.gender || '').toLowerCase() === 'nữ' ? '/src/assets/nu_ava.jpg' : '/src/assets/nam_ava.jpg'} 
-              alt="avatar" 
+            <img
+              src={member.avatar ? `${API_URL}${member.avatar}` : ((member.gender || '').toLowerCase() === 'nữ' ? '/src/assets/nu_ava.jpg' : '/src/assets/nam_ava.jpg')}
+              alt="avatar"
               className="h-24 w-24 rounded-full object-cover border-4 border-white shadow-sm dark:border-gray-900"
             />
             <h2 className="mt-4 text-xl font-bold text-gray-900 dark:text-white">{member.full_name || 'N/A'}</h2>
@@ -93,6 +94,18 @@ const MemberDetail = () => {
                 {(member.joinDate || member.registered_at) ? new Date(member.joinDate || member.registered_at).toLocaleDateString('vi-VN') : 'N/A'}
               </p>
             </div>
+            {member.roadmap_goal && (
+              <div>
+                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Mục tiêu tập luyện</p>
+                <p className="text-base font-semibold text-gray-900 dark:text-gray-100 whitespace-pre-line">{member.roadmap_goal}</p>
+              </div>
+            )}
+            {member.member_free_schedule && (
+              <div>
+                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">Lịch tập tự do</p>
+                <p className="text-base font-semibold text-gray-900 dark:text-gray-100 whitespace-pre-line">{member.member_free_schedule}</p>
+              </div>
+            )}
           </div>
         </div>
 

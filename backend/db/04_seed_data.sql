@@ -1,0 +1,476 @@
+-- ============================================================
+-- FILE 4: DỮ LIỆU MẪU (SEED DATA)
+-- Chạy sau file 03_functions_triggers.sql
+-- ============================================================
+
+-- ─── ROLES ───────────────────────────────────────────────
+INSERT INTO "Role" ("role_name") VALUES ('OWNER'), ('MANAGER'), ('PT'), ('MEMBER');
+
+-- ─── ACCOUNTS ────────────────────────────────────────────
+-- Account ID sẽ được tự sinh: owner=1, manager=2, pt=3, mem1=4, pt2=5, pt3=6,
+-- mem2=7..mem10=15, pt4=16, pt5=17, pt6=18, mem11=19..mem20=28
+INSERT INTO "Account" ("username", "password", "role_id", "email", "is_first_login") VALUES
+('owner@gym.com',   '123456', 1, 'owner@gym.com',   false),
+('manager@gym.com', '123456', 2, 'manager@gym.com', false),
+('pt@gym.com',      '123456', 3, 'pt@gym.com',      false),
+('mem1@gym.com',    '123456', 4, 'mem1@gym.com',    false),
+('pt2@gym.com',     '123456', 3, 'pt2@gym.com',     false),
+('pt3@gym.com',     '123456', 3, 'pt3@gym.com',     false),
+('mem2@gym.com',    '123456', 4, 'mem2@gym.com',    false),
+('mem3@gym.com',    '123456', 4, 'mem3@gym.com',    false),
+('mem4@gym.com',    '123456', 4, 'mem4@gym.com',    false),
+('mem5@gym.com',    '123456', 4, 'mem5@gym.com',    false),
+('mem6@gym.com',    '123456', 4, 'mem6@gym.com',    false),
+('mem7@gym.com',    '123456', 4, 'mem7@gym.com',    false),
+('mem8@gym.com',    '123456', 4, 'mem8@gym.com',    false),
+('mem9@gym.com',    '123456', 4, 'mem9@gym.com',    false),
+('mem10@gym.com',   '123456', 4, 'mem10@gym.com',   false),
+('pt4@gym.com',     '123456', 3, 'pt4@gym.com',     false),
+('pt5@gym.com',     '123456', 3, 'pt5@gym.com',     false),
+('pt6@gym.com',     '123456', 3, 'pt6@gym.com',     false),
+('mem11@gym.com',   '123456', 4, 'mem11@gym.com',   false),
+('mem12@gym.com',   '123456', 4, 'mem12@gym.com',   false),
+('mem13@gym.com',   '123456', 4, 'mem13@gym.com',   false),
+('mem14@gym.com',   '123456', 4, 'mem14@gym.com',   false),
+('mem15@gym.com',   '123456', 4, 'mem15@gym.com',   false),
+('mem16@gym.com',   '123456', 4, 'mem16@gym.com',   false),
+('mem17@gym.com',   '123456', 4, 'mem17@gym.com',   false),
+('mem18@gym.com',   '123456', 4, 'mem18@gym.com',   false),
+('mem19@gym.com',   '123456', 4, 'mem19@gym.com',   false),
+('mem20@gym.com',   '123456', 4, 'mem20@gym.com',   false);
+
+-- ─── EMPLOYEES ───────────────────────────────────────────
+INSERT INTO "Employee" ("full_name", "phone", "position", "salary", "account_id", "gender", "dob", "email", "address") VALUES
+('Nguyen Van An',  '0901000001', 'MANAGER',  25000000,  2,    'Male',   '1990-05-15', 'an.nv@gym.com',     'Ha Noi'    ),
+('Tran Minh Khoa', '0901000002', 'PT',        18000000,  3,    'Male',   '1995-08-20', 'khoa.tran@gym.com', 'Ha Noi'    ),
+('Le Hoang Cuong', '0901000003', 'SALE',      12000000,  NULL, 'Male',   '1998-12-10', 'cuong.lh@gym.com',  'Da Nang'   ),
+('Pham Mai Dung',  '0901000004', 'CS_STAFF',  10000000,  NULL, 'Female', '2000-02-28', 'dung.pm@gym.com',   'Can Tho'   ),
+('Nguyen Thi Lan', '0901000005', 'PT',        16000000,  5,    'Female', '1994-06-05', 'lan.nt@gym.com',    'TP.HCM'    ),
+('Do Thu Phuong',  '0901000006', 'SALE',      11000000,  NULL, 'Female', '1997-09-15', 'phuong.dt@gym.com', 'Hue'       ),
+('Vu Van Giang',   '0901000007', 'CS_STAFF',   7000000,  NULL, 'Male',   '1999-11-11', 'giang.vv@gym.com',  'Nha Trang' ),
+('Bui Thi Hien',   '0901000008', 'MANAGER',   22000000,  NULL, 'Female', '1992-03-30', 'hien.bt@gym.com',   'Binh Duong'),
+('Pham Van Hung',  '0901000009', 'PT',        15000000,  6,    'Male',   '1996-07-07', 'hung.pv@gym.com',   'Vung Tau'  ),
+('Ly Thu Ky',      '0901000010', 'CS_STAFF',   6000000,  NULL, 'Female', '1993-01-22', 'ky.lt@gym.com',     'Dong Nai'  ),
+('Tran Duc Anh',   '0901000011', 'PT',        17000000, 16,    'Male',   '1993-04-12', 'anh.td@gym.com',    'Ha Noi'    ),
+('Nguyen Thi Mai', '0901000012', 'PT',        16500000, 17,    'Female', '1997-07-25', 'mai.nt@gym.com',    'TP.HCM'    ),
+('Le Minh Tuan',   '0901000013', 'PT',        18500000, 18,    'Male',   '1991-11-03', 'tuan.lm@gym.com',   'Da Nang'   );
+
+-- ─── PT DETAIL ───────────────────────────────────────────
+INSERT INTO "PT_Detail" ("employee_id", "professional_profile", "body_index", "experience_years", "achievements", "available_schedule") VALUES
+(
+  2,
+  'Huan luyen vien chuyen Strength & Conditioning voi hon 6 nam kinh nghiem. Tung la Head PT tai ActiveGym Ha Noi va Personal Trainer tai California Fitness (2019-2022). So huu chung chi ACE-CPT va FMS Level 1.',
+  '{"height": 178, "weight": 76, "chest": 102, "bicep": 38, "waist": 80, "forearm": 29, "thigh": 58, "calf": 40}',
+  '6',
+  'HCV Men''s Physique - VNBF 2023; A quan Classic Bodybuilding - WBPF 2022; Top 3 PT of the Year - ActiveGym 2024',
+  '{"Mon": ["07:00","08:00","09:00","17:00","18:00"], "Tue": ["07:00","08:00","09:00"], "Wed": ["17:00","18:00","19:00"], "Thu": ["07:00","08:00","09:00"], "Fri": ["17:00","18:00","19:00"], "Sat": ["08:00","09:00","10:00"]}'
+),
+(
+  5,
+  'Chuyen gia Yoga va Pilates voi 5 nam kinh nghiem. Tot nghiep Dai hoc TDTT TP.HCM, co chung chi Yoga Alliance 200h va Pilates Reformer Certified. Chuyen tri lieu dau lung va cai thien linh hoat co the.',
+  '{"height": 163, "weight": 52, "chest": 84, "bicep": 26, "waist": 62, "forearm": 21, "thigh": 52, "calf": 34}',
+  '5',
+  'Best Female Trainer - FitExpo Vietnam 2023; Yoga Alliance 200h Certified; Pilates Reformer Certified',
+  '{"Mon": ["09:00","10:00","14:00","15:00"], "Wed": ["09:00","10:00","14:00","15:00"], "Fri": ["09:00","10:00","14:00","15:00"], "Sat": ["08:00","09:00","10:00","11:00"]}'
+),
+(
+  9,
+  'Huan luyen vien the hinh va calisthenics voi 4 nam kinh nghiem. Chuyen thiet ke chuong trinh giam mo, tang co va phuc hoi chuc nang. So huu chung chi NSCA-CPT va Functional Movement Specialist.',
+  '{"height": 175, "weight": 72, "chest": 98, "bicep": 36, "waist": 78, "forearm": 28, "thigh": 56, "calf": 38}',
+  '4',
+  'Chung chi NSCA-CPT; Top 10 Physique - Mr. Vietnam 2022; Best Transformation Coach - ActiveGym 2023',
+  '{"Tue": ["06:00","07:00","08:00","19:00","20:00"], "Thu": ["06:00","07:00","08:00","19:00","20:00"], "Sat": ["06:00","07:00","08:00","09:00"], "Sun": ["09:00","10:00","11:00"]}'
+),
+(
+  11,
+  'Chuyen gia Aerobic va HIIT voi 7 nam kinh nghiem. Cuu van dong vien the duc nhip dieu quoc gia. Chung chi ACE Group Fitness va Les Mills BODYCOMBAT.',
+  '{"height": 180, "weight": 74, "chest": 100, "bicep": 37, "waist": 79, "forearm": 28, "thigh": 57, "calf": 39}',
+  '7',
+  'HCV Aerobic Dong doi - Giai Quoc gia 2019; Chung chi ACE Group Fitness; Les Mills BODYCOMBAT Certified',
+  '{"Mon": ["06:00","07:00","08:00","17:00","18:00","19:00"], "Tue": ["06:00","07:00","08:00","17:00","18:00","19:00"], "Wed": ["06:00","07:00","08:00","17:00","18:00","19:00"], "Thu": ["06:00","07:00","08:00","17:00","18:00","19:00"], "Fri": ["06:00","07:00","08:00","17:00","18:00","19:00"], "Sat": ["07:00","08:00","09:00","10:00"], "Sun": ["08:00","09:00","10:00"]}'
+),
+(
+  12,
+  'Huan luyen vien Yoga va Duong sinh 6 nam. Tot nghiep Yoga Alliance 300h, chuyen tri lieu cot song va can bang tam ly. Tung giang day tai cac spa 5 sao Da Lat va Phu Quoc.',
+  '{"height": 160, "weight": 50, "chest": 82, "bicep": 24, "waist": 60, "forearm": 20, "thigh": 50, "calf": 33}',
+  '6',
+  'Yoga Alliance 300h RYT; Giai thuong Best Yoga Instructor - FitExpo 2024; Yin Yoga & Restorative Certified',
+  '{"Mon": ["08:00","09:00","10:00","14:00","15:00","16:00"], "Wed": ["08:00","09:00","10:00","14:00","15:00","16:00"], "Fri": ["08:00","09:00","10:00","14:00","15:00","16:00"], "Sat": ["07:00","08:00","09:00","10:00","11:00"], "Sun": ["09:00","10:00","11:00","14:00","15:00"]}'
+),
+(
+  13,
+  'Huan luyen vien Boxing va MMA 8 nam kinh nghiem. Cuu vo si hang Welterweight tai giai Boxing toan quoc. Chung chi AIBA Level 2 Coach va USA Boxing Coach.',
+  '{"height": 177, "weight": 78, "chest": 105, "bicep": 40, "waist": 82, "forearm": 31, "thigh": 60, "calf": 41}',
+  '8',
+  'HCB Boxing Hang 69kg - Giai Quoc gia 2018; AIBA Level 2 Coach Certified; USA Boxing Coach Certified',
+  '{"Mon": ["07:00","08:00","09:00","18:00","19:00","20:00"], "Tue": ["07:00","08:00","09:00","18:00","19:00","20:00"], "Thu": ["07:00","08:00","09:00","18:00","19:00","20:00"], "Fri": ["07:00","08:00","09:00","18:00","19:00","20:00"], "Sat": ["08:00","09:00","10:00","11:00"], "Sun": ["10:00","11:00","14:00","15:00"]}'
+);
+
+-- ─── MEMBERS ─────────────────────────────────────────────
+-- Ghi chú: account_id khớp chính xác với bảng Account bên trên
+-- mem1@gym.com = account_id 4  → member id 1
+-- mem2@gym.com = account_id 7  → member id 2
+-- mem3..mem10  = account_id 8..15
+-- mem11..mem20 = account_id 19..28
+INSERT INTO "Member" ("full_name", "phone", "email", "gender", "dob", "address", "account_id") VALUES
+('Nguyen Van A',    '0910000001', 'mem1@gym.com',  'Male',   '1990-01-01', 'Ha Noi',     4 ),
+('Nguyen Van B',    '0910000002', 'mem2@gym.com',  'Male',   '1991-01-01', 'Ha Noi',     7 ),
+('Nguyen Van C',    '0910000003', 'mem3@gym.com',  'Male',   '1992-01-01', 'Ha Noi',     8 ),
+('Nguyen Van D',    '0910000004', 'mem4@gym.com',  'Male',   '1993-01-01', 'Ha Noi',     9 ),
+('Nguyen Van E',    '0910000005', 'mem5@gym.com',  'Male',   '1994-01-01', 'Ha Noi',     10),
+('Nguyen Van F',    '0910000006', 'mem6@gym.com',  'Male',   '1995-01-01', 'Ha Noi',     11),
+('Nguyen Van G',    '0910000007', 'mem7@gym.com',  'Male',   '1996-01-01', 'Ha Noi',     12),
+('Nguyen Van H',    '0910000008', 'mem8@gym.com',  'Male',   '1997-01-01', 'Ha Noi',     13),
+('Nguyen Van I',    '0910000009', 'mem9@gym.com',  'Male',   '1998-01-01', 'Ha Noi',     14),
+('Nguyen Van J',    '0910000010', 'mem10@gym.com', 'Male',   '1999-01-01', 'Ha Noi',     15),
+('Pham Thi Lan',    '0920000011', 'mem11@gym.com', 'Female', '1995-03-10', 'Ha Noi',     19),
+('Hoang Van Binh',  '0920000012', 'mem12@gym.com', 'Male',   '1992-07-22', 'TP.HCM',     20),
+('Vu Thi Cam',      '0920000013', 'mem13@gym.com', 'Female', '1998-11-15', 'Da Nang',    21),
+('Dang Quoc Dung',  '0920000014', 'mem14@gym.com', 'Male',   '1989-05-08', 'Can Tho',    22),
+('Bui Thi Emilia',  '0920000015', 'mem15@gym.com', 'Female', '2000-01-30', 'Hai Phong',  23),
+('Ly Van Phong',    '0920000016', 'mem16@gym.com', 'Male',   '1994-09-18', 'Hue',        24),
+('Trinh Thi Giang', '0920000017', 'mem17@gym.com', 'Female', '1996-12-05', 'Nha Trang',  25),
+('Ngo Dinh Hai',    '0920000018', 'mem18@gym.com', 'Male',   '1991-04-27', 'Binh Duong', 26),
+('Dinh Thi Iris',   '0920000019', 'mem19@gym.com', 'Female', '1997-08-14', 'Vung Tau',   27),
+('Cao Minh Khoa',   '0920000020', 'mem20@gym.com', 'Male',   '1993-06-20', 'Dong Nai',   28);
+
+-- ─── FACILITIES ──────────────────────────────────────────
+INSERT INTO "Facility" ("facility_name", "facility_type", "status", "description", "max_capacity", "current_capacity", "amenities") VALUES
+('Phong Gym VIP',      'Gym',    'Operating', 'Khu tap cao cap danh rieng cho hoi vien VIP. Trang bi day du may moc hien dai, khong gian rong rai, anh sang chuyen nghiep va he thong dieu hoa inverter tieu chuan quoc te.',                     40, 12, 'Dieu hoa inverter, WiFi toc do cao, Nuoc uong mien phi, Tu khoa VIP, Phong thay do rieng, Man hinh tivi, Guong toan than'),
+('Phong Yoga',         'Studio', 'Operating', 'Khong gian yoga tinh lang, rong rai voi anh sang tu nhien va san go am ap. Thich hop cho cac lop Hatha, Vinyasa va Yin Yoga. Hoc vien duoc cung cap day du dung cu khi tham gia.',                   20,  6, 'Tham Yoga cao cap, Gach Yoga, Day dai tap, Guong toan than, He thong am thanh, Dieu hoa, Khoa tu do'),
+('Phong Aerobic',      'Studio', 'Operating', 'Phong tap Aerobic rong rai voi san go chuyen dung giam chan, he thong am thanh song dong va guong toan than. Khong gian ly tuong cho cac lop Aerobic, Zumba va Dance Fitness.',                       30,  8, 'San go chuyen dung, Guong toan than, He thong am thanh JBL, Dieu hoa, Quat thong gio, Tham Aerobic'),
+('Phong Pilates',      'Studio', 'Operating', 'Phong Pilates chuyen nghiep trang bi may Reformer cao cap nhap khau tu Duc. Phu hop cho ca nguoi moi bat dau lan hoc vien nang cao. Giang vien duoc chung nhan quoc te STOTT Pilates.',               12,  4, 'May Pilates Reformer, Vong Magic Circle, Tham Pilates, Guong toan than, Dieu hoa, Khoa tu do'),
+('Phong Duong sinh',   'Studio', 'Operating', 'Khong gian yen tinh, thoang dang danh cho cac bai tap duong sinh, thai cuc quyen va khi cong. San go tu nhien, am nhac thien dinh nhe nhang giup tam the thu gian hoan toan.',                       20,  5, 'San go tu nhien, Nhac thien dinh, Gay the duc, Tham tap, Quat gio tu nhien, Cay xanh trang tri'),
+('Phong Xong hoi kho', 'Spa',    'Operating', 'Phong xong hoi kho (Sauna) nhiet do 80-100 do C, ho tro giai doc co the, thu gian co bap sau luyen tap va cai thien tuan hoan mau. Phuc vu hoi vien VIP va Female-only.',                            10,  2, 'May xong hoi kho Nhat Ban, Khan tam, Tinh dau thu gian, Nuoc uong, Dong ho hen gio'),
+('Phong Xong hoi uot', 'Spa',    'Operating', 'Phong xong hoi uot (Steam Room) voi hoi nuoc o 45-50 do C. Ho tro lam sach lo chan long, cai thien ho hap va giam cang thang. Su dung sau moi buoi tap de phuc hoi hieu qua.',                       10,  1, 'May sinh hoi nuoc Nhat Ban, Khan tam, Ghe da tu nhien, Nuoc uong, Den UV khu khuan'),
+('Phong Boxing',       'Studio', 'Operating', 'Phong tap Boxing chuyen nghiep voi san cao su chong chan, day du bao cat va vong boxing tieu chuan. Phu hop cho luyen tap Boxing, Kickboxing va Muay Thai co ban.',                                    15,  4, 'Bao cat Boxing, Vong Boxing, Gang tay (cho muon), San cao su, Guong toan than, Dieu hoa'),
+('Phong Gym Co Ban',   'Gym',    'Operating', 'Khu tap gym tieu chuan danh cho hoi vien goi Co Ban. Trang bi ta tu do, may chay bo va cac thiet bi gym pho bien. Khong gian thoai mai, phu hop voi moi trinh do.',                                    35, 10, 'Ta tu do (2-40kg), May chay bo, Xe dap tap, Dieu hoa, Guong, Nuoc uong'),
+('Phong Gym Nu',       'Gym',    'Operating', 'Khu tap gym danh rieng cho hoi vien nu - khong gian rieng tu, an toan va than thien. Trang bi thiet bi phu hop voi nhu cau tap luyen cua phu nu nhu giam mo, dinh hinh voc dang.',                    25,  7, 'Ta tay (1-15kg), Tham tap, May chay bo nho, Guong toan than, Dieu hoa, Khong gian rieng tu');
+
+-- ─── EQUIPMENT ───────────────────────────────────────────
+INSERT INTO "Equipment" ("facility_id", "equipment_name", "serial_number", "quantity", "status", "purchase_date", "maintenance_deadline", "origin") VALUES
+(1,  'May chay bo Kingsmith',        'KSM-001',  5, 'Broken',      '2026-01-01', '2027-01-01', 'Trung Quoc'),
+(1,  'Ta don Olympic',               'TDO-001',  4, 'Broken',      '2026-01-05', '2027-01-05', 'Viet Nam'  ),
+(2,  'Tham Yoga cao cap',            'THM-001', 20, 'New',         '2026-02-01', '2027-02-01', 'Dai Loan'  ),
+(3,  'Dan am thanh JBL',             'JBL-003',  1, 'Operating',   '2026-02-01', '2027-02-01', 'My'        ),
+(4,  'May Pilates Reformer',         'PLT-004',  4, 'New',         '2026-03-01', '2028-03-01', 'Duc'       ),
+(6,  'May xong hoi kho',             'XHK-001',  1, 'Maintenance', '2026-01-20', '2027-01-20', 'Nhat Ban'  ),
+(7,  'May xong hoi uot',             'XHU-001',  1, 'Maintenance', '2026-01-20', '2027-01-20', 'Nhat Ban'  ),
+(8,  'Bao cat Boxing Pro',           'BOX-001',  4, 'Operating',   '2026-01-15', '2027-01-15', 'Thai Lan'  ),
+(9,  'Bo ta tu do (2-40kg)',         'TAT-009',  3, 'Operating',   '2026-01-15', '2027-06-15', 'Viet Nam'  ),
+(10, 'May chay bo NordicTrack',      'NRT-010',  5, 'New',         '2026-03-05', '2028-03-05', 'My'        ),
+(1,  'Bo ta don Olympic day du',     'OLY-011',  2, 'Operating',   '2026-01-01', '2027-06-01', 'My'        ),
+(1,  'Ghe tap da nang (Adjustable)', 'ADJ-012',  5, 'Operating',   '2026-01-01', '2027-06-01', 'Duc'       ),
+(1,  'May keo cap da nang',          'CAB-013',  2, 'Operating',   '2026-01-15', '2027-06-15', 'My'        ),
+(2,  'Gach Yoga (Yoga Block)',       'YBK-014', 30, 'New',         '2026-02-01', '2028-02-01', 'Dai Loan'  ),
+(2,  'Day dai Yoga (Yoga Strap)',    'YST-015', 25, 'New',         '2026-02-01', '2028-02-01', 'Dai Loan'  ),
+(3,  'Tham Aerobic chong truot',     'TAR-016', 25, 'New',         '2026-02-15', '2027-08-15', 'Han Quoc'  ),
+(4,  'Vong Magic Circle',            'VMC-017', 10, 'New',         '2026-03-01', '2028-03-01', 'Nhat Ban'  ),
+(5,  'Gay the duc (Wooden Stick)',   'GAY-018', 15, 'Operating',   '2026-02-01', '2027-08-01', 'Viet Nam'  ),
+(5,  'Tham tap duong sinh',          'THD-019', 15, 'New',         '2026-02-01', '2028-02-01', 'Dai Loan'  ),
+(8,  'Vong Boxing tieu chuan',       'VBX-020',  1, 'Operating',   '2026-01-15', '2027-06-15', 'Thai Lan'  ),
+(8,  'Gang tay Boxing (cho muon)',   'GBX-021', 10, 'Operating',   '2026-01-15', '2027-01-15', 'Thai Lan'  ),
+(9,  'Xe dap tap thang',             'XDC-022',  4, 'Operating',   '2026-02-10', '2027-08-10', 'Trung Quoc'),
+(10, 'Ta tay bo (1-15kg)',           'TAY-023',  3, 'New',         '2026-03-05', '2027-09-05', 'Han Quoc'  ),
+(10, 'Tham tap yoga/fitness',        'TMN-024', 10, 'New',         '2026-03-05', '2027-09-05', 'Dai Loan'  );
+
+-- ─── SERVICE CATEGORIES ──────────────────────────────────
+INSERT INTO "ServiceCategory" ("category_name", "benefits_description", "allowed_gender") VALUES
+('VIP',         'Truy cap moi khu vuc, gym VIP, phong xong hoi, yoga va tat ca studio',          'All'   ),
+('Normal',      'Khu vuc Gym Co Ban, thiet bi cardio va ta tu do',                                'All'   ),
+('Female-only', 'Phong Gym Nu rieng tu, an toan; ket hop Yoga va Spa',                           'Female'),
+('Aerobic',     'Lop hoc Aerobic, HIIT, Zumba cuong do cao - dot mo hieu qua',                   'All'   ),
+('Yoga',        'Yoga, Pilates, Duong sinh - cai thien linh hoat va tam tri',                    'All'   ),
+('Boxing',      'Boxing, Kickboxing, MMA - ren suc manh va phan xa',                             'All'   ),
+('Pilates',     'Pilates Reformer, Mat Pilates - phuc hoi chuc nang va tang co loi',             'All'   ),
+('Duong sinh',  'Khi cong, Thai cuc quyen, thien dinh - can bang the chat lan tinh than',       'All'   );
+
+-- ─── MEMBERSHIP PACKAGES ─────────────────────────────────
+INSERT INTO "MembershipPackage" ("category_id", "package_name", "duration_days", "price", "is_active") VALUES
+(1, 'Goi VIP Thang',          30,  1000000, true),
+(1, 'Goi VIP nua nam',       180,  5000000, true),
+(1, 'Goi VIP 1 nam',         365, 10000000, true),
+(1, 'Goi VIP 3 thang',        90,  2800000, true),
+(2, 'Goi Co Ban Thang',       30,   500000, true),
+(2, 'Goi Co Ban 3 thang',     90,  1300000, true),
+(3, 'Goi Nu Thang',           30,    50000, true),
+(3, 'Goi Nu nua nam',        180,  2500000, true),
+(4, 'Goi Aerobic Thang',      30,   400000, true),
+(4, 'Goi Aerobic 3 thang',    90,  1050000, true),
+(4, 'Goi Aerobic 6 thang',   180,  1900000, true),
+(5, 'Goi Yoga Thang',         30,   450000, true),
+(5, 'Goi Yoga 3 thang',       90,  1200000, true),
+(5, 'Goi Yoga Tri lieu',      60,   900000, true),
+(6, 'Goi Boxing Thang',       30,   500000, true),
+(6, 'Goi Boxing 3 thang',     90,  1300000, true),
+(7, 'Goi Pilates Thang',      30,   600000, true),
+(7, 'Goi Pilates 3 thang',    90,  1600000, true),
+(8, 'Goi Duong sinh Thang',   30,   300000, true),
+(8, 'Goi Duong sinh 6 thang',180,  1500000, true);
+
+-- ─── SUBSCRIPTIONS ───────────────────────────────────────
+INSERT INTO "Subscription" ("member_id", "package_id", "registration_date", "start_date", "end_date", "status") VALUES
+(1,   1, '2026-06-01 08:00:00', '2026-06-01', '2026-07-01', 'active'),
+(1,  12, '2026-06-01 08:00:00', '2026-06-01', '2026-07-01', 'active'),
+(2,   5, '2026-06-01 08:00:00', '2026-06-01', '2026-07-01', 'active'),
+(2,   9, '2026-06-01 08:00:00', '2026-06-01', '2026-07-01', 'active'),
+(3,   1, '2026-06-01 08:00:00', '2026-06-01', '2026-07-01', 'active'),
+(3,  15, '2026-06-01 08:00:00', '2026-06-01', '2026-07-01', 'active'),
+(4,   7, '2026-06-01 08:00:00', '2026-06-01', '2026-07-01', 'active'),
+(4,  12, '2026-06-01 08:00:00', '2026-06-01', '2026-07-01', 'active'),
+(5,   2, '2026-06-01 08:00:00', '2026-06-01', '2026-11-28', 'active'),
+(5,  17, '2026-06-01 08:00:00', '2026-06-01', '2026-07-01', 'active'),
+(6,   5, '2026-06-01 08:00:00', '2026-06-01', '2026-07-01', 'active'),
+(6,  10, '2026-06-01 08:00:00', '2026-06-01', '2026-08-30', 'active'),
+(7,   2, '2026-06-01 08:00:00', '2026-06-01', '2026-11-28', 'active'),
+(7,  13, '2026-06-01 08:00:00', '2026-06-01', '2026-08-30', 'active'),
+(7,  15, '2026-06-01 08:00:00', '2026-06-01', '2026-07-01', 'active'),
+(8,   7, '2026-06-01 08:00:00', '2026-06-01', '2026-07-01', 'active'),
+(8,  17, '2026-06-01 08:00:00', '2026-06-01', '2026-07-01', 'active'),
+(8,  19, '2026-06-01 08:00:00', '2026-06-01', '2026-07-01', 'active'),
+(9,   3, '2026-06-01 08:00:00', '2026-06-01', '2027-06-01', 'active'),
+(9,  16, '2026-06-01 08:00:00', '2026-06-01', '2026-08-30', 'active'),
+(9,  14, '2026-06-01 08:00:00', '2026-06-01', '2026-07-31', 'active'),
+(10,  7, '2026-06-01 08:00:00', '2026-06-01', '2026-07-01', 'active'),
+(10, 20, '2026-06-01 08:00:00', '2026-06-01', '2026-11-28', 'active'),
+(11,  1, '2026-06-01 08:00:00', '2026-06-01', '2026-07-01', 'active'),
+(11, 12, '2026-06-01 08:00:00', '2026-06-01', '2026-07-01', 'active'),
+(12,  4, '2026-06-01 08:00:00', '2026-06-01', '2026-08-30', 'active'),
+(12, 15, '2026-06-01 08:00:00', '2026-06-01', '2026-07-01', 'active'),
+(13,  9, '2026-06-01 08:00:00', '2026-06-01', '2026-07-01', 'active'),
+(13, 19, '2026-06-01 08:00:00', '2026-06-01', '2026-07-01', 'active'),
+(14,  6, '2026-06-01 08:00:00', '2026-06-01', '2026-08-30', 'active'),
+(14, 10, '2026-06-01 08:00:00', '2026-06-01', '2026-08-30', 'active'),
+(15,  7, '2026-06-01 08:00:00', '2026-06-01', '2026-07-01', 'active'),
+(15, 12, '2026-06-01 08:00:00', '2026-06-01', '2026-07-01', 'active'),
+(16,  1, '2026-06-01 08:00:00', '2026-06-01', '2026-07-01', 'active'),
+(16, 15, '2026-06-01 08:00:00', '2026-06-01', '2026-07-01', 'active'),
+(17,  8, '2026-06-01 08:00:00', '2026-06-01', '2026-11-28', 'active'),
+(17, 13, '2026-06-01 08:00:00', '2026-06-01', '2026-08-30', 'active'),
+(18,  2, '2026-06-01 08:00:00', '2026-06-01', '2026-11-28', 'active'),
+(18, 16, '2026-06-01 08:00:00', '2026-06-01', '2026-08-30', 'active'),
+(19, 12, '2026-06-01 08:00:00', '2026-06-01', '2026-07-01', 'active'),
+(19,  9, '2026-06-01 08:00:00', '2026-06-01', '2026-07-01', 'active'),
+(20,  3, '2026-06-01 08:00:00', '2026-06-01', '2027-06-01', 'active'),
+(20, 11, '2026-06-01 08:00:00', '2026-06-01', '2026-11-28', 'active');
+
+-- Gói đã hết hạn (lịch sử)
+INSERT INTO "Subscription" ("member_id", "package_id", "registration_date", "start_date", "end_date", "status") VALUES
+(1,  5, '2026-02-01 08:00:00', '2026-02-01', '2026-03-03', 'expired'),
+(3,  5, '2026-01-15 08:00:00', '2026-01-15', '2026-02-14', 'expired'),
+(5,  5, '2026-03-15 08:00:00', '2026-03-15', '2026-04-14', 'expired'),
+(12, 9, '2026-01-05 08:00:00', '2026-01-05', '2026-02-04', 'expired'),
+(14, 1, '2026-03-20 08:00:00', '2026-03-20', '2026-04-19', 'expired');
+
+-- ─── INVOICES ────────────────────────────────────────────
+INSERT INTO "Invoice" ("member_id", "subscription_id", "total_amount", "payment_status", "payment_method", "notes") VALUES
+(1,   1,  1000000, 'Paid', 'Cash',          'Goi VIP Thang'),
+(1,   2,   450000, 'Paid', 'Card',          'Goi Yoga Thang - combo VIP'),
+(2,   3,   500000, 'Paid', 'Bank Transfer', 'Goi Co Ban Thang'),
+(2,   4,   400000, 'Paid', 'Cash',          'Goi Aerobic Thang'),
+(3,   5,  1000000, 'Paid', 'Card',          'Goi VIP Thang'),
+(3,   6,   500000, 'Paid', 'Bank Transfer', 'Goi Boxing Thang - combo VIP'),
+(4,   7,    50000, 'Paid', 'Cash',          'Goi Nu Thang'),
+(4,   8,   450000, 'Paid', 'Cash',          'Goi Yoga Thang - combo Nu'),
+(5,   9,  5000000, 'Paid', 'Bank Transfer', 'Goi VIP nua nam'),
+(5,  10,   600000, 'Paid', 'Card',          'Goi Pilates Thang - combo VIP'),
+(6,  11,   500000, 'Paid', 'Cash',          'Goi Co Ban Thang'),
+(6,  12,  1050000, 'Paid', 'Bank Transfer', 'Goi Aerobic 3 thang'),
+(7,  13,  5000000, 'Paid', 'Card',          'Goi VIP nua nam'),
+(7,  14,  1200000, 'Paid', 'Card',          'Goi Yoga 3 thang - combo VIP'),
+(7,  15,   500000, 'Paid', 'Cash',          'Goi Boxing Thang - combo VIP'),
+(8,  16,    50000, 'Paid', 'Cash',          'Goi Nu Thang'),
+(8,  17,   600000, 'Paid', 'Bank Transfer', 'Goi Pilates Thang - combo Nu'),
+(8,  18,   300000, 'Paid', 'Cash',          'Goi Duong sinh Thang - combo Nu'),
+(9,  19, 10000000, 'Paid', 'Bank Transfer', 'Goi VIP 1 nam'),
+(9,  20,  1300000, 'Paid', 'Card',          'Goi Boxing 3 thang - combo VIP'),
+(9,  21,   900000, 'Paid', 'Bank Transfer', 'Goi Yoga Tri lieu - combo VIP'),
+(10, 22,    50000, 'Paid', 'Card',          'Goi Nu Thang'),
+(10, 23,  1500000, 'Paid', 'Card',          'Goi Duong sinh 6 thang - combo Nu'),
+(11, 24,  1000000, 'Paid', 'Cash',          'Goi VIP Thang'),
+(11, 25,   450000, 'Paid', 'Card',          'Goi Yoga Thang - combo VIP'),
+(12, 26,  2800000, 'Paid', 'Bank Transfer', 'Goi VIP 3 thang'),
+(12, 27,   500000, 'Paid', 'Cash',          'Goi Boxing Thang - combo VIP 3T'),
+(13, 28,   400000, 'Paid', 'Card',          'Goi Aerobic Thang'),
+(13, 29,   300000, 'Paid', 'Cash',          'Goi Duong sinh Thang - combo Aerobic'),
+(14, 30,  1300000, 'Paid', 'Bank Transfer', 'Goi Co Ban 3 thang'),
+(14, 31,  1050000, 'Paid', 'Card',          'Goi Aerobic 3 thang - combo Co ban'),
+(15, 32,    50000, 'Paid', 'Cash',          'Goi Nu Thang'),
+(15, 33,   450000, 'Paid', 'Card',          'Goi Yoga Thang - combo Nu'),
+(16, 34,  1000000, 'Paid', 'Bank Transfer', 'Goi VIP Thang'),
+(16, 35,   500000, 'Paid', 'Cash',          'Goi Boxing Thang - combo VIP'),
+(17, 36,  2500000, 'Paid', 'Card',          'Goi Nu nua nam'),
+(17, 37,  1200000, 'Paid', 'Bank Transfer', 'Goi Yoga 3 thang - combo Nu'),
+(18, 38,  5000000, 'Paid', 'Card',          'Goi VIP nua nam'),
+(18, 39,  1300000, 'Paid', 'Cash',          'Goi Boxing 3 thang - combo VIP'),
+(19, 40,   450000, 'Paid', 'Bank Transfer', 'Goi Yoga Thang'),
+(19, 41,   400000, 'Paid', 'Card',          'Goi Aerobic Thang - combo Yoga'),
+(20, 42, 10000000, 'Paid', 'Bank Transfer', 'Goi VIP 1 nam'),
+(20, 43,  1900000, 'Paid', 'Card',          'Goi Aerobic 6 thang - combo VIP'),
+(1,  44,   500000, 'Paid', 'Cash',          'Gia han Goi Co Ban Thang (da het han)'),
+(3,  45,   500000, 'Paid', 'Cash',          'Gia han Goi Co Ban Thang (da het han)'),
+(5,  46,   500000, 'Paid', 'Card',          'Gia han Goi Co Ban Thang (da het han)'),
+(12, 47,   400000, 'Paid', 'Cash',          'Goi Aerobic Thang (da het han)'),
+(14, 48,  1000000, 'Paid', 'Bank Transfer', 'Goi VIP Thang (da het han)');
+
+-- ─── FEEDBACK ────────────────────────────────────────────
+INSERT INTO "Feedback" ("member_id", "processor_id", "equipment_id", "content", "sent_at", "resolution_note", "status", "rating") VALUES
+(1,   1,  1, 'May chay bo so 1 hay bi ket bang tai',         '2026-04-10 08:30:00', 'Da bao tri xong, may chay muot',         'Resolved', 4),
+(2,   4,  2, 'Ta don Olympic bi tray xuoc phan tay cam',     '2026-04-11 09:15:00', 'Dang doi thay moi',                      'Pending',  2),
+(3,   8,  3, 'Tham Yoga bi rach o goc',                     '2026-04-12 10:00:00', 'Da thay tham moi cho hoi vien',          'Resolved', 5),
+(4,   1,  4, 'Dan am thanh JBL phat ra tieng re',           '2026-04-13 14:20:00', 'Da kiem tra va ve sinh loa',             'Resolved', 3),
+(5,   4,  5, 'May Pilates Reformer bi ket duong ray',       '2026-04-14 15:45:00', 'Da tra dau va can chinh lai',            'Resolved', 4),
+(6,   8,  6, 'Phong xong hoi kho khong du nong',            '2026-04-15 16:10:00', 'Chinh lai cam bien nhiet',               'Resolved', 4),
+(7,   1,  7, 'May xong uot bi ro nuoc ra san',              '2026-04-16 09:00:00', 'Dang cho linh kien sua chua',            'Pending',  1),
+(8,   4,  8, 'Bao cat Boxing bi mop mot ben',               '2026-05-02 11:30:00', 'Se boc lai da va them bong',             'Pending',  3),
+(9,   8,  9, 'Bo ta tu do thieu ta 20kg',                   '2026-05-10 10:00:00', 'Da bo sung ta con thieu',                'Resolved', 5),
+(10,  1, 10, 'May chay bo NordicTrack phat tieng keu la',   '2026-05-15 08:45:00', 'Da ve sinh va tra dau bang tai',         'Resolved', 5);
+
+-- ─── TRAINING BOOKINGS ───────────────────────────────────
+INSERT INTO "TrainingBooking"
+  ("member_id","pt_id","requested_start","requested_end","training_plan_note","status","intensity","roadmap_goal","member_free_schedule","rejection_reason")
+VALUES
+-- PT 2 (Khoa - Strength)
+(1,  2,'2026-05-03 07:00:00','2026-05-03 08:00:00','Tang co nguc va vai',                    'Completed','High',  'Tang 5kg co trong 3 thang',               '{"Mon":"07:00","Wed":"07:00","Fri":"07:00"}',''),
+(3,  2,'2026-05-08 08:00:00','2026-05-08 09:00:00','Giam mo bung, tang co lung',             'Completed','Medium','Giam 8kg mo trong 4 thang',               '{"Tue":"08:00","Thu":"08:00","Sat":"08:00"}',''),
+(12, 2,'2026-05-13 09:00:00','2026-05-13 10:00:00','Phuc hoi sau chan thuong vai',           'Completed','Low',   'Phuc hoi hoan toan va tro lai tap nang',  '{"Mon":"09:00","Thu":"09:00"}',''),
+(18, 2,'2026-06-07 07:00:00','2026-06-07 08:00:00','Strength training co ban',               'Accepted', 'Medium','Xay dung nen tang suc manh',              '{"Mon":"07:00","Wed":"07:00","Fri":"07:00"}',''),
+(16, 2,'2026-06-08 17:00:00','2026-06-08 18:00:00','Deadlift va Squat ky thuat',             'Accepted', 'High',  'Thi dau powerlifting',                    '{"Tue":"17:00","Thu":"17:00","Sat":"09:00"}',''),
+(5,  2,'2026-06-18 08:00:00','2026-06-18 09:00:00','Chuong trinh tang co toan than',         'Pending',  'High',  'Tang 10kg co trong 6 thang',              '{"Mon":"08:00","Wed":"08:00","Fri":"08:00"}',''),
+(20, 2,'2026-05-18 09:00:00','2026-05-18 10:00:00','Tap theo chuong trinh VIP',              'Rejected', 'High',  'Tham gia Mr. Vietnam',                    '{"Mon":"09:00"}','PT khong co lich trong gio nay, vui long chon khung gio khac'),
+(9,  2,'2026-06-22 17:00:00','2026-06-22 18:00:00','Olympic lifting - Snatch va Clean&Jerk', 'Pending',  'High',  'Nang cao ky thuat Olympic lifting',       '{"Wed":"17:00","Fri":"17:00"}',''),
+-- PT 5 (Lan - Yoga/Pilates)
+(4,  5,'2026-05-05 09:00:00','2026-05-05 10:00:00','Yoga tri lieu dau lung',                 'Completed','Low',   'Het dau lung man tinh',                   '{"Mon":"09:00","Wed":"09:00","Fri":"09:00"}',''),
+(8,  5,'2026-05-11 14:00:00','2026-05-11 15:00:00','Pilates cai thien tu the',               'Completed','Low',   'Cai thien tu the, giam gu lung',          '{"Tue":"14:00","Thu":"14:00"}',''),
+(15, 5,'2026-06-06 09:00:00','2026-06-06 10:00:00','Yoga danh cho nguoi moi bat dau',        'Accepted', 'Low',   'Can bang tam ly va the chat',             '{"Mon":"09:00","Wed":"09:00","Fri":"09:00"}',''),
+(17, 5,'2026-06-07 14:00:00','2026-06-07 15:00:00','Yoga giam stress sau cong viec',         'Accepted', 'Low',   'Giam stress, ngu ngon hon',               '{"Wed":"14:00","Fri":"14:00","Sat":"10:00"}',''),
+(19, 5,'2026-06-19 10:00:00','2026-06-19 11:00:00','Yoga ket hop thien dinh',               'Pending',  'Low',   'Cai thien suc khoe tinh than',            '{"Mon":"10:00","Wed":"10:00"}',''),
+(11, 5,'2026-05-20 14:00:00','2026-05-20 15:00:00','Pilates Reformer ca nhan',               'Rejected', 'Medium','Tang co loi va linh hoat',                '{"Sat":"14:00"}','Thiet bi Reformer dang bao tri, vui long chon ngay khac'),
+(13, 5,'2026-06-21 09:00:00','2026-06-21 10:00:00','Yoga danh cho van dong vien',            'Pending',  'Medium','Tang tinh linh hoat va phuc hoi',         '{"Wed":"09:00","Fri":"09:00"}',''),
+-- PT 9 (Hung - Calisthenics)
+(2,  9,'2026-05-01 07:00:00','2026-05-01 08:00:00','Calisthenics co ban - muscle up',        'Completed','High',  'Hoc duoc muscle up trong 2 thang',        '{"Tue":"07:00","Thu":"07:00","Sat":"07:00"}',''),
+(6,  9,'2026-05-15 19:00:00','2026-05-15 20:00:00','Giam mo ket hop calisthenics',           'Completed','Medium','Giam 6kg va tang suc ben',                '{"Tue":"19:00","Thu":"19:00"}',''),
+(14, 9,'2026-06-06 08:00:00','2026-06-06 09:00:00','Handstand va ring training',             'Accepted', 'High',  'Tu dung duoc handstand',                  '{"Sat":"07:00","Sun":"09:00"}',''),
+(7,  9,'2026-06-08 20:00:00','2026-06-08 21:00:00','Chuong trinh nang cao - front lever',   'Accepted', 'High',  'Hoan thien front lever va planche',       '{"Tue":"20:00","Thu":"20:00"}',''),
+(10, 9,'2026-06-18 07:00:00','2026-06-18 08:00:00','Calisthenics nhe cho nguoi cao tuoi',   'Pending',  'Low',   'Duy tri suc khoe va linh hoat',           '{"Sat":"09:00","Sun":"10:00"}',''),
+(18, 9,'2026-05-21 19:00:00','2026-05-21 20:00:00','Ket hop Strength va Calisthenics',       'Rejected', 'High',  'Xay dung co the toan dien',               '{"Tue":"19:00"}','Member chua du nen tang cho chuong trinh nay, can tap them 1 thang co ban'),
+(20, 9,'2026-06-23 08:00:00','2026-06-23 09:00:00','Chuan bi thi dau Calisthenics',          'Pending',  'High',  'Dat top 3 giai Calisthenics Ha Noi',      '{"Sat":"07:00","Sun":"09:00"}',''),
+-- PT 11 (Anh - Aerobic)
+(2,  11,'2026-04-28 06:00:00','2026-04-28 07:00:00','HIIT cho nguoi moi',                    'Completed','Medium','Tang suc ben cardio',                     '{"Mon":"06:00","Wed":"06:00","Fri":"06:00"}',''),
+(13, 11,'2026-05-09 17:00:00','2026-05-09 18:00:00','Zumba ket hop Aerobic',                 'Completed','Medium','Giam 5kg va co dang dep',                 '{"Tue":"17:00","Thu":"17:00","Sat":"08:00"}',''),
+(6,  11,'2026-06-06 07:00:00','2026-06-06 08:00:00','HIIT nang cao giam mo',                 'Accepted', 'High',  'Giam 10kg trong 3 thang',                 '{"Mon":"07:00","Tue":"07:00","Thu":"07:00"}',''),
+(19, 11,'2026-06-07 17:00:00','2026-06-07 18:00:00','Aerobic ket hop bai tap tim mach',     'Accepted', 'Medium','Cai thien suc khoe tim mach',             '{"Tue":"17:00","Thu":"17:00"}',''),
+(14, 11,'2026-06-19 18:00:00','2026-06-19 19:00:00','Aerobic va HIIT phoi hop',              'Pending',  'High',  'Tang suc ben tong the',                   '{"Mon":"18:00","Wed":"18:00","Fri":"18:00"}',''),
+(20, 11,'2026-05-17 06:00:00','2026-05-17 07:00:00','Cardio danh cho powerlifter',           'Rejected', 'Medium','Tang suc ben khong anh huong suc manh',   '{"Mon":"06:00"}','Lich cua PT da kin gio nay'),
+(16, 11,'2026-06-21 07:00:00','2026-06-21 08:00:00','Cardio ket hop strength',               'Pending',  'High',  'Cai thien suc ben va dot mo',             '{"Mon":"07:00","Fri":"07:00"}',''),
+(1,  11,'2026-06-24 17:00:00','2026-06-24 18:00:00','Aerobic buoi chieu sau gio lam',       'Pending',  'Medium','Duy tri can nang ly tuong',               '{"Tue":"17:00","Thu":"17:00"}',''),
+-- PT 12 (Mai - Yoga)
+(15, 12,'2026-05-07 08:00:00','2026-05-07 09:00:00','Yoga co ban cho nguoi moi',             'Completed','Low',   'Giam dau lung va stress',                 '{"Mon":"08:00","Wed":"08:00","Fri":"08:00"}',''),
+(10, 12,'2026-05-14 14:00:00','2026-05-14 15:00:00','Duong sinh cho nguoi trung nien',       'Completed','Low',   'Cai thien suc khoe tong the',             '{"Wed":"14:00","Sat":"09:00"}',''),
+(17, 12,'2026-06-06 10:00:00','2026-06-06 11:00:00','Yoga sau - Yin Yoga',                   'Accepted', 'Low',   'Thu gian sau va phuc hoi',                '{"Mon":"10:00","Wed":"10:00","Fri":"10:00"}',''),
+(4,  12,'2026-06-08 15:00:00','2026-06-08 16:00:00','Yoga tiep theo sau buoi tri lieu',      'Accepted', 'Low',   'Duy tri khong dau lung',                  '{"Tue":"15:00","Thu":"15:00"}',''),
+(11, 12,'2026-06-20 09:00:00','2026-06-20 10:00:00','Power Yoga cho nguoi nang dong',        'Pending',  'Medium','Ket hop yoga va the luc',                 '{"Mon":"09:00","Thu":"09:00","Sat":"10:00"}',''),
+(8,  12,'2026-05-19 14:00:00','2026-05-19 15:00:00','Pilates mat level 2',                   'Rejected', 'Medium','Tang cuong co loi',                       '{"Tue":"14:00"}','Buoi nay da co member khac dat truoc'),
+(13, 12,'2026-06-22 16:00:00','2026-06-22 17:00:00','Yoga phuc hoi sau tap nang',            'Pending',  'Low',   'Tang tinh linh hoat',                     '{"Wed":"16:00","Fri":"16:00"}',''),
+-- PT 13 (Tuan - Boxing)
+(3,  13,'2026-04-25 07:00:00','2026-04-25 08:00:00','Boxing co ban - ky thuat dam',          'Completed','Medium','Hoc boxing de tu ve',                     '{"Mon":"07:00","Wed":"07:00","Fri":"07:00"}',''),
+(7,  13,'2026-05-12 19:00:00','2026-05-12 20:00:00','Kickboxing nang cao',                   'Completed','High',  'Thi dau giai nghiep du',                  '{"Tue":"19:00","Thu":"19:00","Sat":"09:00"}',''),
+(16, 13,'2026-06-06 18:00:00','2026-06-06 19:00:00','Boxing giam stress',                    'Accepted', 'High',  'Ren luyen suc manh va tu duy chien thuat','{"Mon":"18:00","Thu":"18:00","Fri":"18:00"}',''),
+(12, 13,'2026-06-07 08:00:00','2026-06-07 09:00:00','MMA co ban ket hop Boxing',             'Accepted', 'High',  'Hoc MMA toan dien',                       '{"Tue":"08:00","Thu":"08:00","Sat":"08:00"}',''),
+(18, 13,'2026-06-19 19:00:00','2026-06-19 20:00:00','Nang cao ky thuat jab-cross-hook',     'Pending',  'High',  'Chuan bi thi dau',                        '{"Mon":"19:00","Wed":"19:00","Fri":"19:00"}',''),
+(9,  13,'2026-05-16 07:00:00','2026-05-16 08:00:00','Boxing conditioning cho powerlifter',   'Rejected', 'High',  'Tang toc do va phan xa',                  '{"Sat":"07:00"}','PT Tuan dang co giai dau tuan nay, vui long dat lai'),
+(20, 13,'2026-06-08 08:00:00','2026-06-08 09:00:00','Chuan bi the luc thi boxing',           'Pending',  'High',  'Dat HCV Boxing nghiep du',                '{"Mon":"08:00","Wed":"08:00","Fri":"08:00"}',''),
+(14, 13,'2026-06-21 07:00:00','2026-06-21 08:00:00','Boxing co ban buoi sang',               'Pending',  'Medium','Hoc boxing de giu dang va tu ve',         '{"Mon":"07:00","Wed":"07:00","Fri":"07:00"}',''),
+-- Bổ sung lịch PT 2
+(4,  2,'2026-06-05 07:00:00','2026-06-05 08:00:00','Tap chan - Squat va Lunge nang cao',     'Accepted', 'Medium','Cai thien suc manh chan va tu the',       '{"Mon":"07:00","Thu":"07:00"}',''),
+(8,  2,'2026-06-09 17:00:00','2026-06-09 18:00:00','Tang co vai va tay sau',                 'Accepted', 'High',  'Co bap phan tren can doi',               '{"Tue":"17:00","Fri":"17:00"}',''),
+(6,  2,'2026-06-12 08:00:00','2026-06-12 09:00:00','Full body workout - chuong trinh 3 thang','Accepted', 'Medium','Tang can nang va suc manh tong the',     '{"Mon":"08:00","Wed":"08:00","Sat":"08:00"}',''),
+(13, 2,'2026-06-20 17:00:00','2026-06-20 18:00:00','Ky thuat Bench Press nang cao',          'Pending',  'High',  'Dat Bench Press 100kg',                   '{"Tue":"17:00","Fri":"17:00"}',''),
+(19, 2,'2026-06-27 08:00:00','2026-06-27 09:00:00','Chuong trinh tang co loi',               'Pending',  'Medium','Tang suc manh core va giam dau lung',     '{"Wed":"08:00","Sat":"08:00"}',''),
+-- Bổ sung lịch PT 5
+(7,  5,'2026-06-05 09:00:00','2026-06-05 10:00:00','Yoga nang cao - Arm Balances',           'Accepted', 'Medium','Chinh phuc cac tu the can bang tay',      '{"Mon":"09:00","Thu":"09:00"}',''),
+(6,  5,'2026-06-09 14:00:00','2026-06-09 15:00:00','Yoga phuc hoi - Restorative Yoga',       'Accepted', 'Low',   'Giam cang co toan than sau tap nang',    '{"Tue":"14:00","Fri":"14:00"}',''),
+(12, 5,'2026-06-12 10:00:00','2026-06-12 11:00:00','Pilates co ban cho hoi vien moi',        'Accepted', 'Low',   'Lam quen Pilates, tang co loi',           '{"Thu":"10:00","Sat":"10:00"}',''),
+(20, 5,'2026-06-19 09:00:00','2026-06-19 10:00:00','Yoga toan than ket hop duong sinh',      'Pending',  'Low',   'Can bang than tam, giam stress',          '{"Wed":"09:00","Sat":"09:00"}',''),
+(16, 5,'2026-06-26 14:00:00','2026-06-26 15:00:00','Vinyasa Flow nang cao',                  'Pending',  'Medium','Lien ket hoi tho va chuyen dong',         '{"Mon":"14:00","Thu":"14:00"}',''),
+-- Bổ sung lịch PT 9
+(1,  9,'2026-06-03 08:00:00','2026-06-03 09:00:00','Pull-up va dip nang cao',                'Accepted', 'High',  'Dat 20 pull-up lien tuc',                 '{"Tue":"08:00","Thu":"08:00","Sat":"08:00"}',''),
+(3,  9,'2026-06-05 19:00:00','2026-06-05 20:00:00','Calisthenics co ban - buoi 2',           'Accepted', 'Medium','Hoan thien push-up va squat ky thuat',    '{"Mon":"19:00","Wed":"19:00"}',''),
+(5,  9,'2026-06-10 08:00:00','2026-06-10 09:00:00','Muscle up va bar training',              'Accepted', 'High',  'Hoc muscle up trong 6 tuan',              '{"Tue":"08:00","Fri":"08:00"}',''),
+(11, 9,'2026-06-12 07:00:00','2026-06-12 08:00:00','Ring training - co ban',                 'Accepted', 'High',  'Kiem soat vong tot trong 2 thang',       '{"Thu":"07:00","Sat":"07:00"}',''),
+(9,  9,'2026-06-17 07:00:00','2026-06-17 08:00:00','Planche va front lever',                 'Pending',  'High',  'Thi dau Calisthenics Ha Noi',             '{"Tue":"07:00","Thu":"07:00"}',''),
+(13, 9,'2026-06-20 08:00:00','2026-06-20 09:00:00','Calisthenics giam mo tang co',           'Pending',  'Medium','Giam 5kg va tang co tay',                 '{"Mon":"08:00","Wed":"08:00","Fri":"08:00"}',''),
+(15, 9,'2026-06-24 09:00:00','2026-06-24 10:00:00','Khoi dau Calisthenics cho nguoi moi',   'Pending',  'Low',   'Xay nen tang the luc vung chac',          '{"Sat":"09:00","Sun":"10:00"}',''),
+(17, 9,'2026-06-28 07:00:00','2026-06-28 08:00:00','Dragon flag va L-sit',                   'Pending',  'High',  'Nang cao ky thuat the duc dung cu',      '{"Sat":"07:00","Sun":"08:00"}',''),
+-- Bổ sung lịch PT 11
+(4,  11,'2026-06-05 06:00:00','2026-06-05 07:00:00','Tabata training buoi sang',             'Accepted', 'High',  'Tang suc ben va dot mo nhanh',            '{"Mon":"06:00","Wed":"06:00","Fri":"06:00"}',''),
+(7,  11,'2026-06-10 17:00:00','2026-06-10 18:00:00','Dance Fitness - Zumba nang cao',        'Accepted', 'Medium','Phoi hop nhip dieu va dot calories',     '{"Tue":"17:00","Thu":"17:00","Sat":"09:00"}',''),
+(10, 11,'2026-06-12 06:00:00','2026-06-12 07:00:00','Circuit training toan than',            'Accepted', 'High',  'Tang suc ben va suc manh dong thoi',     '{"Mon":"06:00","Fri":"06:00"}',''),
+(12, 11,'2026-06-20 18:00:00','2026-06-20 19:00:00','Aerobic 45 phut cuong do vua',          'Pending',  'Medium','Giu can nang ly tuong dai han',           '{"Tue":"18:00","Thu":"18:00"}',''),
+(15, 11,'2026-06-27 07:00:00','2026-06-27 08:00:00','HIIT buoi sang ket hop stretching',    'Pending',  'Medium','Tang suc khoe tim mach toan dien',        '{"Mon":"07:00","Wed":"07:00","Fri":"07:00"}',''),
+-- Bổ sung lịch PT 12
+(5,  12,'2026-06-05 08:00:00','2026-06-05 09:00:00','Ashtanga Yoga - Primary Series',        'Accepted', 'Medium','Luyen tap Yoga lien tuc 6 buoi/tuan',     '{"Mon":"08:00","Wed":"08:00","Fri":"08:00"}',''),
+(6,  12,'2026-06-10 14:00:00','2026-06-10 15:00:00','Yoga Nidra va thien dinh sau',          'Accepted', 'Low',   'Cai thien giac ngu va giam stress',      '{"Tue":"14:00","Thu":"14:00"}',''),
+(9,  12,'2026-06-12 10:00:00','2026-06-12 11:00:00','Hatha Yoga cho nguoi moi',              'Accepted', 'Low',   'Hoc Yoga tu dau, tap tho dung cach',     '{"Thu":"10:00","Sat":"10:00"}',''),
+(18, 12,'2026-06-20 08:00:00','2026-06-20 09:00:00','Power Yoga ket hop calisthenics nhe',  'Pending',  'Medium','Tang the luc va linh hoat tong the',     '{"Mon":"08:00","Wed":"08:00"}',''),
+(20, 12,'2026-06-27 16:00:00','2026-06-27 17:00:00','Prenatal Yoga - Yoga an toan',          'Pending',  'Low',   'Duy tri suc khoe va thu gian',           '{"Wed":"16:00","Sat":"15:00"}',''),
+-- Bổ sung lịch PT 13
+(1,  13,'2026-06-05 07:00:00','2026-06-05 08:00:00','Shadow boxing va footwork',             'Accepted', 'Medium','Cai thien phan xa va di chuyen',          '{"Mon":"07:00","Wed":"07:00","Fri":"07:00"}',''),
+(6,  13,'2026-06-10 19:00:00','2026-06-10 20:00:00','Sparring nhe - ky thuat phong thu',    'Accepted', 'High',  'Hoan thien ky thuat phong thu co ban',  '{"Tue":"19:00","Thu":"19:00"}',''),
+(10, 13,'2026-06-12 18:00:00','2026-06-12 19:00:00','Bag work nang cao - combo 6 don',      'Accepted', 'High',  'Thanh thao cac combo co ban',            '{"Mon":"18:00","Thu":"18:00","Fri":"18:00"}',''),
+(17, 13,'2026-06-20 07:00:00','2026-06-20 08:00:00','Muay Thai co ban - da va goi',          'Pending',  'High',  'Ket hop ky thuat tay va chan',           '{"Tue":"07:00","Thu":"07:00","Sat":"08:00"}',''),
+(19, 13,'2026-06-27 18:00:00','2026-06-27 19:00:00','Conditioning va suc ben Boxing',        'Pending',  'High',  'Tang the luc thi dau dai han',           '{"Mon":"18:00","Wed":"18:00","Fri":"18:00"}','');
+
+-- ─── TRAINING SESSIONS ───────────────────────────────────
+INSERT INTO "TrainingSession" ("booking_id","facility_id","session_time","attendance_status","pt_feedback")
+SELECT b.id, 1, b.requested_start, 'Present', 'Buoi tap hieu qua, ky thuat tot, can chu y khoi dong ky hon'
+FROM "TrainingBooking" b WHERE b.status = 'Completed' AND b.pt_id = 2 ORDER BY b.id;
+
+INSERT INTO "TrainingSession" ("booking_id","facility_id","session_time","attendance_status","pt_feedback")
+SELECT b.id, 2, b.requested_start, 'Present', 'Hoc vien tien bo ro ret, tu the Yoga cai thien nhieu'
+FROM "TrainingBooking" b WHERE b.status = 'Completed' AND b.pt_id = 5 ORDER BY b.id;
+
+INSERT INTO "TrainingSession" ("booking_id","facility_id","session_time","attendance_status","pt_feedback")
+SELECT b.id, 1, b.requested_start,
+       CASE WHEN b.member_id % 3 = 0 THEN 'Absent' ELSE 'Present' END,
+       CASE WHEN b.member_id % 3 = 0 THEN 'Hoc vien vang mat khong bao truoc'
+            ELSE 'Hoan thanh tot bai Calisthenics, dang tien gan den Muscle Up' END
+FROM "TrainingBooking" b WHERE b.status = 'Completed' AND b.pt_id = 9 ORDER BY b.id;
+
+INSERT INTO "TrainingSession" ("booking_id","facility_id","session_time","attendance_status","pt_feedback")
+SELECT b.id, 3, b.requested_start, 'Present', 'Cardio tot, nhip tim on dinh, can tang cuong do them o buoi sau'
+FROM "TrainingBooking" b WHERE b.status = 'Completed' AND b.pt_id = 11 ORDER BY b.id;
+
+INSERT INTO "TrainingSession" ("booking_id","facility_id","session_time","attendance_status","pt_feedback")
+SELECT b.id, 2, b.requested_start, 'Present', 'Hoc vien rat cham chi, tu the dep, tiep tuc duy tri'
+FROM "TrainingBooking" b WHERE b.status = 'Completed' AND b.pt_id = 12 ORDER BY b.id;
+
+INSERT INTO "TrainingSession" ("booking_id","facility_id","session_time","attendance_status","pt_feedback")
+SELECT b.id, 8, b.requested_start,
+       CASE WHEN b.member_id % 4 = 0 THEN 'Absent' ELSE 'Present' END,
+       CASE WHEN b.member_id % 4 = 0 THEN 'Hoc vien vang mat, can lien he lai'
+            ELSE 'Ky thuat dam cai thien, tiep tuc luyen footwork' END
+FROM "TrainingBooking" b WHERE b.status = 'Completed' AND b.pt_id = 13 ORDER BY b.id;
+
+INSERT INTO "TrainingSession" ("booking_id","facility_id","session_time","attendance_status","pt_feedback")
+SELECT b.id, 1, b.requested_start, 'Present', ''
+FROM "TrainingBooking" b WHERE b.status = 'Accepted' ORDER BY b.id;
+
+-- ─── ĐỒNG BỘ roadmap_goal VÀ member_free_schedule ────────
+-- Lấy booking MỚI NHẤT có dữ liệu không rỗng cho từng member,
+-- rồi cập nhật vào bảng Member để hiển thị trên hồ sơ cá nhân.
+UPDATE "Member" m
+SET
+    roadmap_goal         = latest.roadmap_goal,
+    member_free_schedule = latest.member_free_schedule
+FROM (
+    SELECT DISTINCT ON (member_id)
+        member_id,
+        roadmap_goal,
+        member_free_schedule
+    FROM "TrainingBooking"
+    WHERE roadmap_goal         IS NOT NULL AND roadmap_goal         <> ''
+      AND member_free_schedule IS NOT NULL AND member_free_schedule <> ''
+    ORDER BY member_id, requested_start DESC
+) latest
+WHERE m.id = latest.member_id;

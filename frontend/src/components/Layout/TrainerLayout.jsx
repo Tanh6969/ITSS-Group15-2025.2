@@ -1,5 +1,7 @@
 import React from 'react';
-import { NavLink, Outlet } from 'react-router-dom';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
+import { pageVariants } from '@/lib/animations';
 import useAuthStore from '@/store/useAuthStore';
 import useUIStore from '@/store/useUIStore';
 import useThemeStore from '@/store/useThemeStore';
@@ -11,6 +13,7 @@ import {
 import NotificationBell from '@/components/Common/NotificationBell';
 
 const TrainerLayout = () => {
+  const { pathname } = useLocation();
   const user = useAuthStore((state) => state.user);
   const logout = useAuthStore((state) => state.logout);
   const isSidebarOpen = useUIStore((state) => state.isSidebarOpen);
@@ -128,8 +131,19 @@ const TrainerLayout = () => {
         </header>
 
         {/* Content Area */}
-        <main className="flex-1 overflow-hidden bg-gray-50 dark:bg-gray-900 flex flex-col">
-          <Outlet />
+        <main className="flex-1 overflow-hidden bg-gray-50 dark:bg-gray-900 relative">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={pathname}
+              variants={pageVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              className="absolute inset-0 overflow-y-auto overflow-x-hidden flex flex-col"
+            >
+              <Outlet />
+            </motion.div>
+          </AnimatePresence>
         </main>
       </div>
     </div>
