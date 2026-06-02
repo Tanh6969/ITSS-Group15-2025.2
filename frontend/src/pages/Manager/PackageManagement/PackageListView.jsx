@@ -8,7 +8,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { formatPriceVND } from '@/utils/formatters';
 import { slideUpVariants, sectionStaggerVariants } from '@/lib/animations';
 
+import { useTranslation } from 'react-i18next';
 const PackageList = () => {
+    const { t } = useTranslation('manager');
   const navigate = useNavigate();
   const { data: packages, isLoading, isError } = usePackages();
   const { data: serviceCategories } = useServiceCategories();

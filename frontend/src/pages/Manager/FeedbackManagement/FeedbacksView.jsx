@@ -9,6 +9,7 @@ import { useFeedbacks } from '@/hooks/queries/useFeedbacks';
 import { useUpdateFeedbackStatus } from '@/hooks/mutations/useFeedbackMutations';
 import { slideUpVariants, cardVariants, staggerContainerVariants, sectionStaggerVariants } from '@/lib/animations';
 
+import { useTranslation } from 'react-i18next';
 const statusConfig = {
     pending: { label: 'Chờ xử lý', color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' },
     resolved: { label: 'Đã xử lý', color: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' }
@@ -17,6 +18,7 @@ const statusConfig = {
 const normalizeStatus = (status) => (status || '').toString().trim().toLowerCase();
 
 const FeedbacksView = () => {
+    const { t } = useTranslation('manager');
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
     const [selectedFeedback, setSelectedFeedback] = useState(null);
@@ -81,7 +83,7 @@ const FeedbacksView = () => {
             {/* Header */}
             <motion.div variants={slideUpVariants} className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Phản Hồi Của Hội Viên</h1>
+                    <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{t('feedbacks.title')}</h1>
                     <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                         Quản lý các phản hồi và đánh giá từ hội viên
                     </p>
@@ -111,7 +113,7 @@ const FeedbacksView = () => {
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                             <Input
                                 type="text"
-                                placeholder="Tìm theo tên hội viên hoặc nội dung..."
+                                placeholder={t('feedbacks.search_placeholder')}
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 className="pl-10"
@@ -125,9 +127,9 @@ const FeedbacksView = () => {
                         onChange={(e) => setStatusFilter(e.target.value)}
                         className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300"
                     >
-                        <option value="all">Tất cả trạng thái</option>
-                        <option value="pending">Chưa xử lý</option>
-                        <option value="resolved">Đã xử lý</option>
+                        <option value="all">{t('feedbacks.filter_all')}</option>
+                        <option value="pending">{t('feedbacks.unprocessed')}</option>
+                        <option value="resolved">{t('feedbacks.processed')}</option>
                     </select>
                 </div>
 
@@ -140,11 +142,11 @@ const FeedbacksView = () => {
             <motion.div variants={staggerContainerVariants} className="space-y-3">
                 {isLoading ? (
                     <div className="rounded-xl border border-gray-100 bg-white p-12 text-center shadow-sm dark:border-gray-800 dark:bg-gray-950">
-                        <p className="text-gray-500 dark:text-gray-400">Đang tải dữ liệu...</p>
+                        <p className="text-gray-500 dark:text-gray-400">{t('feedbacks.loading')}</p>
                     </div>
                 ) : filteredFeedbacks.length === 0 ? (
                     <div className="rounded-xl border border-gray-100 bg-white p-12 text-center shadow-sm dark:border-gray-800 dark:bg-gray-950">
-                        <p className="text-gray-500 dark:text-gray-400">Không có phản hồi nào</p>
+                        <p className="text-gray-500 dark:text-gray-400">{t('feedbacks.no_feedback')}</p>
                     </div>
                 ) : (
                     filteredFeedbacks.map((feedback, i) => (
@@ -194,19 +196,19 @@ const FeedbacksView = () => {
 
                         <div className="grid grid-cols-2 gap-4">
                             <div>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">Hội viên</p>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">{t('feedbacks.member')}</p>
                                 <p className="text-sm font-semibold text-gray-900 dark:text-white">{selectedFeedback.member_name}</p>
                             </div>
                             <div>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">Đánh giá</p>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">{t('feedbacks.rating')}</p>
                                 <div>{renderStars(selectedFeedback.rating)}</div>
                             </div>
                             <div>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">Ngày gửi</p>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">{t('feedbacks.sent_date')}</p>
                                 <p className="text-sm font-semibold text-gray-900 dark:text-white">{formatDate(selectedFeedback.sent_at)}</p>
                             </div>
                             <div>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">Trạng thái</p>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">{t('feedbacks.status')}</p>
                                 <Badge className={statusConfig[normalizeStatus(selectedFeedback.status)]?.color || 'bg-gray-100'}>
                                     {statusConfig[normalizeStatus(selectedFeedback.status)]?.label || selectedFeedback.status}
                                 </Badge>
@@ -215,14 +217,14 @@ const FeedbacksView = () => {
 
                         {selectedFeedback.resolution_note && (
                             <div className="border-t border-gray-200 pt-4 dark:border-gray-700">
-                                <p className="text-sm font-semibold text-gray-900 dark:text-white mb-2">Ghi chú xử lý</p>
+                                <p className="text-sm font-semibold text-gray-900 dark:text-white mb-2">{t('feedbacks.processing_note')}</p>
                                 <p className="text-sm text-gray-600 dark:text-gray-400">{selectedFeedback.resolution_note}</p>
                             </div>
                         )}
 
                         <div className="flex justify-end gap-2 border-t border-gray-200 pt-4 dark:border-gray-700">
                             {normalizeStatus(selectedFeedback.status) === 'pending' && (
-                                <Button onClick={() => setShowProcessModal(true)}>Xử lý</Button>
+                                <Button onClick={() => setShowProcessModal(true)}>{t('feedbacks.process')}</Button>
                             )}
                             <Button variant="outline" onClick={() => setShowDetailModal(false)}>
                                 Đóng
@@ -255,7 +257,7 @@ const FeedbacksView = () => {
                             <textarea
                                 value={processingNote}
                                 onChange={(e) => setProcessingNote(e.target.value)}
-                                placeholder="Nhập ghi chú về cách xử lý phản hồi này..."
+                                placeholder={t('feedbacks.process_placeholder')}
                                 rows="4"
                                 className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 placeholder-gray-400 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500 focus:border-blue-500 focus:outline-none dark:focus:border-blue-500"
                             />
@@ -275,7 +277,7 @@ const FeedbacksView = () => {
                             <Button
                                 onClick={() => {
                                     if (!processingNote.trim()) {
-                                        alert('Vui lòng nhập ghi chú xử lý');
+                                        alert(t('feedbacks.require_note'));
                                         return;
                                     }
                                     setIsProcessing(true);

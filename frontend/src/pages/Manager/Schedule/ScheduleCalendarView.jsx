@@ -6,7 +6,9 @@ import { useTrainingBookings, useCancelTrainingBooking } from '@/hooks/queries/u
 import { useEmployees } from '@/hooks/queries/useEmployees';
 import { useMembers } from '@/hooks/queries/useMembers';
 
+import { useTranslation } from 'react-i18next';
 const ScheduleCalendarView = () => {
+    const { t } = useTranslation('manager');
     const [currentDate, setCurrentDate] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
     const [selectedSchedule, setSelectedSchedule] = useState(null);
@@ -299,22 +301,22 @@ const ScheduleCalendarView = () => {
                                                         <p className="font-semibold text-gray-900 dark:text-white">{schedule.time}</p>
                                                     </div>
                                                     <div>
-                                                        <p className="text-xs text-gray-500 dark:text-gray-400">Huấn luyện viên</p>
+                                                        <p className="text-xs text-gray-500 dark:text-gray-400">{t('schedule.trainer')}</p>
                                                         <p className="font-semibold text-gray-900 dark:text-white">{schedule.pt}</p>
                                                     </div>
                                                     <div>
-                                                        <p className="text-xs text-gray-500 dark:text-gray-400">Hội viên</p>
+                                                        <p className="text-xs text-gray-500 dark:text-gray-400">{t('schedule.member')}</p>
                                                         <p className="font-semibold text-gray-900 dark:text-white">{schedule.member}</p>
                                                     </div>
                                                     <div>
-                                                        <p className="text-xs text-gray-500 dark:text-gray-400">Trạng thái</p>
+                                                        <p className="text-xs text-gray-500 dark:text-gray-400">{t('schedule.status')}</p>
                                                         <p className="font-semibold text-gray-900 dark:text-white">{getStatusLabel(schedule.status)}</p>
                                                     </div>
                                                 </div>
 
                                                 {schedule.trainingPlanNote && (
                                                     <div>
-                                                        <p className="text-xs text-gray-500 dark:text-gray-400">Ghi chú</p>
+                                                        <p className="text-xs text-gray-500 dark:text-gray-400">{t('schedule.note')}</p>
                                                         <p className="text-sm text-gray-700 dark:text-gray-300">{schedule.trainingPlanNote}</p>
                                                     </div>
                                                 )}

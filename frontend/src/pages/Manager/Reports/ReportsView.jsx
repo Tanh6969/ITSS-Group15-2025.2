@@ -6,6 +6,7 @@ import Badge from '@/components/Common/Badge';
 import { useMembers } from '@/hooks/queries/useMembers';
 import { useInvoices } from '@/hooks/queries/useInvoices';
 
+import { useTranslation } from 'react-i18next';
 // Màu sắc cho các gói tập
 const PACKAGE_COLORS = ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#06b6d4', '#ec4899', '#14b8a6'];
 
@@ -25,6 +26,7 @@ const ptPerformanceData = [
 ];
 
 const ReportsView = () => {
+    const { t } = useTranslation('manager');
     const [timeframe, setTimeframe] = useState('6months');
     const { data: membersResponse } = useMembers(1, 1000);
     const { data: invoicesResponse } = useInvoices(1, 10000);
@@ -180,15 +182,15 @@ const ReportsView = () => {
             {/* Key Metrics */}
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-950">
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Tổng doanh thu</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{t('reports.total_revenue')}</p>
                     <p className="mt-2 text-3xl font-bold text-blue-600 dark:text-blue-400">{formatCurrency(totalRevenue)}</p>
-                    <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">Trung bình {formatCurrency(avgRevenue)}/tháng</p>
+                    <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">{t('reports.avg_revenue', { amount: '{formatCurrency(avgRevenue)}' })}</p>
                 </div>
 
                 <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-950">
                     <p className="text-sm text-gray-500 dark:text-gray-400">Số lượng hoá đơn</p>
                     <p className="mt-2 text-3xl font-bold text-green-600 dark:text-green-400">{invoiceCount}</p>
-                    <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">Trung bình {(invoiceCount / getMonthsForTimeframe(timeframe)).toFixed(1)}/tháng</p>
+                    <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">{t('reports.avg_revenue', { amount: '{(invoiceCount / getMonthsForTimeframe(timeframe)).toFixed(1)}' })}</p>
                 </div>
 
                 <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-950">
@@ -228,7 +230,7 @@ const ReportsView = () => {
 
                 {/* Revenue Chart */}
                 <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-950">
-                    <h3 className="mb-4 font-semibold text-gray-900 dark:text-white">Doanh thu theo tháng</h3>
+                    <h3 className="mb-4 font-semibold text-gray-900 dark:text-white">{t('reports.chart_revenue')}</h3>
                     <ResponsiveContainer width="100%" height={300}>
                         <LineChart data={chartData}>
                             <CartesianGrid strokeDasharray="3 3" />
@@ -245,7 +247,7 @@ const ReportsView = () => {
 
                 {/* Package Distribution */}
                 <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-950">
-                    <h3 className="mb-4 font-semibold text-gray-900 dark:text-white">Phân bổ gói tập</h3>
+                    <h3 className="mb-4 font-semibold text-gray-900 dark:text-white">{t('reports.chart_packages')}</h3>
                     <ResponsiveContainer width="100%" height={340}>
                         <PieChart>
                             <Pie

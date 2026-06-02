@@ -8,6 +8,7 @@ import { packageService } from '@/services/packageService';
 import { toast } from '@/utils/toast';
 import Button from '@/components/Common/Button';
 
+import { useTranslation } from 'react-i18next';
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 const getEmailErrorMsg = (error) => {
@@ -20,6 +21,7 @@ const getEmailErrorMsg = (error) => {
 };
 
 const CreateMemberWithAccount = () => {
+    const { t } = useTranslation('manager');
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 

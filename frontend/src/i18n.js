@@ -20,15 +20,18 @@ import layoutJA from './locales/ja/layout.json';
 import ownerJA from './locales/ja/owner.json';
 import trainerJA from './locales/ja/trainer.json';
 import memberJA from './locales/ja/member.json';
+import managerEN from './locales/en/manager.json';
+import managerVI from './locales/vi/manager.json';
+import managerJA from './locales/ja/manager.json';
 
 i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
     resources: {
-      en: { common: commonEN, auth: authEN, layout: layoutEN, owner: ownerEN, trainer: trainerEN, member: memberEN },
-      vi: { common: commonVI, auth: authVI, layout: layoutVI, owner: ownerVI, trainer: trainerVI, member: memberVI },
-      ja: { common: commonJA, auth: authJA, layout: layoutJA, owner: ownerJA, trainer: trainerJA, member: memberJA },
+      en: { common: commonEN, auth: authEN, layout: layoutEN, owner: ownerEN, trainer: trainerEN, member: memberEN, manager: managerEN },
+      vi: { common: commonVI, auth: authVI, layout: layoutVI, owner: ownerVI, trainer: trainerVI, member: memberVI, manager: managerVI },
+      ja: { common: commonJA, auth: authJA, layout: layoutJA, owner: ownerJA, trainer: trainerJA, member: memberJA, manager: managerJA },
     },
     fallbackLng: 'vi',
     defaultNS: 'common',

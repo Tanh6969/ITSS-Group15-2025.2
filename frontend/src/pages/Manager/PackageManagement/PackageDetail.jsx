@@ -5,7 +5,9 @@ import { usePackageDetails } from '@/hooks/queries/usePackages';
 import { useServiceCategoryDetails } from '@/hooks/queries/useServiceCategories';
 import { formatPriceVND } from '@/utils/formatters';
 
+import { useTranslation } from 'react-i18next';
 const PackageDetail = () => {
+    const { t } = useTranslation('manager');
   const { id } = useParams();
   const navigate = useNavigate();
   const { data: packageData, isLoading, isError } = usePackageDetails(id);
@@ -63,19 +65,19 @@ const PackageDetail = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Giá */}
           <div className="flex flex-col">
-            <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">Giá</span>
+            <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">{t('packages.price')}</span>
             <span className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{formatPriceVND ? formatPriceVND(packageData.price) : `${packageData.price.toLocaleString('vi-VN')} đ`}</span>
           </div>
 
           {/* Thời hạn */}
           <div className="flex flex-col">
-            <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">Thời hạn</span>
+            <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">{t('packages.duration')}</span>
             <span className="text-2xl font-bold text-gray-900 dark:text-white">{getDurationDisplay(packageData.duration_days)}</span>
           </div>
 
           {/* Trạng thái */}
           <div className="flex flex-col">
-            <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">Trạng thái</span>
+            <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">{t('packages.status')}</span>
             <div className="flex items-center gap-2">
               {packageData.is_active ? (
                 <>
@@ -105,7 +107,7 @@ const PackageDetail = () => {
 
           {/* Tên gói */}
           <div className="flex flex-col">
-            <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">Tên gói</span>
+            <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">{t('packages.name')}</span>
             <span className="text-lg font-medium text-gray-900 dark:text-white">{packageData?.package_name}</span>
           </div>
 

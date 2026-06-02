@@ -5,7 +5,9 @@ import { ArrowLeft } from 'lucide-react';
 import Button from '@/components/Common/Button';
 import { toast } from '@/utils/toast';
 
+import { useTranslation } from 'react-i18next';
 const PackageFormPage = () => {
+    const { t } = useTranslation('manager');
   const { id } = useParams();
   const navigate = useNavigate();
   const isEditing = !!id;
@@ -40,7 +42,7 @@ const PackageFormPage = () => {
   };
 
   if (isEditing && !initialData) {
-    return <div className="p-8 text-center text-gray-500">Đang tải dữ liệu...</div>;
+    return <div className="p-8 text-center text-gray-500">{t('packages.loading')}</div>;
   }
 
   return (

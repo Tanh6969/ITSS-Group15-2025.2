@@ -8,14 +8,16 @@ import Badge from '@/components/Common/Badge';
 import { useMembers } from '@/hooks/queries/useMembers';
 import { slideUpVariants, cardVariants, staggerContainerVariants, sectionStaggerVariants } from '@/lib/animations';
 
+import { useTranslation } from 'react-i18next';
 const statusConfig = {
-    active: { label: 'Đang hoạt động', color: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' },
-    paused: { label: 'Tạm dừng', color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' },
-    expired: { label: 'Hết hạn', color: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' },
-    inactive: { label: 'Không hoạt động', color: 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400' }
+    active: { label: t('members.status_active'), color: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' },
+    paused: { label: t('members.status_paused'), color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' },
+    expired: { label: t('members.status_expired'), color: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' },
+    inactive: { label: t('members.status_inactive'), color: 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400' }
 };
 
 const MemberListView = () => {
+    const { t } = useTranslation('manager');
     const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');
@@ -55,11 +57,11 @@ const MemberListView = () => {
         return (
             <div className="space-y-6">
                 <div>
-                    <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Quản Lý Hội Viên</h1>
-                    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Danh sách tất cả hội viên tại phòng gym</p>
+                    <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{t('members.title')}</h1>
+                    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{t('members.subtitle')}</p>
                 </div>
                 <div className="rounded-xl border border-gray-100 bg-white p-12 text-center shadow-sm dark:border-gray-800 dark:bg-gray-950">
-                    <p className="text-gray-500 dark:text-gray-400">Đang tải dữ liệu...</p>
+                    <p className="text-gray-500 dark:text-gray-400">{t('members.loading')}</p>
                 </div>
             </div>
         );
@@ -70,8 +72,8 @@ const MemberListView = () => {
         return (
             <div className="space-y-6">
                 <div>
-                    <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Quản Lý Hội Viên</h1>
-                    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Danh sách tất cả hội viên tại phòng gym</p>
+                    <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{t('members.title')}</h1>
+                    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{t('members.subtitle')}</p>
                 </div>
                 <div className="rounded-xl border border-red-100 bg-red-50 p-6 dark:border-red-900 dark:bg-red-900/20">
                     <p className="text-red-600 dark:text-red-400">Lỗi khi tải dữ liệu. Vui lòng thử lại sau.</p>
@@ -107,7 +109,7 @@ const MemberListView = () => {
             {/* Header */}
             <motion.div variants={slideUpVariants} className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Quản Lý Hội Viên</h1>
+                    <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{t('members.title')}</h1>
                     <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                         Danh sách tất cả hội viên tại phòng gym
                     </p>
@@ -130,7 +132,7 @@ const MemberListView = () => {
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                             <Input
                                 type="text"
-                                placeholder="Tìm theo tên, SĐT hoặc ID..."
+                                placeholder={t('members.search_placeholder')}
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 className="pl-10"
@@ -146,11 +148,11 @@ const MemberListView = () => {
                             onChange={(e) => setStatusFilter(e.target.value)}
                             className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300"
                         >
-                            <option value="all">Tất cả trạng thái</option>
-                            <option value="active">Đang hoạt động</option>
-                            <option value="paused">Tạm dừng</option>
-                            <option value="expired">Hết hạn</option>
-                            <option value="inactive">Không hoạt động</option>
+                            <option value="all">{t('members.filter_all')}</option>
+                            <option value="active">{t('members.filter_active')}</option>
+                            <option value="paused">{t('members.filter_paused')}</option>
+                            <option value="expired">{t('members.filter_expired')}</option>
+                            <option value="inactive">{t('members.filter_inactive')}</option>
                         </select>
                     </div>
                 </div>
@@ -165,7 +167,7 @@ const MemberListView = () => {
             <motion.div variants={staggerContainerVariants} className="space-y-3">
                 {filteredMembers.length === 0 ? (
                     <div className="rounded-xl border border-gray-100 bg-white p-12 text-center shadow-sm dark:border-gray-800 dark:bg-gray-950">
-                        <p className="text-gray-500 dark:text-gray-400">Không tìm thấy hội viên nào</p>
+                        <p className="text-gray-500 dark:text-gray-400">{t('members.no_member')}</p>
                     </div>
                 ) : (
                     filteredMembers.map((member, i) => (
@@ -198,7 +200,7 @@ const MemberListView = () => {
                                         </div>
 
                                         <div className="text-right">
-                                            <p className="text-sm text-gray-600 dark:text-gray-400">Hết hạn</p>
+                                            <p className="text-sm text-gray-600 dark:text-gray-400">{t('members.filter_expired')}</p>
                                             <p className="text-sm font-medium text-gray-900 dark:text-white">{getMemberExpiry(member)}</p>
                                         </div>
                                     </div>
@@ -209,11 +211,11 @@ const MemberListView = () => {
                                 {/* Mobile view */}
                                 <div className="mt-3 flex flex-wrap gap-3 sm:hidden">
                                     <div className="flex-1 min-w-0">
-                                        <p className="text-xs text-gray-500 dark:text-gray-400">Gói</p>
+                                        <p className="text-xs text-gray-500 dark:text-gray-400">{t('members.package')}</p>
                                         <p className="text-sm font-medium text-gray-900 dark:text-white">{getMemberPackage(member)}</p>
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <p className="text-xs text-gray-500 dark:text-gray-400">Hết hạn</p>
+                                        <p className="text-xs text-gray-500 dark:text-gray-400">{t('members.filter_expired')}</p>
                                         <p className="text-sm font-medium text-gray-900 dark:text-white">{getMemberExpiry(member)}</p>
                                     </div>
                                     <div className="flex-1 min-w-0">

@@ -8,17 +8,18 @@ import Modal from '@/components/Common/Modal';
 import { useTransactions } from '@/hooks/queries/useTransactions';
 import { slideUpVariants, cardVariants, staggerContainerVariants, sectionStaggerVariants } from '@/lib/animations';
 
+import { useTranslation } from 'react-i18next';
 const transactionTypeConfig = {
-    registration: { label: 'Đăng ký mới', color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' },
-    renewal: { label: 'Gia hạn', color: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' },
-    unknown: { label: 'Không xác định', color: 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400' }
+    registration: { label: t('transactions.type_registration'), color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' },
+    renewal: { label: t('transactions.type_renewal'), color: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' },
+    unknown: { label: t('transactions.type_unknown'), color: 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400' }
 };
 
 const statusConfig = {
-    completed: { label: 'Hoàn thành', color: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' },
-    pending: { label: 'Chờ xác nhận', color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' },
-    failed: { label: 'Thất bại', color: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' },
-    unknown: { label: 'Không xác định', color: 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400' }
+    completed: { label: t('transactions.status_completed'), color: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' },
+    pending: { label: t('transactions.status_pending'), color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' },
+    failed: { label: t('transactions.status_failed'), color: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' },
+    unknown: { label: t('transactions.type_unknown'), color: 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400' }
 };
 
 const normalizeStatus = (status) => {
@@ -45,9 +46,9 @@ const normalizeTransaction = (transaction) => {
         amount: Number(transaction.amount || 0),
         customerName: transaction.customerName || 'N/A',
         phone: transaction.phone || 'N/A',
-        package: transaction.package || 'Chưa có gói',
+        package: transaction.package || t('transactions.no_package'),
         paymentMethod: transaction.paymentMethod || 'N/A',
-        notes: transaction.notes || 'Không có ghi chú',
+        notes: transaction.notes || t('transactions.no_note'),
         rawStatus: transaction.status || '',
         rawType: transaction.type || '',
         status: normalizedStatus,
@@ -76,6 +77,7 @@ const formatDate = (date) => {
 };
 
 const TransactionsView = () => {
+    const { t } = useTranslation('manager');
     const [searchTerm, setSearchTerm] = useState('');
     const [typeFilter, setTypeFilter] = useState('all');
     const [statusFilter, setStatusFilter] = useState('all');
@@ -133,11 +135,11 @@ const TransactionsView = () => {
         return (
             <div className="space-y-6">
                 <div>
-                    <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Quản lý giao dịch</h1>
-                    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Danh sách đăng ký mới và gia hạn gói tập</p>
+                    <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{t('transactions.title')}</h1>
+                    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{t('transactions.subtitle')}</p>
                 </div>
                 <div className="rounded-xl border border-gray-100 bg-white p-12 text-center shadow-sm dark:border-gray-800 dark:bg-gray-950">
-                    <p className="text-gray-500 dark:text-gray-400">Đang tải dữ liệu giao dịch...</p>
+                    <p className="text-gray-500 dark:text-gray-400">{t('transactions.loading')}</p>
                 </div>
             </div>
         );
@@ -147,12 +149,12 @@ const TransactionsView = () => {
         return (
             <div className="space-y-6">
                 <div>
-                    <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Quản lý giao dịch</h1>
-                    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Danh sách đăng ký mới và gia hạn gói tập</p>
+                    <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{t('transactions.title')}</h1>
+                    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{t('transactions.subtitle')}</p>
                 </div>
                 <div className="rounded-xl border border-red-100 bg-red-50 p-6 dark:border-red-900 dark:bg-red-900/20">
-                    <p className="font-medium text-red-700 dark:text-red-300">Không tải được dữ liệu giao dịch.</p>
-                    <p className="mt-1 text-sm text-red-600 dark:text-red-400">{error?.message || 'Vui lòng kiểm tra backend và thử lại.'}</p>
+                    <p className="font-medium text-red-700 dark:text-red-300">{t('transactions.error')}</p>
+                    <p className="mt-1 text-sm text-red-600 dark:text-red-400">{error?.message || t('transactions.error_hint')}</p>
                 </div>
             </div>
         );
@@ -167,18 +169,16 @@ const TransactionsView = () => {
         >
             <motion.div variants={slideUpVariants} className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Quản lý giao dịch</h1>
-                    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                        Dữ liệu thanh toán từ bảng Invoice, liên kết hội viên và gói tập
-                    </p>
+                    <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{t('transactions.title')}</h1>
+                    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{t('transactions.subtitle')}</p>
                 </div>
             </motion.div>
 
             <motion.div variants={staggerContainerVariants} className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 {[
-                    { label: 'Tổng giao dịch', value: stats.total, color: 'text-gray-900 dark:text-white' },
-                    { label: 'Hoàn thành', value: stats.completed, color: 'text-green-600 dark:text-green-400' },
-                    { label: 'Tổng doanh thu', value: formatAmount(stats.revenue), color: 'text-blue-600 dark:text-blue-400' },
+                    { label: t('transactions.total_transactions'), value: stats.total, color: 'text-gray-900 dark:text-white' },
+                    { label: t('transactions.status_completed'), value: stats.completed, color: 'text-green-600 dark:text-green-400' },
+                    { label: t('transactions.total_revenue'), value: formatAmount(stats.revenue), color: 'text-blue-600 dark:text-blue-400' },
                 ].map(({ label, value, color }, i) => (
                     <motion.div key={label} variants={cardVariants} custom={i} whileHover={{ scale: 1.03, y: -2 }} className="rounded-lg border border-gray-100 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-950">
                         <p className="text-sm text-gray-500 dark:text-gray-400">{label}</p>
@@ -194,7 +194,7 @@ const TransactionsView = () => {
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
                             <Input
                                 type="text"
-                                placeholder="Tìm theo tên, SĐT, ID hoặc gói tập..."
+                                placeholder={t('transactions.search_placeholder')}
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 className="pl-10"
@@ -207,9 +207,9 @@ const TransactionsView = () => {
                         onChange={(e) => setTypeFilter(e.target.value)}
                         className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300"
                     >
-                        <option value="all">Tất cả loại</option>
-                        <option value="registration">Đăng ký mới</option>
-                        <option value="renewal">Gia hạn</option>
+                        <option value="all">{t('transactions.filter_all_types')}</option>
+                        <option value="registration">{t('transactions.filter_registration')}</option>
+                        <option value="renewal">{t('transactions.filter_renewal')}</option>
                     </select>
 
                     <select
@@ -217,15 +217,15 @@ const TransactionsView = () => {
                         onChange={(e) => setStatusFilter(e.target.value)}
                         className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300"
                     >
-                        <option value="all">Tất cả trạng thái</option>
-                        <option value="completed">Hoàn thành</option>
-                        <option value="pending">Chờ xác nhận</option>
-                        <option value="failed">Thất bại</option>
+                        <option value="all">{t('transactions.filter_all_status')}</option>
+                        <option value="completed">{t('transactions.filter_completed')}</option>
+                        <option value="pending">{t('transactions.filter_pending')}</option>
+                        <option value="failed">{t('transactions.filter_failed')}</option>
                     </select>
                 </div>
 
                 <div className="mt-3 text-sm text-gray-500 dark:text-gray-400">
-                    Hiển thị <span className="font-medium">{filteredTransactions.length}</span> trong <span className="font-medium">{transactions.length}</span> giao dịch
+                    {t('transactions.showing')} <span className="font-medium">{filteredTransactions.length}</span> {t('transactions.in')} <span className="font-medium">{transactions.length}</span> {t('dashboard.transactions')}
                 </div>
             </motion.div>
 
@@ -233,14 +233,14 @@ const TransactionsView = () => {
                 <table className="w-full">
                     <thead className="border-b border-gray-100 bg-gray-50 dark:border-gray-800 dark:bg-gray-900">
                         <tr>
-                            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">ID</th>
-                            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Khách hàng</th>
-                            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Loại</th>
-                            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Gói</th>
-                            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Số tiền</th>
-                            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Ngày</th>
-                            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Trạng thái</th>
-                            <th className="px-6 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">Hành động</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">{t('transactions.id')}</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">{t('transactions.customer')}</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">{t('transactions.type')}</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">{t('transactions.package')}</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">{t('transactions.amount')}</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">{t('transactions.date')}</th>
+                            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">{t('transactions.status')}</th>
+                            <th className="px-6 py-3 text-center text-sm font-semibold text-gray-900 dark:text-white">{t('transactions.actions')}</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
@@ -303,11 +303,11 @@ const TransactionsView = () => {
                                 <p className="text-lg font-semibold text-gray-900 dark:text-white">#{selectedTransaction.id}</p>
                             </div>
                             <div>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">Ngày</p>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">{t('transactions.date')}</p>
                                 <p className="text-lg font-semibold text-gray-900 dark:text-white">{formatDate(selectedTransaction.date)}</p>
                             </div>
                             <div>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">Khách hàng</p>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">{t('transactions.customer')}</p>
                                 <p className="text-lg font-semibold text-gray-900 dark:text-white">{selectedTransaction.customerName}</p>
                             </div>
                             <div>
@@ -323,17 +323,17 @@ const TransactionsView = () => {
                                 <p className="text-sm font-semibold text-gray-900 dark:text-white">{selectedTransaction.package}</p>
                             </div>
                             <div>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">Số tiền</p>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">{t('transactions.amount')}</p>
                                 <p className="text-lg font-semibold text-blue-600 dark:text-blue-400">{formatAmount(selectedTransaction.amount)}</p>
                             </div>
                             <div>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">Phương thức thanh toán</p>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">{t('transactions.payment_method')}</p>
                                 <p className="text-sm font-semibold text-gray-900 dark:text-white">{selectedTransaction.paymentMethod}</p>
                             </div>
                         </div>
 
                         <div className="rounded-lg bg-gray-50 p-4 dark:bg-gray-900">
-                            <p className="text-sm text-gray-500 dark:text-gray-400">Ghi chú</p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">{t('transactions.note')}</p>
                             <p className="mt-1 text-gray-900 dark:text-white">{selectedTransaction.notes}</p>
                         </div>
 

@@ -8,6 +8,7 @@ import Badge from '@/components/Common/Badge';
 import { memberService } from '@/services/memberService';
 import { toast } from '@/utils/toast';
 
+import { useTranslation } from 'react-i18next';
 const Tabs = {
     INFO: 'info',
     PACKAGE: 'package'
@@ -26,6 +27,7 @@ const getMemberExpiryDate = (member) => member?.expiryDate || 'N/A';
 const getMemberJoinDate = (member) => member?.joinDate || 'N/A';
 
 const MemberDetailView = () => {
+    const { t } = useTranslation('manager');
     const { id } = useParams();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
@@ -94,7 +96,7 @@ const MemberDetailView = () => {
                     className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300"
                 >
                     <ChevronLeft size={20} />
-                    <span>Quay lại</span>
+                    <span>{t('members.go_back')}</span>
                 </button>
                 <div className="flex gap-2">
                     <Button

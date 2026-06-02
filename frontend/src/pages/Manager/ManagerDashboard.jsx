@@ -11,11 +11,14 @@ import { useMembers } from '@/hooks/queries/useMembers';
 import { useEmployees } from '@/hooks/queries/useEmployees';
 import { useTrainingBookings } from '@/hooks/queries/useTrainingBookings';
 import { useFeedbacks } from '@/hooks/queries/useFeedbacks';
+import { useTranslation } from 'react-i18next';
 import {
+
   slideUpVariants, cardVariants, staggerContainerVariants, sectionStaggerVariants,
 } from '@/lib/animations';
 
 const ManagerDashboard = () => {
+  const { t } = useTranslation('manager');
   const { data: memberResponse = {} } = useMembers(1, 1000);
   const { data: employeeResponse = {} } = useEmployees(1, 1000);
   const { data: bookingResponse = {} } = useTrainingBookings();
@@ -214,13 +217,13 @@ const ManagerDashboard = () => {
         <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-950">
           <div className="mb-4 flex items-center justify-between">
             <div>
-              <h3 className="text-base font-semibold text-gray-900 dark:text-white">Lịch PT hôm nay</h3>
+              <h3 className="text-base font-semibold text-gray-900 dark:text-white">{t('dashboard.pt_schedule_today')}</h3>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                 {todaySchedules.length} buổi · {todayDone} hoàn thành
               </p>
             </div>
             <Link to="/manager/schedule">
-              <Button variant="ghost" size="sm">Xem lịch →</Button>
+              <Button variant="ghost" size="sm">{t('dashboard.view_schedule')}</Button>
             </Link>
           </div>
 
@@ -255,11 +258,11 @@ const ManagerDashboard = () => {
         <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-950">
           <div className="mb-4 flex items-center justify-between">
             <div>
-              <h3 className="text-base font-semibold text-gray-900 dark:text-white">Hội viên sắp hết hạn</h3>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">trong 30 ngày tới</p>
+              <h3 className="text-base font-semibold text-gray-900 dark:text-white">{t('dashboard.expiring_soon')}</h3>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{t('dashboard.in_next_30_days')}</p>
             </div>
             <Link to="/manager/members">
-              <Button variant="ghost" size="sm">Xem tất cả →</Button>
+              <Button variant="ghost" size="sm">{t('dashboard.view_all')}</Button>
             </Link>
           </div>
 
@@ -305,22 +308,22 @@ const ManagerDashboard = () => {
         </p>
         <div className="flex flex-wrap gap-2">
           <Link to="/manager/members">
-            <Button size="sm">Quản lý hội viên</Button>
+            <Button size="sm">{t('dashboard.manage_members')}</Button>
           </Link>
           <Link to="/manager/schedule">
-            <Button variant="outline" size="sm">Lịch PT</Button>
+            <Button variant="outline" size="sm">{t('dashboard.pt_schedule')}</Button>
           </Link>
           <Link to="/manager/transactions">
-            <Button variant="outline" size="sm">Giao dịch</Button>
+            <Button variant="outline" size="sm">{t('dashboard.transactions')}</Button>
           </Link>
           <Link to="/manager/feedbacks">
-            <Button variant="outline" size="sm">Phản hồi</Button>
+            <Button variant="outline" size="sm">{t('dashboard.feedbacks')}</Button>
           </Link>
           <Link to="/manager/packages">
-            <Button variant="outline" size="sm">Gói tập</Button>
+            <Button variant="outline" size="sm">{t('dashboard.packages')}</Button>
           </Link>
           <Link to="/manager/report">
-            <Button variant="outline" size="sm">Báo cáo</Button>
+            <Button variant="outline" size="sm">{t('dashboard.reports')}</Button>
           </Link>
         </div>
       </motion.div>

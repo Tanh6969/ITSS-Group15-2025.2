@@ -4,7 +4,9 @@ import { useMyEmployee, useUpdateMyEmployee } from '@/hooks/queries/useEmployees
 import AvatarUpload from '@/components/Common/AvatarUpload';
 import { toast } from '@/utils/toast';
 
+import { useTranslation } from 'react-i18next';
 const ManagerProfile = () => {
+    const { t } = useTranslation('manager');
   const { data: employee, isLoading } = useMyEmployee();
   const updateMeMutation = useUpdateMyEmployee();
   const [saving, setSaving] = useState(false);
