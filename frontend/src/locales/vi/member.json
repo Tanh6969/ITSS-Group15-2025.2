@@ -248,7 +248,8 @@
       "no_bio": "Chuyên gia huấn luyện cá nhân với lộ trình bài bản...",
       "view_detail": "Xem chi tiết",
       "book_btn": "Đặt lịch ngay",
-      "pending": "Chờ xác nhận",
+      "pending": "Đã đặt ngày này",
+      "limit_reached": "Vượt giới hạn (5)",
       "no_trainers": "Hiện chưa có huấn luyện viên nào sẵn sàng."
     },
     "evaluation": {

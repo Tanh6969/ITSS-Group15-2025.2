@@ -371,6 +371,7 @@ const Schedule = () => {
               ptDetails={ptDetails}
               setSelectedTrainer={setSelectedTrainer}
               bookings={bookings}
+              selectedDate={selectedDate}
             />
           ) : activeTab === 'evaluations' ? (
             <EvaluationView

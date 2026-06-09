@@ -4,12 +4,28 @@ import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { cardVariants, staggerContainerVariants } from '@/lib/animations';
 
-const PTCardList = ({ ptDetails, setSelectedTrainer, bookings = [] }) => {
+const PTCardList = ({ ptDetails, setSelectedTrainer, bookings = [], selectedDate }) => {
   const { t } = useTranslation('member');
 
+  // Đếm tổng số booking đang active (Pending, Accepted) và chưa hết hạn để giới hạn 5 lần
+  const activeBookingsCount = bookings.filter(b => {
+    const isActive = ['Pending', 'Accepted', 'Confirmed'].includes(b.status);
+    const isNotExpired = new Date(b.requested_end) >= new Date();
+    return isActive && isNotExpired;
+  }).length;
+
+  const isLimitReached = activeBookingsCount >= 5;
+
   const getPTStatus = (ptId) => {
-    const hasPending = bookings.some(b => b.pt_id === ptId && b.status === 'Pending');
-    return hasPending ? 'Pending' : 'Available';
+    // Chỉ check xem trong ngày selectedDate đã đặt PT này chưa (Pending/Accepted)
+    const hasBookingToday = bookings.some(b => {
+      const isThisPT = b.pt_id === ptId;
+      const isThisDay = b.requested_start.startsWith(selectedDate);
+      const isActive = ['Pending', 'Accepted', 'Confirmed'].includes(b.status);
+      const isNotExpired = new Date(b.requested_end) >= new Date();
+      return isThisPT && isThisDay && isActive && isNotExpired;
+    });
+    return hasBookingToday ? 'Pending' : 'Available';
   };
 
   return (
@@ -69,7 +85,11 @@ const PTCardList = ({ ptDetails, setSelectedTrainer, bookings = [] }) => {
 
                     {isPending ? (
                       <div className="px-3 py-1.5 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400 text-[10px] font-bold rounded-lg border border-yellow-100 dark:border-yellow-900/50">
-                        {t('schedule.pt_card.pending')}
+                        {t('schedule.pt_card.pending', { defaultValue: 'Đã đặt ngày này' })}
+                      </div>
+                    ) : isLimitReached ? (
+                      <div className="px-3 py-1.5 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 text-[10px] font-bold rounded-lg border border-red-100 dark:border-red-900/50" title="Bạn đã đạt giới hạn 5 lượt đặt lịch đang chờ/chưa hoàn thành.">
+                        Giới hạn đặt
                       </div>
                     ) : (
                       <button

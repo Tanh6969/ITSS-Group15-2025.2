@@ -248,7 +248,8 @@
       "no_bio": "実績あるプログラムで個人指導...",
       "view_detail": "詳細",
       "book_btn": "予約",
-      "pending": "保留中",
+      "pending": "本日予約済み",
+      "limit_reached": "上限到達 (5)",
       "no_trainers": "現在利用可能なトレーナーはいません。"
     },
     "evaluation": {

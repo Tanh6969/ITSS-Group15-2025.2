@@ -248,7 +248,8 @@
       "no_bio": "Personal training specialist with structured programs...",
       "view_detail": "View Details",
       "book_btn": "Book Now",
-      "pending": "Pending",
+      "pending": "Booked this day",
+      "limit_reached": "Limit Reached",
       "no_trainers": "No trainers available at the moment."
     },
     "evaluation": {
