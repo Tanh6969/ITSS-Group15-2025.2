@@ -9,18 +9,19 @@ import { useTransactions } from '@/hooks/queries/useTransactions';
 import { slideUpVariants, cardVariants, staggerContainerVariants, sectionStaggerVariants } from '@/lib/animations';
 
 import { useTranslation } from 'react-i18next';
-const transactionTypeConfig = {
+
+const getTransactionTypeConfig = (t) => ({
     registration: { label: t('transactions.type_registration'), color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' },
     renewal: { label: t('transactions.type_renewal'), color: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' },
     unknown: { label: t('transactions.type_unknown'), color: 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400' }
-};
+});
 
-const statusConfig = {
+const getStatusConfig = (t) => ({
     completed: { label: t('transactions.status_completed'), color: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' },
     pending: { label: t('transactions.status_pending'), color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' },
     failed: { label: t('transactions.status_failed'), color: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' },
     unknown: { label: t('transactions.type_unknown'), color: 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400' }
-};
+});
 
 const normalizeStatus = (status) => {
     const value = String(status || '').trim().toLowerCase();
@@ -35,26 +36,6 @@ const normalizeStatus = (status) => {
 const normalizeType = (type) => {
     const value = String(type || '').trim().toLowerCase();
     return ['registration', 'renewal'].includes(value) ? value : 'unknown';
-};
-
-const normalizeTransaction = (transaction) => {
-    const normalizedStatus = normalizeStatus(transaction.status);
-    const normalizedType = normalizeType(transaction.type);
-
-    return {
-        ...transaction,
-        amount: Number(transaction.amount || 0),
-        customerName: transaction.customerName || 'N/A',
-        phone: transaction.phone || 'N/A',
-        package: transaction.package || t('transactions.no_package'),
-        paymentMethod: transaction.paymentMethod || 'N/A',
-        notes: transaction.notes || t('transactions.no_note'),
-        rawStatus: transaction.status || '',
-        rawType: transaction.type || '',
-        status: normalizedStatus,
-        type: normalizedType,
-        date: transaction.date || null,
-    };
 };
 
 const formatAmount = (amount) => {
@@ -78,6 +59,29 @@ const formatDate = (date) => {
 
 const TransactionsView = () => {
     const { t } = useTranslation('manager');
+    const transactionTypeConfig = getTransactionTypeConfig(t);
+    const statusConfig = getStatusConfig(t);
+
+    const normalizeTransaction = (transaction) => {
+        const normalizedStatus = normalizeStatus(transaction.status);
+        const normalizedType = normalizeType(transaction.type);
+
+        return {
+            ...transaction,
+            amount: Number(transaction.amount || 0),
+            customerName: transaction.customerName || 'N/A',
+            phone: transaction.phone || 'N/A',
+            package: transaction.package || t('transactions.no_package'),
+            paymentMethod: transaction.paymentMethod || 'N/A',
+            notes: transaction.notes || t('transactions.no_note'),
+            rawStatus: transaction.status || '',
+            rawType: transaction.type || '',
+            status: normalizedStatus,
+            type: normalizedType,
+            date: transaction.date || null,
+        };
+    };
+
     const [searchTerm, setSearchTerm] = useState('');
     const [typeFilter, setTypeFilter] = useState('all');
     const [statusFilter, setStatusFilter] = useState('all');
@@ -94,7 +98,8 @@ const TransactionsView = () => {
                 : [];
 
         return list.map(normalizeTransaction);
-    }, [apiTransactions]);
+    }, [apiTransactions, t]);
+
 
     const filteredTransactions = useMemo(() => {
         const keyword = searchTerm.trim().toLowerCase();

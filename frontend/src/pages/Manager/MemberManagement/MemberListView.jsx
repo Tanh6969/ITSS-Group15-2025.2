@@ -9,15 +9,17 @@ import { useMembers } from '@/hooks/queries/useMembers';
 import { slideUpVariants, cardVariants, staggerContainerVariants, sectionStaggerVariants } from '@/lib/animations';
 
 import { useTranslation } from 'react-i18next';
-const statusConfig = {
+
+const getStatusConfig = (t) => ({
     active: { label: t('members.status_active'), color: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' },
     paused: { label: t('members.status_paused'), color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' },
     expired: { label: t('members.status_expired'), color: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' },
     inactive: { label: t('members.status_inactive'), color: 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400' }
-};
+});
 
 const MemberListView = () => {
     const { t } = useTranslation('manager');
+    const statusConfig = getStatusConfig(t);
     const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('all');

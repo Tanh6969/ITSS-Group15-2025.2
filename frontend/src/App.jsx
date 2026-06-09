@@ -5,6 +5,7 @@ import { Toaster } from 'sonner';
 import useThemeStore from '@/store/useThemeStore';
 
 function App() {
+  console.log("App component rendered");
   const theme = useThemeStore((state) => state.theme);
 
   useEffect(() => {

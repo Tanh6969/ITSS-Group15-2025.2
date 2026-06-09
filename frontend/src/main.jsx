@@ -6,6 +6,7 @@ import './i18n';
 import './index.css';
 import App from './App.jsx';
 
+console.log("main.jsx executing before createRoot");
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
