@@ -115,7 +115,7 @@ const MemberListView = () => {
                 <div>
                     <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{t('members.title')}</h1>
                     <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                        Danh sách tất cả hội viên tại phòng gym
+                        {t('members.subtitle')}
                     </p>
                 </div>
                 <button
@@ -123,7 +123,7 @@ const MemberListView = () => {
                     className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 shadow-sm"
                 >
                     <UserPlus className="h-4 w-4" />
-                    Tạo tài khoản hội viên
+                    {t('members.create_account')}
                 </button>
             </motion.div>
 

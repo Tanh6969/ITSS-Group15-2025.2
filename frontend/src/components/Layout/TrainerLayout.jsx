@@ -25,11 +25,11 @@ const TrainerLayout = () => {
   const { t } = useTranslation('layout');
 
   const trainerMenuItems = [
-    { title: 'layout:menu.profile',           path: '/trainer/profile',      icon: User },
-    { title: 'layout:menu.students',          path: '/trainer/students',     icon: Users },
     { title: 'layout:menu.teaching_schedule', path: '/trainer/schedule',     icon: CalendarCheck },
     { title: 'layout:menu.availability',      path: '/trainer/availability', icon: Settings },
     { title: 'layout:menu.evaluation',        path: '/trainer/evaluation',   icon: ClipboardList },
+    { title: 'layout:menu.students',          path: '/trainer/students',     icon: Users },
+    { title: 'layout:menu.profile',           path: '/trainer/profile',      icon: User },
   ];
 
   return (
