@@ -289,6 +289,16 @@
       "inactive": "Bị ẩn"
     },
     "no_description": "Chưa có mô tả",
+    "day": "Ngày",
+    "days": "Ngày",
+    "month": "Tháng",
+    "months": "Tháng",
+    "mock": {
+      "basic": "Gói Cơ Bản",
+      "advanced": "Gói Nâng Cao",
+      "vip": "Gói VIP (1 Năm)",
+      "trial": "Gói Trải Nghiệm"
+    },
     "tooltip": {
       "hide": "Ẩn gói",
       "show": "Hiển thị gói",

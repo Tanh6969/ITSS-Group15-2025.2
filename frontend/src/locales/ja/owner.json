@@ -289,6 +289,16 @@
       "inactive": "非表示"
     },
     "no_description": "説明なし",
+    "day": "日",
+    "days": "日",
+    "month": "ヶ月",
+    "months": "ヶ月",
+    "mock": {
+      "basic": "ベーシックパッケージ",
+      "advanced": "アドバンスパッケージ",
+      "vip": "VIPパッケージ（1年）",
+      "trial": "体験パッケージ"
+    },
     "tooltip": {
       "hide": "パッケージを非表示",
       "show": "パッケージを表示",

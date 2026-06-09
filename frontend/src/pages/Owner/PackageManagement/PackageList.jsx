@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Plus, Edit, Eye, EyeOff } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -17,8 +17,26 @@ const PackageList = () => {
   const [toggleModal, setToggleModal] = useState({ isOpen: false, pkg: null });
   const statusMutation = useUpdatePackageStatus();
 
-  // LÆ°u Ã½: Náº¿u báº¡n muá»‘n dÃ¹ng deleteMutation, báº¡n cáº§n import hook tÆ°Æ¡ng á»©ng á»Ÿ Ä‘Ã¢y
+  // Lưu ý: Nếu bạn muốn dùng deleteMutation, bạn cần import hook tương ứng ở đây
   // const deleteMutation = useDeletePackage(); 
+
+  const getDurationText = (pkg) => {
+    if (pkg.duration_days) {
+      return `${pkg.duration_days} ${t('package.days')}`;
+    }
+    const unitMap = {
+      'Tháng': t('package.months'),
+      'tháng': t('package.months'),
+      'Month': t('package.months'),
+      'Months': t('package.months'),
+      'Ngày': t('package.days'),
+      'ngày': t('package.days'),
+      'Day': t('package.days'),
+      'Days': t('package.days'),
+    };
+    const unit = unitMap[pkg.durationUnit] || pkg.durationUnit || '';
+    return `${pkg.duration} ${unit}`;
+  };
 
   const handleToggleStatus = (pkg) => {
     setToggleModal({ isOpen: true, pkg });
@@ -34,10 +52,10 @@ const PackageList = () => {
   };
 
   const mockPackages = packages || [
-    { id: 1, name: "GÃ³i CÆ¡ Báº£n", duration: 1, durationUnit: "ThÃ¡ng", price: 300000, is_active: true, features: ["PhÃ²ng gym cÆ¡ báº£n", "Yoga"] },
-    { id: 2, name: "GÃ³i NÃ¢ng Cao", duration: 3, durationUnit: "ThÃ¡ng", price: 800000, is_active: true, features: ["Táº¥t cáº£ khu vá»±c", "Tá»§ Ä‘á»“ cÃ¡ nhÃ¢n"] },
-    { id: 3, name: "GÃ³i VIP (1 NÄƒm)", duration: 12, durationUnit: "ThÃ¡ng", price: 3000000, is_active: true, features: ["HLV cÃ¡ nhÃ¢n 2 buá»•i", "Massge", "Sauna"] },
-    { id: 4, name: "GÃ³i Tráº£i Nghiá»‡m", duration: 7, durationUnit: "NgÃ y", price: 100000, is_active: false, features: ["DÃ¹ng thá»­ giá»›i háº¡n"] },
+    { id: 1, name: t('package.mock.basic'), duration: 1, durationUnit: "Tháng", price: 300000, is_active: true, features: [t('package.mock.basic_feature_1', { defaultValue: "Phòng gym cơ bản" }), t('package.mock.basic_feature_2', { defaultValue: "Yoga" })] },
+    { id: 2, name: t('package.mock.advanced'), duration: 3, durationUnit: "Tháng", price: 800000, is_active: true, features: [t('package.mock.adv_feature_1', { defaultValue: "Tất cả khu vực" }), t('package.mock.adv_feature_2', { defaultValue: "Tủ đồ cá nhân" })] },
+    { id: 3, name: t('package.mock.vip'), duration: 12, durationUnit: "Tháng", price: 3000000, is_active: true, features: [t('package.mock.vip_feature_1', { defaultValue: "HLV cá nhân 2 buổi" }), t('package.mock.vip_feature_2', { defaultValue: "Massage" }), t('package.mock.vip_feature_3', { defaultValue: "Sauna" })] },
+    { id: 4, name: t('package.mock.trial'), duration: 7, durationUnit: "Ngày", price: 100000, is_active: false, features: [t('package.mock.trial_feature_1', { defaultValue: "Dùng thử giới hạn" })] },
   ];
 
   return (
@@ -83,10 +101,10 @@ const PackageList = () => {
                   <TableRow key={pkg.id}>
                     <TableCell className="font-semibold text-gray-900 dark:text-gray-100">{pkg.package_name || pkg.name}</TableCell>
                     <TableCell className="text-gray-600 dark:text-gray-300">
-                      {pkg.duration_days ? `${pkg.duration_days} NgÃ y` : `${pkg.duration} ${pkg.durationUnit}`}
+                      {getDurationText(pkg)}
                     </TableCell>
                     <TableCell className="font-medium text-emerald-600 dark:text-emerald-400">
-                      {formatPriceVND ? formatPriceVND(pkg.price) : `${pkg.price.toLocaleString('vi-VN')} Ä‘`}
+                      {formatPriceVND ? formatPriceVND(pkg.price) : `${pkg.price.toLocaleString('vi-VN')} đ`}
                     </TableCell>
                     <TableCell className="text-sm text-gray-500 max-w-[200px] truncate">
                       {pkg.description || pkg.features?.join(", ") || t('package.no_description')}

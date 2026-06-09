@@ -289,6 +289,16 @@
       "inactive": "Hidden"
     },
     "no_description": "No description",
+    "day": "Day",
+    "days": "Days",
+    "month": "Month",
+    "months": "Months",
+    "mock": {
+      "basic": "Basic Package",
+      "advanced": "Advanced Package",
+      "vip": "VIP Package (1 Year)",
+      "trial": "Trial Package"
+    },
     "tooltip": {
       "hide": "Hide package",
       "show": "Show package",
