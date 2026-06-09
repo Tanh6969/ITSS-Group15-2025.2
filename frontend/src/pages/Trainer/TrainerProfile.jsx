@@ -53,7 +53,7 @@ const TrainerProfile = () => {
     );
   }
 
-  const birthYear = pt.dob ? new Date(pt.dob).getFullYear() : "â€”";
+  const birthYear = pt.dob ? new Date(pt.dob).getFullYear() : "-";
 
   let bodyIndex = {};
   try { bodyIndex = JSON.parse(pt.body_index || "{}"); } catch { bodyIndex = {}; }
@@ -89,7 +89,7 @@ const TrainerProfile = () => {
           </div>
           <div className="flex-1 text-center lg:text-left">
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 mb-2">
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{pt.full_name || "â€”"}</h1>
+              <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{pt.full_name || "-"}</h1>
               <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 text-xs font-semibold rounded-full">
                 Trainer
               </span>
@@ -100,8 +100,8 @@ const TrainerProfile = () => {
           </div>
           <div className="flex flex-wrap gap-3 justify-center lg:justify-end shrink-0">
             {[
-              { icon: Briefcase, value: pt.experience_years ? `${pt.experience_years} ${t('profile.stats.experience_unit')}` : "â€”", label: t('profile.stats.experience') },
-              { icon: Award, value: awards.length || "â€”", label: t('profile.stats.awards') },
+              { icon: Briefcase, value: pt.experience_years ? `${pt.experience_years} ${t('profile.stats.experience_unit')}` : "-", label: t('profile.stats.experience') },
+              { icon: Award, value: awards.length || "-", label: t('profile.stats.awards') },
               { icon: Calendar, value: birthYear, label: t('profile.stats.birth_year') },
             ].map(({ icon: Icon, value, label }) => (
               <div key={label} className="flex flex-col items-center gap-1.5 px-4 py-3 bg-gray-50 dark:bg-gray-900/60 border border-gray-100 dark:border-gray-800 rounded-xl text-center">
@@ -119,7 +119,7 @@ const TrainerProfile = () => {
         variants={staggerContainerVariants}
         className="grid grid-cols-1 lg:grid-cols-2 gap-6"
       >
-        {/* Left â€” Professional profile */}
+        {/* Left - Professional profile */}
         <motion.div
           variants={cardVariants}
           custom={0}
@@ -168,7 +168,7 @@ const TrainerProfile = () => {
                   </div>
                   <div className="min-w-0">
                     <div className="text-xs text-gray-500 dark:text-gray-400 font-medium">{label}</div>
-                    <div className="text-sm font-semibold text-gray-900 dark:text-white truncate">{value || "â€”"}</div>
+                    <div className="text-sm font-semibold text-gray-900 dark:text-white truncate">{value || "-"}</div>
                   </div>
                 </div>
               ))}
@@ -235,7 +235,7 @@ const TrainerProfile = () => {
                     <span className="text-xs font-normal text-gray-400 ml-1">{unit}</span>
                   </>
                 ) : (
-                  <span className="text-gray-300 dark:text-gray-600">â€”</span>
+                  <span className="text-gray-300 dark:text-gray-600">-</span>
                 )}
               </div>
             </motion.div>

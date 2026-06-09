@@ -145,84 +145,84 @@ const AccountList = () => {
 
       {/* Table */}
       <motion.div variants={slideUpVariants}>
-      {isLoading ? (
-        <div className="text-center py-10 text-gray-500">{t('account.loading')}</div>
-      ) : (
-        <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden dark:border-gray-800 dark:bg-gray-950">
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
-              <tr>
-                <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-400 w-12">{t('account.table.id')}</th>
-                <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-400">{t('account.table.username')}</th>
-                <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-400">{t('account.table.role')}</th>
-                <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-400">{t('account.table.password')}</th>
-                <th className="px-4 py-3 text-right font-semibold text-gray-600 dark:text-gray-400">{t('account.table.actions')}</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
-              {accounts.length === 0 ? (
+        {isLoading ? (
+          <div className="text-center py-10 text-gray-500">{t('account.loading')}</div>
+        ) : (
+          <div className="rounded-xl border border-gray-200 bg-white shadow-sm overflow-hidden dark:border-gray-800 dark:bg-gray-950">
+            <table className="w-full text-sm">
+              <thead className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
                 <tr>
-                  <td colSpan={5} className="px-4 py-8 text-center text-gray-400">{t('account.no_data')}</td>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-400 w-12">{t('account.table.id')}</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-400">{t('account.table.username')}</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-400">{t('account.table.role')}</th>
+                  <th className="px-4 py-3 text-left font-semibold text-gray-600 dark:text-gray-400">{t('account.table.password')}</th>
+                  <th className="px-4 py-3 text-right font-semibold text-gray-600 dark:text-gray-400">{t('account.table.actions')}</th>
                 </tr>
-              ) : (
-                accounts.map((account) => {
-                  const roleName = ROLE_MAP[account.role_id] || `Role ${account.role_id}`;
-                  const badgeClass = ROLE_BADGE[roleName] || ROLE_BADGE.MEMBER;
-                  return (
-                    <tr key={account.id} className="hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors">
-                      <td className="px-4 py-3 text-gray-500 dark:text-gray-400">{account.id}</td>
-                      <td className="px-4 py-3 font-medium text-gray-900 dark:text-white">{account.username}</td>
-                      <td className="px-4 py-3">
-                        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ring-1 ring-inset ${badgeClass}`}>
-                          {roleName}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-gray-400 font-mono tracking-widest">â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢</td>
-                      <td className="px-4 py-3">
-                        <div className="flex justify-end gap-1">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/50"
-                            title={t('account.tooltip.view_password')}
-                            onClick={() => openRevealModal(account)}
-                          >
-                            <KeyRound className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/50"
-                            title={t('account.tooltip.delete')}
-                            onClick={() => setDeleteModal({ isOpen: true, account })}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="flex items-center justify-between">
-          <span className="text-sm text-gray-500 dark:text-gray-400">{t('account.pagination', { page, total: totalPages })}</span>
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <Button variant="outline" size="sm" onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}>
-              <ChevronRight className="h-4 w-4" />
-            </Button>
+              </thead>
+              <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+                {accounts.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="px-4 py-8 text-center text-gray-400">{t('account.no_data')}</td>
+                  </tr>
+                ) : (
+                  accounts.map((account) => {
+                    const roleName = ROLE_MAP[account.role_id] || `Role ${account.role_id}`;
+                    const badgeClass = ROLE_BADGE[roleName] || ROLE_BADGE.MEMBER;
+                    return (
+                      <tr key={account.id} className="hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors">
+                        <td className="px-4 py-3 text-gray-500 dark:text-gray-400">{account.id}</td>
+                        <td className="px-4 py-3 font-medium text-gray-900 dark:text-white">{account.username}</td>
+                        <td className="px-4 py-3">
+                          <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ring-1 ring-inset ${badgeClass}`}>
+                            {roleName}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-gray-400 font-mono tracking-widest">**********</td>
+                        <td className="px-4 py-3">
+                          <div className="flex justify-end gap-1">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/50"
+                              title={t('account.tooltip.view_password')}
+                              onClick={() => openRevealModal(account)}
+                            >
+                              <KeyRound className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/50"
+                              title={t('account.tooltip.delete')}
+                              onClick={() => setDeleteModal({ isOpen: true, account })}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
           </div>
-        </div>
-      )}
+        )}
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-gray-500 dark:text-gray-400">{t('account.pagination', { page, total: totalPages })}</span>
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}>
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        )}
       </motion.div>
 
       {/* Modal: ThÃªm tÃ i khoáº£n */}

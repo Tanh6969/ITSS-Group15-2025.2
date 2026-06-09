@@ -317,7 +317,7 @@ const EvaluationList = () => {
                 </div>
               </div>
 
-              {/* Text fields â€” 2 columns on wider screens */}
+              {/* Text fields - 2 columns on wider screens */}
               <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-5">
                 {FIELD_KEYS.map((key) => (
                   <div key={key}>
