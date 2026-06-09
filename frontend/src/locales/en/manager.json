@@ -87,7 +87,8 @@
     "suspend_account": "Suspend Account",
     "activate_account": "Activate Account",
     "info": "Information",
-    "go_back": "Go Back"
+    "go_back": "Go Back",
+    "pagination": "Page {{page}} / {{total}} (Total: {{count}} members)"
   },
   "packages": {
     "title": "Package Management",

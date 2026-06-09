@@ -87,7 +87,8 @@
     "suspend_account": "Khóa tài khoản",
     "activate_account": "Mở khóa tài khoản",
     "info": "Thông tin",
-    "go_back": "Quay lại"
+    "go_back": "Quay lại",
+    "pagination": "Trang {{page}} / {{total}} (Tổng: {{count}} hội viên)"
   },
   "packages": {
     "title": "Quản Lý Gói Tập",

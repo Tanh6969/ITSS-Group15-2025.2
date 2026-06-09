@@ -87,7 +87,8 @@
     "suspend_account": "アカウントを停止",
     "activate_account": "アカウントを有効化",
     "info": "情報",
-    "go_back": "戻る"
+    "go_back": "戻る",
+    "pagination": "{{page}} / {{total}} ページ (合計: {{count}} 名)"
   },
   "packages": {
     "title": "パッケージ管理",
