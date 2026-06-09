@@ -68,10 +68,10 @@ const OwnerDashboard = () => {
   const retentionRate = members.length > 0 ? Math.round(activeCount / members.length * 100) : 0;
 
   const statsCards = [
-    { title: t('dashboard.stats.revenue'), value: fmt(monthRevenue), icon: ArrowUpRight, trend: 'up', trendValue: t('dashboard.stats.current_month') },
-    { title: t('dashboard.stats.new_members'), value: String(newMembersCount), icon: Users, trend: 'up', trendValue: t('dashboard.stats.this_month') },
-    { title: t('dashboard.stats.retention'), value: `${retentionRate}%`, icon: ShieldCheck, trend: retentionRate >= 70 ? 'up' : 'down', trendValue: `${activeCount}/${members.length}` },
-    { title: t('dashboard.stats.staff'), value: String(employees.length), icon: Briefcase, trend: 'neutral', trendValue: t('dashboard.stats.total') },
+    { title: t('dashboard.stats.revenue'), value: fmt(monthRevenue), icon: ArrowUpRight, trend: 'up', trendValue: t('dashboard.stats.current_month'), trendLabel: t('dashboard.stats.compared_to_last_month') },
+    { title: t('dashboard.stats.new_members'), value: String(newMembersCount), icon: Users, trend: 'up', trendValue: t('dashboard.stats.this_month'), trendLabel: t('dashboard.stats.compared_to_last_month') },
+    { title: t('dashboard.stats.retention'), value: `${retentionRate}%`, icon: ShieldCheck, trend: retentionRate >= 70 ? 'up' : 'down', trendValue: `${activeCount}/${members.length}`, trendLabel: t('dashboard.stats.compared_to_last_month') },
+    { title: t('dashboard.stats.staff'), value: String(employees.length), icon: Briefcase, trend: 'neutral', trendValue: t('dashboard.stats.total'), trendLabel: t('dashboard.stats.compared_to_last_month') },
   ];
 
   const revenueChartData = useMemo(() => {
@@ -182,6 +182,7 @@ const OwnerDashboard = () => {
               icon={card.icon}
               trend={card.trend}
               trendValue={card.trendValue}
+              trendLabel={card.trendLabel}
             />
           </motion.div>
         ))}

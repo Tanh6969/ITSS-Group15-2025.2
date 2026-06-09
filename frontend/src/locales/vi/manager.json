@@ -32,7 +32,8 @@
     "none_yet": "Chưa có",
     "members_label": "hội viên",
     "sessions": "buổi",
-    "with_member": "với {{name}}"
+    "with_member": "với {{name}}",
+    "compared_to_last_month": "so với tháng trước"
   },
   "feedbacks": {
     "title": "Phản Hồi Của Hội Viên",

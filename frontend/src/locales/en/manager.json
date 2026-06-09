@@ -32,7 +32,8 @@
     "none_yet": "None yet",
     "members_label": "members",
     "sessions": "sessions",
-    "with_member": "with {{name}}"
+    "with_member": "with {{name}}",
+    "compared_to_last_month": "vs last month"
   },
   "feedbacks": {
     "title": "Member Feedbacks",

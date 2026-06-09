@@ -32,7 +32,8 @@
     "none_yet": "未設定",
     "members_label": "会員",
     "sessions": "セッション",
-    "with_member": "{{name}} と"
+    "with_member": "{{name}} と",
+    "compared_to_last_month": "前月比"
   },
   "feedbacks": {
     "title": "会員フィードバック",

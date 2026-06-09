@@ -10,7 +10,8 @@
       "staff": "Staff",
       "current_month": "Current month",
       "this_month": "This month",
-      "total": "Total"
+      "total": "Total",
+      "compared_to_last_month": "vs last month"
     },
     "chart": {
       "revenue_title": "Revenue – Last 7 Months",

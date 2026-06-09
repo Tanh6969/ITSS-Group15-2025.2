@@ -10,7 +10,8 @@
       "staff": "Nhân sự",
       "current_month": "Tháng hiện tại",
       "this_month": "Tháng này",
-      "total": "Tổng cộng"
+      "total": "Tổng cộng",
+      "compared_to_last_month": "so với tháng trước"
     },
     "chart": {
       "revenue_title": "Doanh thu 7 tháng gần nhất",

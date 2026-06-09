@@ -10,7 +10,8 @@
       "staff": "スタッフ",
       "current_month": "今月",
       "this_month": "今月",
-      "total": "合計"
+      "total": "合計",
+      "compared_to_last_month": "前月比"
     },
     "chart": {
       "revenue_title": "直近7ヶ月の売上",
