@@ -6,20 +6,21 @@ import { cn } from '@/lib/utils';
 const TrainerModal = ({ selectedTrainer, ptDetails = [], setSelectedTrainer, setBookingForm }) => {
   const { t } = useTranslation('member');
 
-  if (!selectedTrainer) return null;
-
   const pt = ptDetails.find((p) => p.full_name === selectedTrainer);
-  if (!pt) return null;
 
+  // useMemo MUST be called before any early returns (Rules of Hooks)
   const availability = useMemo(() => {
-    if (!pt.available_schedule) return {};
+    if (!pt?.available_schedule) return {};
     try {
       return JSON.parse(pt.available_schedule);
     } catch (e) {
       console.error('Failed to parse availability', e);
       return {};
     }
-  }, [pt.available_schedule]);
+  }, [pt?.available_schedule]);
+
+  if (!selectedTrainer) return null;
+  if (!pt) return null;
 
   const hasAvailability = Object.keys(availability).some(day => availability[day]?.length > 0);
 

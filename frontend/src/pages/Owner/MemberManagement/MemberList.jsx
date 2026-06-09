@@ -20,11 +20,11 @@ const MemberList = () => {
 
   // Mock data fallback
   const mockMembers = [
-    { id: 1, full_name: 'Nguyễn Văn A', phone: '0912345678', email: 'vana@gmail.com', package_name: 'Gói VIP', status: 'active', registered_at: '2026-01-15' },
-    { id: 2, full_name: 'Trần Thị B', phone: '0923456789', email: 'thib@gmail.com', package_name: 'Gói Basic', status: 'active', registered_at: '2026-02-20' },
-    { id: 3, full_name: 'Lê Văn C', phone: '0934567890', email: 'vanc@gmail.com', package_name: 'Gói Premium', status: 'inactive', registered_at: '2025-12-10' },
-    { id: 4, full_name: 'Phạm Thị D', phone: '0945678901', email: 'thid@gmail.com', package_name: 'Gói VIP', status: 'active', registered_at: '2026-03-05' },
-    { id: 5, full_name: 'Hoàng Văn E', phone: '0956789012', email: 'vane@gmail.com', package_name: 'Gói Basic', status: 'active', registered_at: '2026-03-15' },
+    { id: 1, full_name: 'Nguyá»…n VÄƒn A', phone: '0912345678', email: 'vana@gmail.com', package_name: 'GÃ³i VIP', status: 'active', registered_at: '2026-01-15' },
+    { id: 2, full_name: 'Tráº§n Thá»‹ B', phone: '0923456789', email: 'thib@gmail.com', package_name: 'GÃ³i Basic', status: 'active', registered_at: '2026-02-20' },
+    { id: 3, full_name: 'LÃª VÄƒn C', phone: '0934567890', email: 'vanc@gmail.com', package_name: 'GÃ³i Premium', status: 'inactive', registered_at: '2025-12-10' },
+    { id: 4, full_name: 'Pháº¡m Thá»‹ D', phone: '0945678901', email: 'thid@gmail.com', package_name: 'GÃ³i VIP', status: 'active', registered_at: '2026-03-05' },
+    { id: 5, full_name: 'HoÃ ng VÄƒn E', phone: '0956789012', email: 'vane@gmail.com', package_name: 'GÃ³i Basic', status: 'active', registered_at: '2026-03-15' },
   ];
 
   // Handle API response
@@ -67,12 +67,7 @@ const MemberList = () => {
   }, [searchTerm, sortedMembers]);
 
   return (
-    <motion.div
-      className="space-y-6 relative"
-      variants={sectionStaggerVariants}
-      initial="hidden"
-      animate="visible"
-    >
+    <div className="space-y-6 relative">
       <motion.div variants={slideUpVariants} className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{t('member.title')}</h1>
@@ -134,7 +129,7 @@ const MemberList = () => {
                       <TableCell className="font-semibold text-gray-900 dark:text-gray-100">
                         <div className="flex items-center gap-3">
                           <img 
-                            src={(member.gender || '').toLowerCase() === 'nữ' ? '/src/assets/nu_ava.jpg' : '/src/assets/nam_ava.jpg'} 
+                            src={(member.gender || '').toLowerCase() === 'ná»¯' ? '/src/assets/nu_ava.jpg' : '/src/assets/nam_ava.jpg'} 
                             alt="avatar" 
                             className="h-8 w-8 rounded-full object-cover border border-gray-200 dark:border-gray-700"
                           />
@@ -208,7 +203,7 @@ const MemberList = () => {
           </div>
         )}
       </motion.div>
-    </motion.div>
+    </div>
   );
 };
 

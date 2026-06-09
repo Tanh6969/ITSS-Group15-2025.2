@@ -116,7 +116,7 @@ const OwnerDashboard = () => {
   const packageData = useMemo(() => {
     const counts = {};
     transactions.forEach(t => {
-      const pkg = t.package || 'Khác';
+      const pkg = t.package || 'KhÃ¡c';
       counts[pkg] = (counts[pkg] || 0) + 1;
     });
     return Object.entries(counts)
@@ -128,7 +128,7 @@ const OwnerDashboard = () => {
   const packageSoldData = useMemo(() => {
     const counts = {};
     transactions.forEach(t => {
-      const pkg = t.package || 'Khác';
+      const pkg = t.package || 'KhÃ¡c';
       counts[pkg] = (counts[pkg] || 0) + 1;
     });
     return Object.entries(counts)
@@ -150,12 +150,7 @@ const OwnerDashboard = () => {
   }, [employees, bookings]);
 
   return (
-    <motion.div
-      className="space-y-6"
-      variants={sectionStaggerVariants}
-      initial="hidden"
-      animate="visible"
-    >
+    <div className="space-y-6">
       {/* Header */}
       <motion.div variants={slideUpVariants} className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -169,7 +164,7 @@ const OwnerDashboard = () => {
         </Link>
       </motion.div>
 
-      {/* Stats cards – staggered */}
+      {/* Stats cards â€“ staggered */}
       <motion.div
         variants={staggerContainerVariants}
         className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"
@@ -209,7 +204,7 @@ const OwnerDashboard = () => {
         <EquipmentStatusChart />
         <PerformanceChart data={packageData} />
       </motion.div>
-    </motion.div>
+    </div>
   );
 };
 

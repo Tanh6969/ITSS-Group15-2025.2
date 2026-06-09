@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+﻿import React, { useState, useRef, useEffect } from 'react';
 import { ClipboardList, CheckCircle2, Clock, Save, User, Building2, X } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -104,12 +104,7 @@ const EvaluationList = () => {
   }
 
   return (
-    <motion.div
-      className="flex-1 p-4 lg:p-6 w-full overflow-hidden flex flex-col"
-      variants={slideUpVariants}
-      initial="hidden"
-      animate="visible"
-    >
+    <div className="flex-1 p-4 lg:p-6 w-full overflow-hidden flex flex-col">
       <div
         className="flex-1 flex flex-col lg:flex-row bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden shadow-sm min-h-0"
         style={{ minHeight: '520px' }}
@@ -162,7 +157,7 @@ const EvaluationList = () => {
                       </div>
                       <div className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
                         {sessionDate.toLocaleDateString(locale, { weekday: 'short', day: '2-digit', month: '2-digit' })}
-                        {' · '}
+                        {' Â· '}
                         {sessionDate.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })}
                       </div>
                     </div>
@@ -202,7 +197,7 @@ const EvaluationList = () => {
                     {new Date(selectedSession.session_time).toLocaleDateString(locale, {
                       weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric',
                     })}
-                    {' · '}
+                    {' Â· '}
                     {new Date(selectedSession.session_time).toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })}
                   </div>
                 </div>
@@ -322,7 +317,7 @@ const EvaluationList = () => {
                 </div>
               </div>
 
-              {/* Text fields — 2 columns on wider screens */}
+              {/* Text fields â€” 2 columns on wider screens */}
               <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-5">
                 {FIELD_KEYS.map((key) => (
                   <div key={key}>
@@ -357,7 +352,7 @@ const EvaluationList = () => {
           )}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

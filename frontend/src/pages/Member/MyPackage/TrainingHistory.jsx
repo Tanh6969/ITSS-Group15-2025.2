@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { CalendarCheck, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -20,12 +20,7 @@ const TrainingHistory = () => {
   }
 
   return (
-    <motion.div
-      className="space-y-6 max-w-lg mx-auto md:max-w-2xl pb-20 px-4"
-      variants={sectionStaggerVariants}
-      initial="hidden"
-      animate="visible"
-    >
+    <div className="space-y-6 max-w-lg mx-auto md:max-w-2xl pb-20 px-4">
       <motion.div variants={slideUpVariants}>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{t('history.title')}</h1>
         <p className="text-gray-500 text-sm mt-1">{t('history.subtitle')}</p>
@@ -62,7 +57,7 @@ const TrainingHistory = () => {
           })}
         </motion.div>
       )}
-    </motion.div>
+    </div>
   );
 };
 export default TrainingHistory;

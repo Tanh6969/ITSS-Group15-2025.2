@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+﻿import React, { useMemo, useState } from 'react';
 import { Plus, Trash2, Eye, EyeOff, ChevronLeft, ChevronRight, KeyRound, ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -43,9 +43,13 @@ const AccountList = () => {
   const revealMutation = useRevealPassword();
 
   const accounts = useMemo(() => {
-    if (!accountResponse) return [];
-    if (Array.isArray(accountResponse)) return accountResponse;
-    return accountResponse.data || [];
+    const raw = !accountResponse
+      ? []
+      : Array.isArray(accountResponse)
+        ? accountResponse
+        : accountResponse.data || [];
+    // áº¨n tÃ i khoáº£n OWNER (role_id = 1) khá»i danh sÃ¡ch
+    return raw.filter((acc) => acc.role_id !== 1);
   }, [accountResponse]);
 
   const totalPages = useMemo(() => {
@@ -125,12 +129,7 @@ const AccountList = () => {
   };
 
   return (
-    <motion.div
-      className="space-y-6"
-      variants={sectionStaggerVariants}
-      initial="hidden"
-      animate="visible"
-    >
+    <div className="space-y-6">
       {/* Header */}
       <motion.div variants={slideUpVariants} className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -178,7 +177,7 @@ const AccountList = () => {
                           {roleName}
                         </span>
                       </td>
-                      <td className="px-4 py-3 text-gray-400 font-mono tracking-widest">••••••••</td>
+                      <td className="px-4 py-3 text-gray-400 font-mono tracking-widest">â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢</td>
                       <td className="px-4 py-3">
                         <div className="flex justify-end gap-1">
                           <Button
@@ -226,7 +225,7 @@ const AccountList = () => {
       )}
       </motion.div>
 
-      {/* Modal: Thêm tài khoản */}
+      {/* Modal: ThÃªm tÃ i khoáº£n */}
       <Modal isOpen={createModal} onClose={() => { setCreateModal(false); setCreateErrors({}); }} title={t('account.modal.add_title')}>
         <div className="p-4 space-y-4">
           <Input
@@ -265,7 +264,7 @@ const AccountList = () => {
         </div>
       </Modal>
 
-      {/* Modal: Xác nhận xóa */}
+      {/* Modal: XÃ¡c nháº­n xÃ³a */}
       <Modal isOpen={deleteModal.isOpen} onClose={() => setDeleteModal({ isOpen: false, account: null })} title={t('account.modal.delete_title')}>
         <div className="p-4">
           <p className="text-gray-700 dark:text-gray-300 mb-2">
@@ -279,7 +278,7 @@ const AccountList = () => {
         </div>
       </Modal>
 
-      {/* Modal: Xem mật khẩu */}
+      {/* Modal: Xem máº­t kháº©u */}
       <Modal isOpen={revealModal.isOpen} onClose={closeRevealModal} title={t('account.modal.reveal_title')}>
         <div className="p-4 space-y-4">
           <div className="flex items-center gap-2 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 p-3">
@@ -309,7 +308,7 @@ const AccountList = () => {
               <label className="text-sm font-medium text-gray-700 dark:text-gray-200">{t('account.reveal.account_password_label')}</label>
               <div className="flex items-center gap-2 rounded-md border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 px-3 py-2">
                 <span className="flex-1 font-mono text-gray-900 dark:text-white">
-                  {showRevealedPwd ? revealedPassword : '•'.repeat(revealedPassword.length || 8)}
+                  {showRevealedPwd ? revealedPassword : 'â€¢'.repeat(revealedPassword.length || 8)}
                 </span>
                 <button
                   type="button"
@@ -326,7 +325,7 @@ const AccountList = () => {
           )}
         </div>
       </Modal>
-    </motion.div>
+    </div>
   );
 };
 

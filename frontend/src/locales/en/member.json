@@ -164,7 +164,8 @@
       "Rejected": "Rejected",
       "Confirmed": "Confirmed",
       "Unconfirmed": "Unconfirmed",
-      "Scheduled": "Scheduled"
+      "Scheduled": "Scheduled",
+      "Expired": "Expired (Cancelled)"
     },
     "session_with": "Session with {{name}}",
     "request_with": "Request with {{name}}",

@@ -80,12 +80,7 @@ const MemberDashboard = () => {
   };
 
   return (
-    <motion.div
-      className="space-y-6 max-w-lg mx-auto md:max-w-full pb-20"
-      variants={sectionStaggerVariants}
-      initial="hidden"
-      animate="visible"
-    >
+    <div className="space-y-6 max-w-lg mx-auto md:max-w-full pb-20">
       {user?.isFirstLogin && (
         <motion.div
           variants={fadeInVariants}
@@ -204,7 +199,7 @@ const MemberDashboard = () => {
           </Link>
         </motion.div>
       </motion.div>
-    </motion.div>
+    </div>
   );
 };
 

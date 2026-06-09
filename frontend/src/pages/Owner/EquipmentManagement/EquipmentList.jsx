@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+﻿import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Plus, Edit, Trash2, PenTool, ChevronLeft, ChevronRight, Power, PowerOff } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -37,11 +37,11 @@ const EquipmentList = () => {
   // Handle API response - extract data from pagination response
   // Fallback to mock data if API fails
   const mockEquipment = [
-    { id: 1, equipment_name: 'Máy chạy bộ Proform', facility_id: 1, status: 'active', origin: 'Mỹ', maintenance_deadline: '2026-06-15' },
-    { id: 2, equipment_name: 'Ghế đẩy ngực', facility_id: 2, status: 'active', origin: 'Đức', maintenance_deadline: '2026-07-20' },
-    { id: 3, equipment_name: 'Máy kéo xô lưng đùi', facility_id: 2, status: 'maintenance', origin: 'Trung Quốc', maintenance_deadline: '2026-05-01' },
-    { id: 4, equipment_name: 'Tạ đòn Olympic 20kg', facility_id: 2, status: 'active', origin: 'Việt Nam', maintenance_deadline: '2026-12-30' },
-    { id: 5, equipment_name: 'Xe đạp tập Elip', facility_id: 1, status: 'active', origin: 'Mỹ', maintenance_deadline: '2026-08-15' },
+    { id: 1, equipment_name: 'MÃ¡y cháº¡y bá»™ Proform', facility_id: 1, status: 'active', origin: 'Má»¹', maintenance_deadline: '2026-06-15' },
+    { id: 2, equipment_name: 'Gháº¿ Ä‘áº©y ngá»±c', facility_id: 2, status: 'active', origin: 'Äá»©c', maintenance_deadline: '2026-07-20' },
+    { id: 3, equipment_name: 'MÃ¡y kÃ©o xÃ´ lÆ°ng Ä‘Ã¹i', facility_id: 2, status: 'maintenance', origin: 'Trung Quá»‘c', maintenance_deadline: '2026-05-01' },
+    { id: 4, equipment_name: 'Táº¡ Ä‘Ã²n Olympic 20kg', facility_id: 2, status: 'active', origin: 'Viá»‡t Nam', maintenance_deadline: '2026-12-30' },
+    { id: 5, equipment_name: 'Xe Ä‘áº¡p táº­p Elip', facility_id: 1, status: 'active', origin: 'Má»¹', maintenance_deadline: '2026-08-15' },
   ];
 
   const equipment = useMemo(() => {
@@ -75,12 +75,7 @@ const EquipmentList = () => {
   }, [equipment, searchTerm]);
 
   return (
-    <motion.div
-      className="space-y-6 relative"
-      variants={sectionStaggerVariants}
-      initial="hidden"
-      animate="visible"
-    >
+    <div className="space-y-6 relative">
       <motion.div variants={slideUpVariants} className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{t('equipment.title')}</h1>
@@ -172,7 +167,7 @@ const EquipmentList = () => {
                       </TableCell>
                       <TableCell className="text-right pr-4">
                         <div className="flex items-center justify-end gap-1">
-                          {/* Kích hoạt button removed as requested */}
+                          {/* KÃ­ch hoáº¡t button removed as requested */}
                           <Link to={`/owner/equipment/${item.id}/edit`}>
                             <Button variant="ghost" size="icon" title={t('equipment.tooltip.edit')} className="h-8 w-8 text-blue-500 hidden sm:inline-flex">
                               <Edit className="h-4 w-4" />
@@ -247,7 +242,7 @@ const EquipmentList = () => {
           </div>
         </div>
       </Modal>
-    </motion.div>
+    </div>
   );
 };
 

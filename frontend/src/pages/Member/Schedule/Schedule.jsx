@@ -94,6 +94,7 @@ const Schedule = () => {
   }, [bookings, ptDetails, sessions, t]);
 
   const requestsWorkouts = useMemo(() => {
+    const now = new Date();
     const map = {};
     bookings
       .filter((b) => b.status === 'Pending' || b.status === 'Rejected')
@@ -101,6 +102,8 @@ const Schedule = () => {
         const dateKey = b.requested_start.slice(0, 10);
         const pt = ptDetails.find((p) => p.employee_id === b.pt_id);
         const ptName = pt?.full_name || `PT #${b.pt_id}`;
+        // Nếu Pending nhưng thời gian yêu cầu đã qua → đánh dấu Expired
+        const isPastDue = b.status === 'Pending' && new Date(b.requested_end) < now;
         if (!map[dateKey]) map[dateKey] = [];
         map[dateKey].push({
           bookingId: b.id,
@@ -110,7 +113,7 @@ const Schedule = () => {
           type: b.training_plan_note || 'Personal',
           location: '',
           trainer: ptName,
-          status: b.status,
+          status: isPastDue ? 'Expired' : b.status,
           denyReason: b.rejection_reason || '',
         });
       });
@@ -278,6 +281,7 @@ const Schedule = () => {
     if (activeTab === 'requests') {
       if (item.status === 'Accepted') return '#16A34A';
       if (item.status === 'Pending') return '#EAB308';
+      if (item.status === 'Expired') return '#9CA3AF';
       return '#EF4444';
     }
     return item.isBookable ? '#3B82F6' : '#9CA3AF';
@@ -290,6 +294,8 @@ const Schedule = () => {
       return 'bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-300';
     if (status === 'Rejected')
       return 'bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300';
+    if (status === 'Expired')
+      return 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400';
     return 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300';
   };
 

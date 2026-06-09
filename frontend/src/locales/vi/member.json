@@ -164,7 +164,8 @@
       "Rejected": "Từ chối",
       "Confirmed": "Đã xác nhận",
       "Unconfirmed": "Chưa xác nhận",
-      "Scheduled": "Đã lên lịch"
+      "Scheduled": "Đã lên lịch",
+      "Expired": "Hết hạn (Hủy)"
     },
     "session_with": "Buổi tập cùng {{name}}",
     "request_with": "Yêu cầu tập cùng {{name}}",

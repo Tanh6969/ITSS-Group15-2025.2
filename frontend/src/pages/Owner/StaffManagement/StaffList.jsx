@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+﻿import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Plus, Trash2, Eye, ChevronLeft, ChevronRight, Wallet } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -30,11 +30,11 @@ const StaffList = () => {
   };
 
   const mockStaffs = [
-    { id: 1, full_name: 'Nguyễn Lê Lễ Tân', phone: '0999888777', email: 'letan@activegym.vn', position: 'Quản lý', status: 'active' },
-    { id: 2, full_name: 'Trần Anh HLV', phone: '0999666555', email: 'pt.trananh@activegym.vn', position: 'Huấn luyện viên', status: 'active' },
-    { id: 3, full_name: 'Phạm Tạp Vụ', phone: '0888111222', email: 'tapvu@activegym.vn', position: 'Nhân viên', status: 'inactive' },
-    { id: 4, full_name: 'Nguyễn Thị Mai', phone: '0977555333', email: 'mai.pt@activegym.vn', position: 'Huấn luyện viên', status: 'active' },
-    { id: 5, full_name: 'Trần Văn Bảo', phone: '0966444222', email: 'bao@activegym.vn', position: 'Lễ tân', status: 'active' },
+    { id: 1, full_name: 'Nguyá»…n LÃª Lá»… TÃ¢n', phone: '0999888777', email: 'letan@activegym.vn', position: 'Quáº£n lÃ½', status: 'active' },
+    { id: 2, full_name: 'Tráº§n Anh HLV', phone: '0999666555', email: 'pt.trananh@activegym.vn', position: 'Huáº¥n luyá»‡n viÃªn', status: 'active' },
+    { id: 3, full_name: 'Pháº¡m Táº¡p Vá»¥', phone: '0888111222', email: 'tapvu@activegym.vn', position: 'NhÃ¢n viÃªn', status: 'inactive' },
+    { id: 4, full_name: 'Nguyá»…n Thá»‹ Mai', phone: '0977555333', email: 'mai.pt@activegym.vn', position: 'Huáº¥n luyá»‡n viÃªn', status: 'active' },
+    { id: 5, full_name: 'Tráº§n VÄƒn Báº£o', phone: '0966444222', email: 'bao@activegym.vn', position: 'Lá»… tÃ¢n', status: 'active' },
   ];
 
   const staffs = useMemo(() => {
@@ -93,12 +93,7 @@ const StaffList = () => {
   };
 
   return (
-    <motion.div
-      className="space-y-8"
-      variants={sectionStaggerVariants}
-      initial="hidden"
-      animate="visible"
-    >
+    <div className="space-y-8">
       <motion.div variants={slideUpVariants} className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{t('staff.title')}</h1>
@@ -158,7 +153,7 @@ const StaffList = () => {
                     <TableCell className="font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-3">
                       <div className="h-9 w-9 overflow-hidden rounded-full bg-gray-100 dark:bg-gray-800 flex-shrink-0">
                         <img
-                          src={(staff.gender || '').toLowerCase() === 'female' || (staff.gender || '').toLowerCase() === 'nữ'
+                          src={(staff.gender || '').toLowerCase() === 'female' || (staff.gender || '').toLowerCase() === 'ná»¯'
                             ? '/src/assets/nu_ava.jpg'
                             : '/src/assets/nam_ava.jpg'}
                           alt={staff.full_name || staff.FullName || staff.fullName}
@@ -266,7 +261,7 @@ const StaffList = () => {
           <div className="space-y-5">
             <div className="flex items-center gap-4">
               <img
-                src={(staffForm.gender || '').toLowerCase() === 'female' || (staffForm.gender || '').toLowerCase() === 'nữ'
+                src={(staffForm.gender || '').toLowerCase() === 'female' || (staffForm.gender || '').toLowerCase() === 'ná»¯'
                   ? '/src/assets/nu_ava.jpg'
                   : '/src/assets/nam_ava.jpg'}
                 alt={staffForm.full_name || staffForm.fullName || 'Avatar'}
@@ -367,7 +362,7 @@ const StaffList = () => {
           </div>
         </div>
       </Modal>
-    </motion.div>
+    </div>
   );
 };
 

@@ -133,8 +133,8 @@ const TransactionsView = () => {
         setShowDetailModal(true);
     };
 
-    const getTypeConfig = (type) => transactionTypeConfig[type] || transactionTypeConfig.unknown;
-    const getStatusConfig = (status) => statusConfig[status] || statusConfig.unknown;
+    const resolveTypeConfig = (type) => transactionTypeConfig[type] || transactionTypeConfig.unknown;
+    const resolveStatusConfig = (status) => statusConfig[status] || statusConfig.unknown;
 
     if (isLoading) {
         return (
@@ -166,12 +166,7 @@ const TransactionsView = () => {
     }
 
     return (
-        <motion.div
-            className="space-y-6"
-            variants={sectionStaggerVariants}
-            initial="hidden"
-            animate="visible"
-        >
+        <div className="space-y-6">
             <motion.div variants={slideUpVariants} className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{t('transactions.title')}</h1>
@@ -257,8 +252,8 @@ const TransactionsView = () => {
                             </tr>
                         ) : (
                             filteredTransactions.map((txn) => {
-                                const typeConfig = getTypeConfig(txn.type);
-                                const currentStatusConfig = getStatusConfig(txn.status);
+                                const typeConfig = resolveTypeConfig(txn.type);
+                                const currentStatusConfig = resolveStatusConfig(txn.status);
 
                                 return (
                                     <tr key={txn.id} className="hover:bg-gray-50 dark:hover:bg-gray-900">
@@ -321,7 +316,7 @@ const TransactionsView = () => {
                             </div>
                             <div>
                                 <p className="text-sm text-gray-500 dark:text-gray-400">Loại giao dịch</p>
-                                <p className="text-sm font-semibold text-gray-900 dark:text-white">{getTypeConfig(selectedTransaction.type).label}</p>
+                                <p className="text-sm font-semibold text-gray-900 dark:text-white">{resolveTypeConfig(selectedTransaction.type).label}</p>
                             </div>
                             <div>
                                 <p className="text-sm text-gray-500 dark:text-gray-400">Gói tập</p>
@@ -343,8 +338,8 @@ const TransactionsView = () => {
                         </div>
 
                         <div className="flex gap-2">
-                            <Badge className={getStatusConfig(selectedTransaction.status).color}>
-                                {getStatusConfig(selectedTransaction.status).label}
+                            <Badge className={resolveStatusConfig(selectedTransaction.status).color}>
+                                {resolveStatusConfig(selectedTransaction.status).label}
                             </Badge>
                         </div>
 
@@ -356,7 +351,7 @@ const TransactionsView = () => {
                     </div>
                 </Modal>
             )}
-        </motion.div>
+        </div>
     );
 };
 

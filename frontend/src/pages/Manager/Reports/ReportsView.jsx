@@ -184,13 +184,13 @@ const ReportsView = () => {
                 <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-950">
                     <p className="text-sm text-gray-500 dark:text-gray-400">{t('reports.total_revenue')}</p>
                     <p className="mt-2 text-3xl font-bold text-blue-600 dark:text-blue-400">{formatCurrency(totalRevenue)}</p>
-                    <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">{t('reports.avg_revenue', { amount: '{formatCurrency(avgRevenue)}' })}</p>
+                    <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">Average {formatCurrency(avgRevenue)}/month</p>
                 </div>
 
                 <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-950">
                     <p className="text-sm text-gray-500 dark:text-gray-400">Số lượng hoá đơn</p>
                     <p className="mt-2 text-3xl font-bold text-green-600 dark:text-green-400">{invoiceCount}</p>
-                    <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">{t('reports.avg_revenue', { amount: '{(invoiceCount / getMonthsForTimeframe(timeframe)).toFixed(1)}' })}</p>
+                    <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">Average {(invoiceCount / getMonthsForTimeframe(timeframe)).toFixed(1)}/month</p>
                 </div>
 
                 <div className="rounded-xl border border-gray-100 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-950">

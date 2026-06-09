@@ -11,7 +11,6 @@ export const menus = {
     { title: "layout:menu.feedback",        path: "/owner/feedbacks", icon: "MessageSquare" },
     { title: "layout:menu.accounts",        path: "/owner/accounts",  icon: "KeyRound" },
     { title: "layout:menu.reports",         path: "/owner/reports",   icon: "BarChartBig" },
-    { title: "layout:menu.profile",         path: "/owner/profile",   icon: "User" },
   ],
   [ROLES.MANAGER]: [
     { title: "layout:menu.overview",        path: "/manager/dashboard",    icon: "LayoutDashboard" },

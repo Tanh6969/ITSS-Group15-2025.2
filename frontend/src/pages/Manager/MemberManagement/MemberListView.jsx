@@ -102,12 +102,7 @@ const MemberListView = () => {
     const getMemberStatus = (member) => member?.status || 'inactive';
 
     return (
-        <motion.div
-            className="space-y-6"
-            variants={sectionStaggerVariants}
-            initial="hidden"
-            animate="visible"
-        >
+        <div className="space-y-6">
             {/* Header */}
             <motion.div variants={slideUpVariants} className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
@@ -230,7 +225,7 @@ const MemberListView = () => {
                     ))
                 )}
             </motion.div>
-        </motion.div>
+        </div>
     );
 };
 

@@ -14,12 +14,7 @@ const PTCardList = ({ ptDetails, setSelectedTrainer, bookings = [] }) => {
 
   return (
     <div className="p-4 sm:p-6 bg-white dark:bg-gray-950">
-      <motion.div
-        className="grid grid-cols-1 md:grid-cols-2 gap-4"
-        variants={staggerContainerVariants}
-        initial="hidden"
-        animate="visible"
-      >
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {ptDetails.map((pt, index) => {
           const status = getPTStatus(pt.employee_id);
           const isPending = status === 'Pending';
@@ -90,7 +85,7 @@ const PTCardList = ({ ptDetails, setSelectedTrainer, bookings = [] }) => {
             </motion.div>
           );
         })}
-      </motion.div>
+      </div>
 
       {ptDetails.length === 0 && (
         <div className="text-center py-12">

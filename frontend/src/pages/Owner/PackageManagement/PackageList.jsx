@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Plus, Edit, Eye, EyeOff } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -17,7 +17,7 @@ const PackageList = () => {
   const [toggleModal, setToggleModal] = useState({ isOpen: false, pkg: null });
   const statusMutation = useUpdatePackageStatus();
 
-  // Lưu ý: Nếu bạn muốn dùng deleteMutation, bạn cần import hook tương ứng ở đây
+  // LÆ°u Ã½: Náº¿u báº¡n muá»‘n dÃ¹ng deleteMutation, báº¡n cáº§n import hook tÆ°Æ¡ng á»©ng á»Ÿ Ä‘Ã¢y
   // const deleteMutation = useDeletePackage(); 
 
   const handleToggleStatus = (pkg) => {
@@ -34,19 +34,14 @@ const PackageList = () => {
   };
 
   const mockPackages = packages || [
-    { id: 1, name: "Gói Cơ Bản", duration: 1, durationUnit: "Tháng", price: 300000, is_active: true, features: ["Phòng gym cơ bản", "Yoga"] },
-    { id: 2, name: "Gói Nâng Cao", duration: 3, durationUnit: "Tháng", price: 800000, is_active: true, features: ["Tất cả khu vực", "Tủ đồ cá nhân"] },
-    { id: 3, name: "Gói VIP (1 Năm)", duration: 12, durationUnit: "Tháng", price: 3000000, is_active: true, features: ["HLV cá nhân 2 buổi", "Massge", "Sauna"] },
-    { id: 4, name: "Gói Trải Nghiệm", duration: 7, durationUnit: "Ngày", price: 100000, is_active: false, features: ["Dùng thử giới hạn"] },
+    { id: 1, name: "GÃ³i CÆ¡ Báº£n", duration: 1, durationUnit: "ThÃ¡ng", price: 300000, is_active: true, features: ["PhÃ²ng gym cÆ¡ báº£n", "Yoga"] },
+    { id: 2, name: "GÃ³i NÃ¢ng Cao", duration: 3, durationUnit: "ThÃ¡ng", price: 800000, is_active: true, features: ["Táº¥t cáº£ khu vá»±c", "Tá»§ Ä‘á»“ cÃ¡ nhÃ¢n"] },
+    { id: 3, name: "GÃ³i VIP (1 NÄƒm)", duration: 12, durationUnit: "ThÃ¡ng", price: 3000000, is_active: true, features: ["HLV cÃ¡ nhÃ¢n 2 buá»•i", "Massge", "Sauna"] },
+    { id: 4, name: "GÃ³i Tráº£i Nghiá»‡m", duration: 7, durationUnit: "NgÃ y", price: 100000, is_active: false, features: ["DÃ¹ng thá»­ giá»›i háº¡n"] },
   ];
 
   return (
-    <motion.div
-      className="space-y-6 relative"
-      variants={sectionStaggerVariants}
-      initial="hidden"
-      animate="visible"
-    >
+    <div className="space-y-6 relative">
       <motion.div variants={slideUpVariants} className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{t('package.title')}</h1>
@@ -88,10 +83,10 @@ const PackageList = () => {
                   <TableRow key={pkg.id}>
                     <TableCell className="font-semibold text-gray-900 dark:text-gray-100">{pkg.package_name || pkg.name}</TableCell>
                     <TableCell className="text-gray-600 dark:text-gray-300">
-                      {pkg.duration_days ? `${pkg.duration_days} Ngày` : `${pkg.duration} ${pkg.durationUnit}`}
+                      {pkg.duration_days ? `${pkg.duration_days} NgÃ y` : `${pkg.duration} ${pkg.durationUnit}`}
                     </TableCell>
                     <TableCell className="font-medium text-emerald-600 dark:text-emerald-400">
-                      {formatPriceVND ? formatPriceVND(pkg.price) : `${pkg.price.toLocaleString('vi-VN')} đ`}
+                      {formatPriceVND ? formatPriceVND(pkg.price) : `${pkg.price.toLocaleString('vi-VN')} Ä‘`}
                     </TableCell>
                     <TableCell className="text-sm text-gray-500 max-w-[200px] truncate">
                       {pkg.description || pkg.features?.join(", ") || t('package.no_description')}
@@ -162,7 +157,7 @@ const PackageList = () => {
           </div>
         </div>
       </Modal>
-    </motion.div>
+    </div>
   );
 };
 

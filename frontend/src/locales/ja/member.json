@@ -164,7 +164,8 @@
       "Rejected": "拒否",
       "Confirmed": "確認済み",
       "Unconfirmed": "未確認",
-      "Scheduled": "予定済み"
+      "Scheduled": "予定済み",
+      "Expired": "期限切れ (キャンセル)"
     },
     "session_with": "{{name}}とのセッション",
     "request_with": "{{name}}へのリクエスト",

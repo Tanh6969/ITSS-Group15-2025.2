@@ -47,12 +47,7 @@ const PackageList = () => {
   };
 
   return (
-    <motion.div
-      className="space-y-6 relative"
-      variants={sectionStaggerVariants}
-      initial="hidden"
-      animate="visible"
-    >
+    <div className="space-y-6 relative">
       <motion.div variants={slideUpVariants} className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Danh sách Gói tập</h1>
@@ -123,7 +118,7 @@ const PackageList = () => {
           </Table>
         )}
       </motion.div>
-    </motion.div>
+    </div>
   );
 };
 

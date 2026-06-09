@@ -177,12 +177,7 @@ const ManagerDashboard = () => {
   };
 
   return (
-    <motion.div
-      className="space-y-6"
-      variants={sectionStaggerVariants}
-      initial="hidden"
-      animate="visible"
-    >
+    <div className="space-y-6">
       {/* Header */}
       <motion.div variants={slideUpVariants}>
         <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
@@ -328,7 +323,7 @@ const ManagerDashboard = () => {
         </div>
       </motion.div>
 
-    </motion.div>
+    </div>
   );
 };
 

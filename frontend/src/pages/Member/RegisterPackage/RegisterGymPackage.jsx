@@ -152,7 +152,7 @@ const RegisterGymPackage = () => {
         <p className="text-gray-500 text-sm mt-2">{t('register.subtitle')}</p>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 items-start">
         {/* ── LEFT: Package List ── */}
         <div className="xl:col-span-2 space-y-8">
 
@@ -380,8 +380,8 @@ const RegisterGymPackage = () => {
         </div>
 
         {/* ── RIGHT: Package Detail Panel ── */}
-        <div className="sticky top-24 h-fit">
-          <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-lg shadow-gray-200/50 dark:border-gray-800 dark:bg-gray-950 dark:shadow-none">
+        <div className="xl:col-span-1 sticky top-6 h-fit">
+          <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-lg shadow-gray-200/50 dark:border-gray-800 dark:bg-gray-950 dark:shadow-none max-h-[calc(100vh-6rem)] overflow-y-auto">
             {!selectedPkg ? (
               <div className="text-center py-10 text-gray-400 dark:text-gray-500 text-sm">{t('register.no_selection')}</div>
             ) : (() => {

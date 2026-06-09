@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+﻿import React, { useMemo, useState } from 'react';
 import { Plus, Users, MapPin, Edit, Eye, Trash2, ChevronLeft, ChevronRight, Power, PowerOff } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -35,11 +35,11 @@ const RoomList = () => {
 
   // Mock data fallback - use "Operating" to match database
   const mockRooms = [
-    { id: 1, facility_name: 'Khu vực Cardio (Tầng 1)', facility_type: 'cardio', status: 'Operating', max_capacity: 30, current_capacity: 15, description: 'Khu vực máy chạy bộ, xe đạp' },
-    { id: 2, facility_name: 'Phòng Tập Tạ (Tầng 2)', facility_type: 'weights', status: 'Operating', max_capacity: 50, current_capacity: 40, description: 'Khu vực tạ tự do và máy tập' },
-    { id: 3, facility_name: 'Phòng Yoga Cao Cấp', facility_type: 'yoga', status: 'Maintenance', max_capacity: 20, current_capacity: 0, description: 'Phòng yoga với trang thiết bị cao cấp' },
-    { id: 4, facility_name: 'Sân Boxing & MMA', facility_type: 'boxing', status: 'Operating', max_capacity: 15, current_capacity: 5, description: 'Khu vực võ thuật' },
-    { id: 5, facility_name: 'Khu vực thay đồ', facility_type: 'locker', status: 'Operating', max_capacity: 100, current_capacity: 30, description: 'Tủ khóa và phòng thay đồ' },
+    { id: 1, facility_name: 'Khu vá»±c Cardio (Táº§ng 1)', facility_type: 'cardio', status: 'Operating', max_capacity: 30, current_capacity: 15, description: 'Khu vá»±c mÃ¡y cháº¡y bá»™, xe Ä‘áº¡p' },
+    { id: 2, facility_name: 'PhÃ²ng Táº­p Táº¡ (Táº§ng 2)', facility_type: 'weights', status: 'Operating', max_capacity: 50, current_capacity: 40, description: 'Khu vá»±c táº¡ tá»± do vÃ  mÃ¡y táº­p' },
+    { id: 3, facility_name: 'PhÃ²ng Yoga Cao Cáº¥p', facility_type: 'yoga', status: 'Maintenance', max_capacity: 20, current_capacity: 0, description: 'PhÃ²ng yoga vá»›i trang thiáº¿t bá»‹ cao cáº¥p' },
+    { id: 4, facility_name: 'SÃ¢n Boxing & MMA', facility_type: 'boxing', status: 'Operating', max_capacity: 15, current_capacity: 5, description: 'Khu vá»±c vÃµ thuáº­t' },
+    { id: 5, facility_name: 'Khu vá»±c thay Ä‘á»“', facility_type: 'locker', status: 'Operating', max_capacity: 100, current_capacity: 30, description: 'Tá»§ khÃ³a vÃ  phÃ²ng thay Ä‘á»“' },
   ];
 
   // Handle API response
@@ -77,20 +77,15 @@ const RoomList = () => {
         current: room.current_capacity || room.CurrentCapacity || 0,
         status: normalizedStatus,
         description: room.description || '',
-        icon: room.facility_type === 'cardio' ? '🏃' : 
-              room.facility_type === 'weights' ? '🏋️' : 
-              room.facility_type === 'yoga' ? '🧘' : '🏢',
+        icon: room.facility_type === 'cardio' ? 'ðŸƒ' : 
+              room.facility_type === 'weights' ? 'ðŸ‹ï¸' : 
+              room.facility_type === 'yoga' ? 'ðŸ§˜' : 'ðŸ¢',
       };
     });
   }, [rooms]);
 
   return (
-    <motion.div
-      className="space-y-6"
-      variants={sectionStaggerVariants}
-      initial="hidden"
-      animate="visible"
-    >
+    <div className="space-y-6">
       <motion.div variants={slideUpVariants} className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{t('room.title')}</h1>
@@ -236,7 +231,7 @@ const RoomList = () => {
           </div>
         </div>
       </Modal>
-    </motion.div>
+    </div>
   );
 };
 

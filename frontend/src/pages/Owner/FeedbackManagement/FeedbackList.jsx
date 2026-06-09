@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+﻿import React, { useMemo, useState } from 'react';
 import { Star, MessageSquare, ChevronLeft, ChevronRight, Edit } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -45,11 +45,11 @@ const FeedbackList = () => {
 
   // Mock data fallback
   const mockFeedbacks = [
-    { id: 1, member_name: 'Nguyễn Văn A', content: 'PT nhiệt tình, chuyên môn cao', rating: 5, sent_at: '2026-03-20', status: 'resolved', feedback_type: 'trainer' },
-    { id: 2, member_name: 'Trần Thị B', content: 'Máy chạy số 3 bị kẹt thảm', rating: 2, sent_at: '2026-03-22', status: 'pending', feedback_type: 'equipment' },
-    { id: 3, member_name: 'Lê Văn C', content: 'Phòng thay đồ mùi ẩm mốc', rating: 3, sent_at: '2026-03-21', status: 'processing', feedback_type: 'service' },
-    { id: 4, member_name: 'Phạm Thị D', content: 'Dịch vụ rất tốt, nhân viên thân thiện', rating: 5, sent_at: '2026-03-18', status: 'resolved', feedback_type: 'service' },
-    { id: 5, member_name: 'Hoàng Văn E', content: 'Máy kéo xô bị hỏng cần sửa', rating: 1, sent_at: '2026-03-25', status: 'pending', feedback_type: 'equipment' },
+    { id: 1, member_name: 'Nguyá»…n VÄƒn A', content: 'PT nhiá»‡t tÃ¬nh, chuyÃªn mÃ´n cao', rating: 5, sent_at: '2026-03-20', status: 'resolved', feedback_type: 'trainer' },
+    { id: 2, member_name: 'Tráº§n Thá»‹ B', content: 'MÃ¡y cháº¡y sá»‘ 3 bá»‹ káº¹t tháº£m', rating: 2, sent_at: '2026-03-22', status: 'pending', feedback_type: 'equipment' },
+    { id: 3, member_name: 'LÃª VÄƒn C', content: 'PhÃ²ng thay Ä‘á»“ mÃ¹i áº©m má»‘c', rating: 3, sent_at: '2026-03-21', status: 'processing', feedback_type: 'service' },
+    { id: 4, member_name: 'Pháº¡m Thá»‹ D', content: 'Dá»‹ch vá»¥ ráº¥t tá»‘t, nhÃ¢n viÃªn thÃ¢n thiá»‡n', rating: 5, sent_at: '2026-03-18', status: 'resolved', feedback_type: 'service' },
+    { id: 5, member_name: 'HoÃ ng VÄƒn E', content: 'MÃ¡y kÃ©o xÃ´ bá»‹ há»ng cáº§n sá»­a', rating: 1, sent_at: '2026-03-25', status: 'pending', feedback_type: 'equipment' },
   ];
 
   // Handle API response
@@ -117,12 +117,7 @@ const FeedbackList = () => {
   };
 
   return (
-    <motion.div
-      className="space-y-6"
-      variants={sectionStaggerVariants}
-      initial="hidden"
-      animate="visible"
-    >
+    <div className="space-y-6">
       <motion.div variants={slideUpVariants} className="space-y-4">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -326,7 +321,7 @@ const FeedbackList = () => {
           </div>
         </div>
       </Modal>
-    </motion.div>
+    </div>
   );
 };
 

@@ -19,7 +19,7 @@ const STATUS_MEMBER_CLS = {
 };
 
 const formatDate = (dateStr) => {
-  if (!dateStr) return '—';
+  if (!dateStr) return 'â€”';
   return new Date(`${dateStr.slice(0, 10)}T00:00:00`).toLocaleDateString('vi-VN');
 };
 
@@ -80,12 +80,7 @@ const StudentList = () => {
 
   return (
     <div className="flex-1 overflow-y-auto px-6 py-6">
-      <motion.div
-        className="space-y-6"
-        variants={sectionStaggerVariants}
-        initial="hidden"
-        animate="visible"
-      >
+      <div className="space-y-6">
         <motion.div variants={slideUpVariants}>
           <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{t('students.title')}</h1>
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{t('students.subtitle')}</p>
@@ -122,13 +117,13 @@ const StudentList = () => {
                       <span className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                         {getMemberName(member, memberId)}
                       </span>
-                      <div className="text-xs text-gray-500 font-normal">{member?.phone ?? '—'}</div>
+                      <div className="text-xs text-gray-500 font-normal">{member?.phone ?? 'â€”'}</div>
                     </TableCell>
                     <TableCell className="text-gray-700 dark:text-gray-300 max-w-[180px]">
-                      <span className="line-clamp-2">{roadmapGoal || '—'}</span>
+                      <span className="line-clamp-2">{roadmapGoal || 'â€”'}</span>
                     </TableCell>
                     <TableCell className="text-gray-700 dark:text-gray-300">
-                      {member?.package || '—'}
+                      {member?.package || 'â€”'}
                     </TableCell>
                     <TableCell className="text-gray-600 dark:text-gray-400">
                       {formatDate(member?.expiryDate)}
@@ -138,7 +133,7 @@ const StudentList = () => {
                     </TableCell>
                     <TableCell>
                       <span className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-medium ${memberStatusCls}`}>
-                        {t(`students.status.${member?.status}`, { defaultValue: member?.status || '—' })}
+                        {t(`students.status.${member?.status}`, { defaultValue: member?.status || 'â€”' })}
                       </span>
                     </TableCell>
                   </TableRow>
@@ -149,7 +144,7 @@ const StudentList = () => {
           </div>
         )}
         </motion.div>
-      </motion.div>
+      </div>
 
       <AnimatePresence>
       {selectedStudentId != null && (
@@ -202,10 +197,10 @@ const StudentList = () => {
                           <TableRow key={booking.id}>
                             <TableCell className="font-semibold text-gray-900 dark:text-gray-100">
                               {getMemberName(selectedMember, booking.member_id)}
-                              <div className="text-xs text-gray-500 font-normal">{selectedMember?.phone ?? '—'}</div>
+                              <div className="text-xs text-gray-500 font-normal">{selectedMember?.phone ?? 'â€”'}</div>
                             </TableCell>
                             <TableCell className="text-gray-700 dark:text-gray-300">
-                              {booking.training_plan_note || '—'}
+                              {booking.training_plan_note || 'â€”'}
                             </TableCell>
                             <TableCell className="text-gray-600 dark:text-gray-400">
                               {formatDate(booking.requested_start)}
