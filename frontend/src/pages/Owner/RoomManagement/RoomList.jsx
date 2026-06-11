@@ -9,6 +9,7 @@ import Button from '@/components/Common/Button';
 import Modal from '@/components/Common/Modal';
 import { toast } from '@/utils/toast';
 import { slideUpVariants, sectionStaggerVariants } from '@/lib/animations';
+import { localizeRoomName, localizeRoomDesc } from '@/utils/helpers';
 
 const RoomList = () => {
   const { t } = useTranslation('owner');
@@ -70,19 +71,20 @@ const RoomList = () => {
       const rawStatus = room.status || 'active';
       const normalizedStatus = rawStatus.toLowerCase() === 'operating' ? 'active' : 
                               rawStatus.toLowerCase() === 'maintenance' ? 'maintenance' : rawStatus;
+      const rawName = room.facility_name || room.facilityName || room.name || 'N/A';
       return {
         id: room.id || room.facility_id,
-        name: room.facility_name || room.facilityName || room.name || 'N/A',
+        name: localizeRoomName(rawName, t),
         capacity: room.max_capacity || room.MaxCapacity || room.capacity || 0,
         current: room.current_capacity || room.CurrentCapacity || 0,
         status: normalizedStatus,
-        description: room.description || '',
+        description: localizeRoomDesc(room.description || '', rawName, t),
         icon: room.facility_type === 'cardio' ? '🏃' : 
               room.facility_type === 'weights' ? '🏋️' : 
               room.facility_type === 'yoga' ? '🧘' : '🏢',
       };
     });
-  }, [rooms]);
+  }, [rooms, t]);
 
   return (
     <div className="space-y-6">

@@ -8,6 +8,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import Button from '@/components/Common/Button';
 import { useFacilityById } from '@/hooks/queries/useFacilities';
+import { localizeRoomName, localizeRoomDesc, localizeAmenity } from '@/utils/helpers';
 
 /* ─── Static image/video data (not translatable) ─── */
 const TYPE_MEDIA = {
@@ -96,7 +97,7 @@ const RoomDetail = () => {
 
   const isOperating = facility.status === 'Operating' || facility.status === 'active';
   const amenityList = facility.amenities
-    ? facility.amenities.split(',').map(a => a.trim()).filter(Boolean)
+    ? facility.amenities.split(',').map(a => localizeAmenity(a.trim(), t)).filter(Boolean)
     : [];
   const occupancyPct = facility.max_capacity > 0
     ? Math.round((facility.current_capacity / facility.max_capacity) * 100)
@@ -120,7 +121,7 @@ const RoomDetail = () => {
             <div>
               <div className="flex items-center gap-2 flex-wrap">
                 <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                  {facility.facility_name}
+                  {localizeRoomName(facility.facility_name, t)}
                 </h1>
                 <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ring-1 ring-inset ${
                   isOperating
@@ -200,7 +201,7 @@ const RoomDetail = () => {
               {t('room.detail.description.title')}
             </h3>
             <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-              {facility.description || t('room.detail.description.no_data')}
+              {localizeRoomDesc(facility.description || '', facility.facility_name, t) || t('room.detail.description.no_data')}
             </p>
           </div>
 
@@ -271,7 +272,7 @@ const RoomDetail = () => {
                 >
                   <img
                     src={src}
-                    alt={`${facility.facility_name} ${idx + 1}`}
+                    alt={`${localizeRoomName(facility.facility_name, t)} ${idx + 1}`}
                     className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
