@@ -34,13 +34,13 @@ const RoomList = () => {
   };
 
   // Mock data fallback - use "Operating" to match database
-  const mockRooms = [
-    { id: 1, facility_name: 'Khu vực Cardio (Tầng 1)', facility_type: 'cardio', status: 'Operating', max_capacity: 30, current_capacity: 15, description: 'Khu vực máy chạy bộ, xe đạp' },
-    { id: 2, facility_name: 'Phòng Tập Tạ (Tầng 2)', facility_type: 'weights', status: 'Operating', max_capacity: 50, current_capacity: 40, description: 'Khu vực tạ tự do và máy tập' },
-    { id: 3, facility_name: 'Phòng Yoga Cao Cấp', facility_type: 'yoga', status: 'Maintenance', max_capacity: 20, current_capacity: 0, description: 'Phòng yoga với trang thiết bị cao cấp' },
-    { id: 4, facility_name: 'Sân Boxing & MMA', facility_type: 'boxing', status: 'Operating', max_capacity: 15, current_capacity: 5, description: 'Khu vực võ thuật' },
-    { id: 5, facility_name: 'Khu vực thay đồ', facility_type: 'locker', status: 'Operating', max_capacity: 100, current_capacity: 30, description: 'Tủ khóa và phòng thay đồ' },
-  ];
+  const mockRooms = useMemo(() => [
+    { id: 1, facility_name: t('room.mock.cardio_name'), facility_type: 'cardio', status: 'Operating', max_capacity: 30, current_capacity: 15, description: t('room.mock.cardio_desc') },
+    { id: 2, facility_name: t('room.mock.weights_name'), facility_type: 'weights', status: 'Operating', max_capacity: 50, current_capacity: 40, description: t('room.mock.weights_desc') },
+    { id: 3, facility_name: t('room.mock.yoga_name'), facility_type: 'yoga', status: 'Maintenance', max_capacity: 20, current_capacity: 0, description: t('room.mock.yoga_desc') },
+    { id: 4, facility_name: t('room.mock.boxing_name'), facility_type: 'boxing', status: 'Operating', max_capacity: 15, current_capacity: 5, description: t('room.mock.boxing_desc') },
+    { id: 5, facility_name: t('room.mock.locker_name'), facility_type: 'locker', status: 'Operating', max_capacity: 100, current_capacity: 30, description: t('room.mock.locker_desc') },
+  ], [t]);
 
   // Handle API response
   const rooms = useMemo(() => {
@@ -49,13 +49,13 @@ const RoomList = () => {
     if (facilityResponse.data && facilityResponse.data.length > 0) return facilityResponse.data;
     if (isLoading === false && !facilityResponse?.data) return mockRooms;
     return mockRooms;
-  }, [facilityResponse, isLoading]);
+  }, [facilityResponse, isLoading, mockRooms]);
 
   const totalItems = useMemo(() => {
     if (!facilityResponse) return mockRooms.length;
     if (Array.isArray(facilityResponse)) return facilityResponse.length;
     return facilityResponse.total_items || mockRooms.length;
-  }, [facilityResponse]);
+  }, [facilityResponse, mockRooms]);
 
   const totalPages = useMemo(() => {
     if (!facilityResponse) return 1;
