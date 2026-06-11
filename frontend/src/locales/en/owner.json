@@ -456,6 +456,18 @@
       "operating": "Open",
       "maintenance": "Maintenance"
     },
+    "mock": {
+      "cardio_name": "Cardio Area (Floor 1)",
+      "cardio_desc": "Treadmill and exercise bike area",
+      "weights_name": "Weight Training Room (Floor 2)",
+      "weights_desc": "Free weights and machine training area",
+      "yoga_name": "Premium Yoga Room",
+      "yoga_desc": "Yoga room with premium equipment",
+      "boxing_name": "Boxing & MMA Ring",
+      "boxing_desc": "Martial arts area",
+      "locker_name": "Locker Room",
+      "locker_desc": "Lockers and changing room"
+    },
     "tooltip": {
       "maintenance": "Set Maintenance",
       "activate": "Activate",

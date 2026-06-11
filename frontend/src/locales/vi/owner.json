@@ -456,6 +456,18 @@
       "operating": "Đang mở cửa",
       "maintenance": "Bảo trì"
     },
+    "mock": {
+      "cardio_name": "Khu vực Cardio (Tầng 1)",
+      "cardio_desc": "Khu vực máy chạy bộ, xe đạp",
+      "weights_name": "Phòng Tập Tạ (Tầng 2)",
+      "weights_desc": "Khu vực tạ tự do và máy tập",
+      "yoga_name": "Phòng Yoga Cao Cấp",
+      "yoga_desc": "Phòng yoga với trang thiết bị cao cấp",
+      "boxing_name": "Sân Boxing & MMA",
+      "boxing_desc": "Khu vực võ thuật",
+      "locker_name": "Khu vực thay đồ",
+      "locker_desc": "Tủ khóa và phòng thay đồ"
+    },
     "tooltip": {
       "maintenance": "Bảo trì",
       "activate": "Kích hoạt",

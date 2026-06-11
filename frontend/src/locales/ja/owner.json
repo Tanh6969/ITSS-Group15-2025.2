@@ -456,6 +456,18 @@
       "operating": "営業中",
       "maintenance": "メンテナンス中"
     },
+    "mock": {
+      "cardio_name": "Cardioエリア (1階)",
+      "cardio_desc": "ランニングマシン、フィットネスバイクエリア",
+      "weights_name": "ウェイトトレーニングルーム (2階)",
+      "weights_desc": "フリーウェイトとマシンエリア",
+      "yoga_name": "プレミアムヨガルーム",
+      "yoga_desc": "プレミアム器具付きのヨガルーム",
+      "boxing_name": "ボクシング ＆ MMAエリア",
+      "boxing_desc": "格闘技エリア",
+      "locker_name": "ロッカールーム",
+      "locker_desc": "ロッカーと更衣室"
+    },
     "tooltip": {
       "maintenance": "メンテナンス設定",
       "activate": "有効化",
