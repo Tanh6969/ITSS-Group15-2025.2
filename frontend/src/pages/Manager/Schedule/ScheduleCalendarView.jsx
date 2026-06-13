@@ -5,12 +5,25 @@ import Badge from '@/components/Common/Badge';
 import { useTrainingBookings, useCancelTrainingBooking } from '@/hooks/queries/useTrainingBookings';
 import { useEmployees } from '@/hooks/queries/useEmployees';
 import { useMembers } from '@/hooks/queries/useMembers';
-
 import { useTranslation } from 'react-i18next';
+
+// Helper functions (defined outside to prevent re-creation and avoid timezone shifts)
+const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+};
+
+const formatTime = (isoString, locale = 'vi-VN') => {
+    const date = new Date(isoString);
+    return date.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });
+};
+
 const ScheduleCalendarView = () => {
-    const { t } = useTranslation('manager');
+    const { t, i18n } = useTranslation('manager');
     const [currentDate, setCurrentDate] = useState(new Date());
-    const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+    const [selectedDate, setSelectedDate] = useState(formatDate(new Date()));
     const [selectedSchedule, setSelectedSchedule] = useState(null);
     const [showCancelConfirm, setShowCancelConfirm] = useState(null);
     const [cancelError, setCancelError] = useState(null);
@@ -24,15 +37,10 @@ const ScheduleCalendarView = () => {
     // Helper functions
     const getDaysInMonth = (date) => new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
     const getFirstDayOfMonth = (date) => new Date(date.getFullYear(), date.getMonth(), 1).getDay();
-    const formatDate = (date) => date.toISOString().split('T')[0];
-    const formatTime = (isoString) => {
-        const date = new Date(isoString);
-        return date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
-    };
 
     const daysInMonth = getDaysInMonth(currentDate);
     const firstDay = getFirstDayOfMonth(currentDate);
-    const monthYear = currentDate.toLocaleDateString('vi-VN', { month: 'long', year: 'numeric' });
+    const monthYear = currentDate.toLocaleDateString(i18n.language, { month: 'long', year: 'numeric' });
 
     const previousMonth = () => {
         setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1));
@@ -70,8 +78,8 @@ const ScheduleCalendarView = () => {
 
         return bookings.map(booking => ({
             id: booking.id,
-            date: formatDate(new Date(booking.requested_start)),
-            time: formatTime(booking.requested_start),
+            date: booking.requested_start ? booking.requested_start.slice(0, 10) : '',
+            time: booking.requested_start ? booking.requested_start.slice(11, 16) : '',
             pt: getEmployeeNameById(booking.pt_id),
             member: getMemberNameById(booking.member_id),
             status: mapStatusToUI(booking.status),
@@ -95,7 +103,16 @@ const ScheduleCalendarView = () => {
         return grouped;
     }, [transformedBookings]);
 
-    const weekDays = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
+    const weekDays = useMemo(() => {
+        if (i18n.language?.startsWith('vi')) {
+            return ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
+        }
+        if (i18n.language?.startsWith('ja')) {
+            return ['日', '月', '火', '水', '木', '金', '土'];
+        }
+        return ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    }, [i18n.language]);
+
     const calendarDays = [];
 
     for (let i = 0; i < firstDay; i++) calendarDays.push(null);
@@ -114,10 +131,10 @@ const ScheduleCalendarView = () => {
 
     const getStatusLabel = (status) => {
         switch (status) {
-            case 'booked': return 'Đã đặt lịch';
-            case 'available': return 'Đang chờ';
-            case 'cancelled': return 'Đã hủy';
-            default: return 'Chưa xác định';
+            case 'booked': return t('schedule.status_booked');
+            case 'available': return t('schedule.available');
+            case 'cancelled': return t('schedule.status_cancelled');
+            default: return t('schedule.status_pending');
         }
     };
 
@@ -135,14 +152,14 @@ const ScheduleCalendarView = () => {
 
                 const response = await cancelBookingMutation.mutateAsync({
                     id: showCancelConfirm,
-                    reason: 'Hủy bởi quản lý'
+                    reason: t('schedule.cancelled_by_manager', { defaultValue: 'Hủy bởi quản lý' })
                 });
 
                 console.log('Cancel successful:', response);
                 setShowCancelConfirm(null);
                 setSelectedSchedule(null);
             } catch (error) {
-                const errorMsg = error?.response?.data?.message || error?.message || 'Lỗi hủy lịch tập';
+                const errorMsg = error?.response?.data?.message || error?.message || t('schedule.cancel_error', { defaultValue: 'Lỗi hủy lịch tập' });
                 console.error('Error canceling booking:', errorMsg, error);
                 setCancelError(errorMsg);
             }
@@ -159,9 +176,9 @@ const ScheduleCalendarView = () => {
             {/* Header */}
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Lịch PT</h1>
+                    <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{t('schedule.title')}</h1>
                     <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                        Xem và quản lý lịch tập của huấn luyện viên
+                        {t('schedule.subtitle')}
                     </p>
                 </div>
             </div>
@@ -224,15 +241,15 @@ const ScheduleCalendarView = () => {
 
                     {/* Legend */}
                     <div className="p-4 space-y-2">
-                        <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2">Chú thích:</p>
+                        <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2">{t('schedule.legend')}:</p>
                         <div className="space-y-2 text-xs">
                             <div className="flex items-center gap-2">
                                 <div className="w-3 h-3 rounded bg-green-500"></div>
-                                <span className="text-gray-600 dark:text-gray-400">Đã đặt lịch</span>
+                                <span className="text-gray-600 dark:text-gray-400">{t('schedule.status_booked')}</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 <div className="w-3 h-3 rounded bg-blue-500"></div>
-                                <span className="text-gray-600 dark:text-gray-400">Còn chỗ</span>
+                                <span className="text-gray-600 dark:text-gray-400">{t('schedule.available')}</span>
                             </div>
 
                         </div>
@@ -244,7 +261,7 @@ const ScheduleCalendarView = () => {
                     <div className="rounded-xl border border-gray-100 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-950">
                         <div className="border-b border-gray-100 p-4 dark:border-gray-800">
                             <h3 className="font-semibold text-gray-900 dark:text-white">
-                                Lịch {new Date(selectedDate + 'T00:00:00').toLocaleDateString('vi-VN', { weekday: 'long', month: 'short', day: 'numeric' })}
+                                {i18n.language?.startsWith('vi') ? 'Lịch' : 'Schedule'} {new Date(selectedDate + 'T00:00:00').toLocaleDateString(i18n.language, { weekday: 'long', month: 'short', day: 'numeric' })}
                             </h3>
                         </div>
 
@@ -252,11 +269,11 @@ const ScheduleCalendarView = () => {
                             {bookingsLoading || employeesLoading || membersLoading ? (
                                 <div className="p-8 text-center">
                                     <Loader2 className="h-8 w-8 animate-spin text-blue-600 mx-auto mb-2" />
-                                    <p className="text-gray-500 dark:text-gray-400">Đang tải lịch tập...</p>
+                                    <p className="text-gray-500 dark:text-gray-400">{t('schedule.loading')}</p>
                                 </div>
                             ) : todaySchedules.length === 0 ? (
                                 <div className="p-8 text-center">
-                                    <p className="text-gray-500 dark:text-gray-400">Không có lịch nào trong ngày</p>
+                                    <p className="text-gray-500 dark:text-gray-400">{t('schedule.no_schedule')}</p>
                                 </div>
                             ) : (
                                 todaySchedules.map((schedule) => (
@@ -297,7 +314,7 @@ const ScheduleCalendarView = () => {
                                             <div className="mt-4 border-t border-gray-200 pt-4 dark:border-gray-700 space-y-3">
                                                 <div className="grid grid-cols-2 gap-4">
                                                     <div>
-                                                        <p className="text-xs text-gray-500 dark:text-gray-400">Giờ</p>
+                                                        <p className="text-xs text-gray-500 dark:text-gray-400">{t('schedule.time')}</p>
                                                         <p className="font-semibold text-gray-900 dark:text-white">{schedule.time}</p>
                                                     </div>
                                                     <div>
@@ -335,8 +352,8 @@ const ScheduleCalendarView = () => {
                                                         disabled={schedule.status === 'cancelled' || cancelBookingMutation.isPending}
                                                     >
                                                         {schedule.status === 'cancelled'
-                                                            ? 'Đã hủy'
-                                                            : cancelBookingMutation.isPending ? 'Đang xử lý...' : 'Hủy lịch'}
+                                                            ? t('schedule.status_cancelled')
+                                                            : cancelBookingMutation.isPending ? t('schedule.processing') : t('schedule.cancel')}
                                                     </Button>
                                                 </div>
                                             </div>
@@ -355,10 +372,10 @@ const ScheduleCalendarView = () => {
                     <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-6 max-w-sm mx-4">
                         <div className="flex items-center gap-3 mb-4">
                             <AlertCircle className="text-red-500" size={24} />
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Xác nhận hủy lịch</h3>
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{t('schedule.confirm_cancel')}</h3>
                         </div>
                         <p className="text-gray-600 dark:text-gray-300 mb-6">
-                            Bạn có chắc chắn muốn hủy lịch tập này không?
+                            {t('schedule.confirm_cancel_msg')}
                         </p>
 
                         {cancelError && (
@@ -373,14 +390,14 @@ const ScheduleCalendarView = () => {
                                 onClick={cancelCancel}
                                 disabled={cancelBookingMutation.isPending}
                             >
-                                Không
+                                {t('schedule.no')}
                             </Button>
                             <Button
                                 className="bg-red-600 hover:bg-red-700 text-white"
                                 onClick={confirmCancel}
                                 disabled={cancelBookingMutation.isPending}
                             >
-                                {cancelBookingMutation.isPending ? 'Đang xử lý...' : 'Xác nhận'}
+                                {cancelBookingMutation.isPending ? t('schedule.processing') : t('schedule.yes')}
                             </Button>
                         </div>
                     </div>
