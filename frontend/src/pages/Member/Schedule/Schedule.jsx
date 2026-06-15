@@ -9,6 +9,8 @@ import ScheduleTabs from './components/ScheduleTabs';
 import CalendarView from './components/CalendarView';
 import WorkoutList from './components/WorkoutList';
 import EvaluationView from './components/EvaluationView';
+import EvaluationTimeline from './components/EvaluationTimeline';
+import RequestsTimeline from './components/RequestsTimeline';
 import TrainerModal from './components/Modals/TrainerModal';
 import BookingModal from './components/Modals/BookingModal';
 import WorkoutDetailModal from './components/Modals/WorkoutDetailModal';
@@ -239,10 +241,17 @@ const Schedule = () => {
     const nextWorkout = getNextUpcomingWorkout(scheduledWorkouts);
     if (!nextWorkout) {
       setSelectedDate(todayKey);
+      setCurrentDate(new Date());
       return;
     }
     setSelectedDate(nextWorkout.dateKey);
     setCurrentDate(new Date(nextWorkout.dateTime.getFullYear(), nextWorkout.dateTime.getMonth(), 1));
+  };
+
+  const openBookingTab = () => {
+    setActiveTab('booking');
+    setSelectedDate(todayKey);
+    setCurrentDate(new Date());
   };
 
   const openEvaluationsTab = () => {
@@ -254,6 +263,7 @@ const Schedule = () => {
       setCurrentDate(new Date(`${latest}T00:00:00`));
     } else {
       setSelectedDate(todayKey);
+      setCurrentDate(new Date());
     }
   };
 
@@ -332,74 +342,93 @@ const Schedule = () => {
 
   return (
     <div className="pb-10">
-      <div className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden shadow-xl shadow-gray-200/50 dark:shadow-none flex flex-col lg:flex-row" style={{ minHeight: '680px' }}>
+      <div className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden shadow-xl shadow-gray-200/50 dark:shadow-none flex flex-col" style={{ minHeight: '680px' }}>
 
-        {/* Left panel: tabs + calendar */}
-        <div className="lg:w-[55%] shrink-0 flex flex-col border-b lg:border-b-0 lg:border-r border-gray-100 dark:border-gray-800">
-          <ScheduleTabs
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-            setSelectedDate={setSelectedDate}
-            defaultRequestDate={defaultRequestDate}
-            openScheduledTab={openScheduledTab}
-            openEvaluationsTab={openEvaluationsTab}
-            todayKey={todayKey}
-          />
-          <div className="flex-1">
-            <CalendarView
-              currentDate={currentDate}
-              prevMonth={prevMonth}
-              nextMonth={nextMonth}
-              monthName={monthName}
-              calendarDays={buildCalendar()}
-              dateKey={dateKey}
-              year={currentDate.getFullYear()}
-              month={currentDate.getMonth()}
-              displayData={currentData}
-              selectedDate={selectedDate}
-              selectDay={selectDay}
-              getCalendarDotClass={getCalendarDotClass}
-              activeTab={activeTab}
+        {/* Tab bar — always visible */}
+        <ScheduleTabs
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          setSelectedDate={setSelectedDate}
+          defaultRequestDate={defaultRequestDate}
+          openScheduledTab={openScheduledTab}
+          openBookingTab={openBookingTab}
+          openEvaluationsTab={openEvaluationsTab}
+          todayKey={todayKey}
+        />
+
+        {activeTab === 'evaluations' ? (
+          /* ── Evaluations: full-width timeline, no calendar ── */
+          <div className="flex-1 overflow-y-auto">
+            <EvaluationTimeline
+              completedSessionsMap={completedSessionsMap}
+              locale={locale}
             />
           </div>
-        </div>
-
-        {/* Right panel: content */}
-        <div className="flex-1 overflow-y-auto">
-          {activeTab === 'booking' ? (
-            <PTCardList
-              ptDetails={ptDetails}
-              setSelectedTrainer={setSelectedTrainer}
-              bookings={bookings}
-              selectedDate={selectedDate}
-            />
-          ) : activeTab === 'evaluations' ? (
-            <EvaluationView
-              selectedDate={selectedDate}
-              selectedDateObject={selectedDateObject}
+        ) : activeTab === 'requests' ? (
+          /* ── Requests: full-width grouped list, no calendar ── */
+          <div className="flex-1 overflow-y-auto">
+            <RequestsTimeline
+              requestsWorkouts={requestsWorkouts}
               locale={locale}
-              sessions={selectedWorkouts}
-            />
-          ) : (
-            <WorkoutList
-              activeTab={activeTab}
-              selectedDate={selectedDate}
-              selectedDateObject={selectedDateObject}
-              locale={locale}
-              selectedWorkouts={selectedWorkouts}
-              getWorkoutDisplayName={(w) => w.name}
-              setSelectedWorkout={setSelectedWorkout}
-              getStatusBadgeClass={getStatusBadgeClass}
-              getAccentColor={getAccentColor}
-              setSelectedTrainer={setSelectedTrainer}
-              setBookingForm={setBookingForm}
-              handleConfirmAttendance={handleConfirmAttendance}
               setSelectedDeniedRequest={setSelectedDeniedRequest}
-              nextUpcomingWorkout={null}
-              isPendingScheduledStatus={isPendingScheduledStatus}
+              setSelectedWorkout={setSelectedWorkout}
             />
-          )}
-        </div>
+          </div>
+        ) : (
+          /* ── Other tabs: Calendar (left) + Content (right) ── */
+          <div className="flex flex-col lg:flex-row flex-1">
+            {/* Left panel: calendar */}
+            <div className="lg:w-[55%] shrink-0 flex flex-col border-b lg:border-b-0 lg:border-r border-gray-100 dark:border-gray-800">
+              <div className="flex-1">
+                <CalendarView
+                  currentDate={currentDate}
+                  prevMonth={prevMonth}
+                  nextMonth={nextMonth}
+                  monthName={monthName}
+                  calendarDays={buildCalendar()}
+                  dateKey={dateKey}
+                  year={currentDate.getFullYear()}
+                  month={currentDate.getMonth()}
+                  displayData={currentData}
+                  selectedDate={selectedDate}
+                  selectDay={selectDay}
+                  getCalendarDotClass={getCalendarDotClass}
+                  activeTab={activeTab}
+                />
+              </div>
+            </div>
+
+            {/* Right panel: content */}
+            <div className="flex-1 overflow-y-auto">
+              {activeTab === 'booking' ? (
+                <PTCardList
+                  ptDetails={ptDetails}
+                  setSelectedTrainer={setSelectedTrainer}
+                  bookings={bookings}
+                  selectedDate={selectedDate}
+                />
+              ) : (
+                <WorkoutList
+                  activeTab={activeTab}
+                  selectedDate={selectedDate}
+                  selectedDateObject={selectedDateObject}
+                  locale={locale}
+                  selectedWorkouts={selectedWorkouts}
+                  getWorkoutDisplayName={(w) => w.name}
+                  setSelectedWorkout={setSelectedWorkout}
+                  getStatusBadgeClass={getStatusBadgeClass}
+                  getAccentColor={getAccentColor}
+                  setSelectedTrainer={setSelectedTrainer}
+                  setBookingForm={setBookingForm}
+                  handleConfirmAttendance={handleConfirmAttendance}
+                  setSelectedDeniedRequest={setSelectedDeniedRequest}
+                  nextUpcomingWorkout={null}
+                  isPendingScheduledStatus={isPendingScheduledStatus}
+                />
+              )}
+            </div>
+          </div>
+        )}
 
       </div>
 

@@ -263,12 +263,29 @@
       "physical": "Tình trạng thể chất",
       "result": "Kết quả buổi tập",
       "nutrition": "Lời khuyên dinh dưỡng",
+      "plan_note": "Giáo trình / Ghi chú",
       "no_detail": "PT chưa nhập đánh giá chi tiết cho buổi này.",
       "intensity": {
         "Low": "Nhẹ",
         "Medium": "Trung bình",
         "High": "Cao"
+      },
+      "timeline": {
+        "history_title": "Lịch sử đánh giá buổi tập",
+        "stat_total": "Tổng buổi",
+        "stat_attendance": "Tỷ lệ có mặt",
+        "stat_last": "Buổi gần nhất",
+        "sessions": "{{count}} buổi",
+        "present_count": "{{count}} có mặt",
+        "empty_title": "Chưa có buổi tập nào hoàn thành",
+        "empty_hint": "Các buổi tập đã hoàn thành sẽ hiện ở đây với đánh giá từ PT."
       }
+    },
+    "requests_timeline": {
+      "title": "Yêu cầu đặt lịch của tôi",
+      "total": "{{count}} yêu cầu",
+      "empty_title": "Chưa có yêu cầu nào",
+      "empty_hint": "Các yêu cầu đặt lịch tập sẽ hiện ở đây sau khi bạn gửi."
     }
   },
   "book_training": {

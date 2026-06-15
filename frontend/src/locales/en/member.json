@@ -263,12 +263,29 @@
       "physical": "Physical Condition",
       "result": "Session Result",
       "nutrition": "Nutrition Advice",
+      "plan_note": "Curriculum / Notes",
       "no_detail": "PT has not entered evaluation details for this session.",
       "intensity": {
         "Low": "Low",
         "Medium": "Medium",
         "High": "High"
+      },
+      "timeline": {
+        "history_title": "Session Evaluation History",
+        "stat_total": "Total sessions",
+        "stat_attendance": "Attendance rate",
+        "stat_last": "Last session",
+        "sessions": "{{count}} sessions",
+        "present_count": "{{count}} present",
+        "empty_title": "No completed sessions yet",
+        "empty_hint": "Completed sessions will appear here along with PT evaluations."
       }
+    },
+    "requests_timeline": {
+      "title": "My Booking Requests",
+      "total": "{{count}} requests",
+      "empty_title": "No requests yet",
+      "empty_hint": "Your booking requests will appear here once submitted."
     }
   },
   "book_training": {

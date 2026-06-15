@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-const ScheduleTabs = ({ activeTab, setActiveTab, setSelectedDate, defaultRequestDate, openScheduledTab, openEvaluationsTab, todayKey }) => {
+const ScheduleTabs = ({ activeTab, setActiveTab, setSelectedDate, defaultRequestDate, openScheduledTab, openBookingTab, openEvaluationsTab, todayKey }) => {
   const { t } = useTranslation('member');
 
   return (
@@ -17,10 +17,7 @@ const ScheduleTabs = ({ activeTab, setActiveTab, setSelectedDate, defaultRequest
         {t('schedule.tabs.scheduled')}
       </button>
       <button
-        onClick={() => {
-          setActiveTab('booking');
-          setSelectedDate(todayKey);
-        }}
+        onClick={openBookingTab}
         className={`px-4 py-2 rounded-lg font-semibold text-sm transition-colors whitespace-nowrap ${
           activeTab === 'booking'
             ? 'bg-blue-600 text-white'
