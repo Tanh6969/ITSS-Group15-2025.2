@@ -3,11 +3,12 @@ import { useParams, Link } from 'react-router-dom';
 import {
   ArrowLeft, Users, MapPin, Activity, LayoutGrid,
   HelpCircle, Image as ImageIcon, Video, Clock,
-  ShieldCheck, AlertCircle, Flame,
+  ShieldCheck, AlertCircle, Flame, Dumbbell
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import Button from '@/components/Common/Button';
 import { useFacilityById } from '@/hooks/queries/useFacilities';
+import { useEquipment } from '@/hooks/queries/useEquipment';
 import { localizeRoomName, localizeRoomDesc, localizeAmenity } from '@/utils/helpers';
 
 /* ─── Static image/video data (not translatable) ─── */
@@ -64,6 +65,7 @@ const RoomDetail = () => {
   const { t } = useTranslation('owner');
   const { id } = useParams();
   const { data: facility, isLoading, error } = useFacilityById(id);
+  const { data: equipmentData } = useEquipment(1, 1000);
 
   if (isLoading) {
     return (
@@ -99,10 +101,11 @@ const RoomDetail = () => {
   const amenityList = facility.amenities
     ? facility.amenities.split(',').map(a => localizeAmenity(a.trim(), t)).filter(Boolean)
     : [];
-  const occupancyPct = facility.max_capacity > 0
-    ? Math.round((facility.current_capacity / facility.max_capacity) * 100)
-    : 0;
-  const isNearFull = occupancyPct > 80;
+
+  const allEquipments = Array.isArray(equipmentData?.data) ? equipmentData.data : (Array.isArray(equipmentData) ? equipmentData : []);
+  const roomEquipments = allEquipments.filter(eq => {
+    return eq.facility_id === parseInt(id) || eq.facilityId === parseInt(id);
+  });
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
@@ -169,28 +172,6 @@ const RoomDetail = () => {
                   {facility.max_capacity} {t('room.detail.metrics.person_unit')}
                 </span>
               </div>
-              <div className={`flex justify-between items-center p-3 rounded-lg border ${
-                isNearFull
-                  ? 'bg-red-50/60 border-red-100 dark:bg-red-900/10 dark:border-red-900/30'
-                  : 'bg-blue-50/50 border-blue-100 dark:bg-blue-900/10 dark:border-blue-900/30'
-              }`}>
-                <span className={`flex items-center gap-2 text-sm ${isNearFull ? 'text-red-600 dark:text-red-400' : 'text-blue-600 dark:text-blue-400'}`}>
-                  <MapPin className="h-4 w-4" />{t('room.detail.metrics.current_guests')}
-                </span>
-                <span className={`font-bold text-sm ${isNearFull ? 'text-red-500' : 'text-blue-600 dark:text-blue-400'}`}>
-                  {facility.current_capacity} {t('room.detail.metrics.person_unit')}
-                </span>
-              </div>
-              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                <div
-                  className={`h-2 rounded-full transition-all ${isNearFull ? 'bg-red-500' : 'bg-blue-600'}`}
-                  style={{ width: `${Math.min(100, occupancyPct)}%` }}
-                />
-              </div>
-              <p className={`text-xs text-right font-medium ${isNearFull ? 'text-red-500' : 'text-gray-500'}`}>
-                {isNearFull && <Flame className="h-3 w-3 inline mr-1" />}
-                {t('room.detail.metrics.efficiency', { pct: occupancyPct })}
-              </p>
             </div>
           </div>
 
@@ -299,20 +280,36 @@ const RoomDetail = () => {
             </div>
           </div>
 
-          {/* Quick stats row */}
-          <div className="grid grid-cols-3 gap-4">
-            {[
-              { label: t('room.detail.quick_stats.capacity'), value: facility.max_capacity, unit: t('room.detail.quick_stats.person_unit'), color: 'blue' },
-              { label: t('room.detail.quick_stats.using'), value: facility.current_capacity, unit: t('room.detail.quick_stats.person_unit'), color: isNearFull ? 'red' : 'green' },
-              { label: t('room.detail.quick_stats.available'), value: Math.max(0, facility.max_capacity - facility.current_capacity), unit: t('room.detail.quick_stats.slot_unit'), color: 'purple' },
-            ].map(({ label, value, unit, color }) => (
-              <div key={label} className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 p-4 text-center shadow-sm">
-                <p className={`text-2xl font-bold text-${color}-600 dark:text-${color}-400`}>{value}</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{label}</p>
-                <p className="text-xs text-gray-400 dark:text-gray-500">{unit}</p>
+          {/* Equipments card */}
+          <div className="rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950 p-5 shadow-sm">
+            <h3 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2 text-sm">
+              <Dumbbell className="h-4 w-4 text-orange-500" />
+              Danh sách thiết bị ({roomEquipments.length})
+            </h3>
+            {roomEquipments.length > 0 ? (
+              <div className="space-y-3">
+                {roomEquipments.map((eq) => (
+                  <div key={eq.id} className="flex justify-between items-center p-3 border border-gray-100 dark:border-gray-800 rounded-lg hover:border-blue-200 transition-colors">
+                    <div className="flex flex-col">
+                      <span className="font-semibold text-sm text-gray-900 dark:text-white">{eq.equipment_name || eq.equipmentName || eq.name}</span>
+                      <span className="text-xs text-gray-500 mt-1">Số lượng: {eq.quantity || 1}</span>
+                    </div>
+                    <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ring-1 ring-inset ${
+                      (eq.status === 'active' || eq.status === 'Operating')
+                        ? 'bg-emerald-50 text-emerald-700 ring-emerald-600/20 dark:bg-emerald-900/30 dark:text-emerald-400'
+                        : 'bg-amber-50 text-amber-700 ring-amber-600/20 dark:bg-amber-900/30 dark:text-amber-400'
+                    }`}>
+                      {(eq.status === 'active' || eq.status === 'Operating') ? 'Hoạt động' : 'Bảo trì'}
+                    </span>
+                  </div>
+                ))}
               </div>
-            ))}
+            ) : (
+              <p className="text-sm text-gray-500 dark:text-gray-400 italic">Chưa có thiết bị nào được ghi nhận trong phòng này.</p>
+            )}
           </div>
+
+
         </div>
       </div>
     </div>

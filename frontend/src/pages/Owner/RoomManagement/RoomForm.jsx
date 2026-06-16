@@ -33,7 +33,6 @@ const RoomFormPage = () => {
             facility_type: data.facility_type || 'Gym',
             description: data.description || '',
             max_capacity: data.max_capacity || 30,
-            current_capacity: data.current_capacity || 0,
             amenities: data.amenities || '',
           });
         })
@@ -54,7 +53,6 @@ const RoomFormPage = () => {
       facility_type: data.facility_type,
       description: data.description || '',
       max_capacity: parseInt(data.max_capacity, 10),
-      current_capacity: parseInt(data.current_capacity || 0, 10),
       amenities: data.amenities || '',
       status: isEditing ? currentStatus : 'Operating',
     };

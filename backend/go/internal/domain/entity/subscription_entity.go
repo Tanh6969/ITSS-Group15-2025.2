@@ -23,4 +23,6 @@ type SubscriptionHistory struct {
 	EndDate          time.Time `json:"end_date"`
 	Status           string    `json:"status"`
 	Price            float64   `json:"price"`
+	PricingType      string    `json:"pricing_type"`
+	TotalSessions    *int      `json:"total_sessions"`
 }

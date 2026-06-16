@@ -28,7 +28,13 @@ const PackageInfo = () => {
   today.setHours(0, 0, 0, 0);
   const packages = allPackages.filter(p => {
     const isActive = p.status === 'active' || p.status === 'Active';
+    const isSessionBased = p.pricing_type === 'session_based' || p.pricingType === 'session_based';
     const endDateStr = p.end_date || p.endDate;
+    
+    // Nếu là gói theo buổi, chỉ cần status active là được hiển thị
+    if (isSessionBased) return isActive;
+    
+    // Nếu là gói thời gian, kiểm tra thêm ngày hết hạn
     const notExpired = !endDateStr || new Date(endDateStr) >= today;
     return isActive && notExpired;
   });
@@ -72,6 +78,7 @@ const PackageInfo = () => {
         const isActive = pkg.status === 'active' || pkg.status === 'Active';
         const endDateStr = pkg.end_date || pkg.endDate;
         const endDate = endDateStr ? new Date(endDateStr) : null;
+        const isSessionBased = pkg.pricing_type === 'session_based' || pkg.pricingType === 'session_based';
         const now = new Date();
         const daysRemaining = endDate && !isNaN(endDate) ? Math.ceil((endDate - now) / (1000 * 60 * 60 * 24)) : null;
         const price = pkg.price ? (typeof pkg.price === 'number' ? pkg.price.toLocaleString(locale) + ' đ' : pkg.price) : '0 đ';
@@ -133,23 +140,25 @@ const PackageInfo = () => {
                     ? 'text-emerald-600 dark:text-emerald-500'
                     : 'text-gray-600 dark:text-gray-500'
                 }`}>
-                  {t('package.expiry_label')}
+                  {isSessionBased ? 'SỐ BUỔI CÒN LẠI' : t('package.expiry_label')}
                 </p>
                 <p className={`font-bold text-xl mt-1 ${
                   isActive
                     ? 'text-emerald-900 dark:text-emerald-200'
                     : 'text-gray-900 dark:text-white'
                 }`}>
-                  {endDate ? endDate.toLocaleDateString(locale) : t('package.expiry_unknown')}
+                  {isSessionBased ? `${pkg.total_sessions || pkg.totalSessions || 0} buổi` : (endDate && !isNaN(endDate) ? endDate.toLocaleDateString(locale) : t('package.expiry_unknown'))}
                 </p>
                 <p className={`text-xs mt-1 ${
                   isActive ? 'text-emerald-600' : 'text-gray-500'
                 }`}>
-                  {daysRemaining === null
+                  {isSessionBased 
                     ? ''
-                    : daysRemaining > 0
-                    ? t('package.days_remaining', { count: daysRemaining })
-                    : t('package.days_expired')}
+                    : (daysRemaining === null
+                        ? ''
+                        : daysRemaining > 0
+                        ? t('package.days_remaining', { count: daysRemaining })
+                        : t('package.days_expired'))}
                 </p>
               </div>
               <div className="flex items-center gap-3">

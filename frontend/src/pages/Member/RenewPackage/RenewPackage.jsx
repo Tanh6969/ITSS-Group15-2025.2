@@ -27,7 +27,11 @@ const RenewPackage = () => {
     return raw
       .filter(pkg => {
         const isActive = pkg.status === 'active' || pkg.status === 'Active';
+        const isSessionBased = pkg.pricing_type === 'session_based' || pkg.pricingType === 'session_based';
         const endDateStr = pkg.end_date || pkg.endDate;
+        
+        if (isSessionBased) return isActive;
+        
         const notExpired = !endDateStr || new Date(endDateStr) >= today;
         return isActive && notExpired;
       })
@@ -42,6 +46,8 @@ const RenewPackage = () => {
   const [renewalMonths, setRenewalMonths] = useState(1);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+  const isSessionBased = selectedPkg?.pricing_type === 'session_based' || selectedPkg?.pricingType === 'session_based';
+
   const renewalPrice = useMemo(() => {
     if (!selectedPkg) return 0;
     const pricePerMonth = typeof selectedPkg.price === 'number'
@@ -51,7 +57,7 @@ const RenewPackage = () => {
   }, [selectedPkg, renewalMonths]);
 
   const calculateNewEndDate = () => {
-    if (!selectedPkg) return null;
+    if (!selectedPkg || isSessionBased) return null;
     const currentEndDate = new Date(selectedPkg.endDate);
     const newEndDate = new Date(currentEndDate);
     newEndDate.setMonth(newEndDate.getMonth() + renewalMonths);
@@ -97,7 +103,9 @@ const RenewPackage = () => {
           renewalMonths,
           renewalPrice,
           currentEndDate: selectedPkg.endDate,
-          newEndDate: newEndDate.toISOString()
+          newEndDate: newEndDate ? newEndDate.toISOString() : null,
+          isSessionBased: isSessionBased,
+          totalSessions: selectedPkg.total_sessions || 0
         }
       }
     });
@@ -120,6 +128,7 @@ const RenewPackage = () => {
                 const today = new Date();
                 const daysRemaining = Math.ceil((endDate - today) / (1000 * 60 * 60 * 24));
                 const isExpired = daysRemaining <= 0;
+                const isPkgSessionBased = pkg.pricing_type === 'session_based' || pkg.pricingType === 'session_based';
 
                 return (
                   <label
@@ -141,7 +150,11 @@ const RenewPackage = () => {
                     <div className="pr-10">
                       <p className="font-bold text-gray-900 dark:text-white">{pkg.name}</p>
                       <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                        {isExpired ? (
+                        {isPkgSessionBased ? (
+                          <span className="text-green-600 dark:text-green-400 font-medium">
+                            Còn {pkg.total_sessions || pkg.totalSessions || 0} buổi
+                          </span>
+                        ) : isExpired ? (
                           <span className="text-red-600 dark:text-red-400">
                             {t('renew.expired_ago', { count: Math.abs(daysRemaining) })}
                           </span>
@@ -161,14 +174,14 @@ const RenewPackage = () => {
           {selectedPkg && (
             <div className="space-y-3">
               <label className="text-sm font-semibold text-gray-900 dark:text-white">
-                {t('renew.months_label')}
+                {isSessionBased ? 'Số lượng mua thêm (Gói)' : t('renew.months_label')}
               </label>
               <div className="relative">
                 <button
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                   className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-950 text-gray-900 dark:text-white font-medium flex items-center justify-between hover:border-blue-300 dark:hover:border-blue-700 transition-colors"
                 >
-                  <span>{t('renew.months_option', { count: renewalMonths })}</span>
+                  <span>{isSessionBased ? `${renewalMonths} gói (x${selectedPkg?.total_sessions || 0} buổi)` : t('renew.months_option', { count: renewalMonths })}</span>
                   <ChevronDown className={`h-5 w-5 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} />
                 </button>
                 {isDropdownOpen && (
@@ -179,7 +192,7 @@ const RenewPackage = () => {
                         onClick={() => { setRenewalMonths(months); setIsDropdownOpen(false); }}
                         className="w-full text-left px-4 py-3 hover:bg-blue-50 dark:hover:bg-blue-900/20 text-gray-900 dark:text-white font-medium first:rounded-t-lg last:rounded-b-lg"
                       >
-                        {t('renew.months_option', { count: months })}
+                        {isSessionBased ? `${months} gói (x${selectedPkg?.total_sessions || 0} buổi)` : t('renew.months_option', { count: months })}
                       </button>
                     ))}
                   </div>
@@ -188,7 +201,7 @@ const RenewPackage = () => {
             </div>
           )}
 
-          {selectedPkg && newEndDate && (
+          {selectedPkg && (
             <div className="rounded-xl bg-blue-50 dark:bg-blue-900/10 border-2 border-blue-200 dark:border-blue-900/30 p-6 space-y-4">
               <h3 className="font-semibold text-gray-900 dark:text-white flex items-center gap-2">
                 <CheckCircle2 className="h-5 w-5 text-green-500" />
@@ -200,21 +213,38 @@ const RenewPackage = () => {
                   <span className="font-semibold text-gray-900 dark:text-white">{selectedPkg.name}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">{t('renew.summary_months')}</span>
-                  <span className="font-semibold text-gray-900 dark:text-white">{t('renew.summary_months_value', { count: renewalMonths })}</span>
-                </div>
-                <div className="border-t border-blue-200 dark:border-blue-900/30 pt-3 flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">{t('renew.summary_current_end')}</span>
+                  <span className="text-gray-600 dark:text-gray-400">{isSessionBased ? 'Số lượng gói' : t('renew.summary_months')}</span>
                   <span className="font-semibold text-gray-900 dark:text-white">
-                    {new Date(selectedPkg.endDate).toLocaleDateString(locale)}
+                    {isSessionBased ? `${renewalMonths} gói` : t('renew.summary_months_value', { count: renewalMonths })}
                   </span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">{t('renew.summary_new_end')}</span>
-                  <span className="font-bold text-green-600 dark:text-green-400">
-                    {newEndDate.toLocaleDateString(locale)}
-                  </span>
-                </div>
+                
+                {!isSessionBased && newEndDate && (
+                  <>
+                    <div className="border-t border-blue-200 dark:border-blue-900/30 pt-3 flex justify-between">
+                      <span className="text-gray-600 dark:text-gray-400">{t('renew.summary_current_end')}</span>
+                      <span className="font-semibold text-gray-900 dark:text-white">
+                        {new Date(selectedPkg.endDate).toLocaleDateString(locale)}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600 dark:text-gray-400">{t('renew.summary_new_end')}</span>
+                      <span className="font-bold text-green-600 dark:text-green-400">
+                        {newEndDate.toLocaleDateString(locale)}
+                      </span>
+                    </div>
+                  </>
+                )}
+
+                {isSessionBased && (
+                  <div className="border-t border-blue-200 dark:border-blue-900/30 pt-3 flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Số buổi được thêm</span>
+                    <span className="font-bold text-green-600 dark:text-green-400">
+                      +{renewalMonths * (selectedPkg.total_sessions || 0)} buổi
+                    </span>
+                  </div>
+                )}
+
                 <div className="border-t border-blue-200 dark:border-blue-900/30 pt-3 flex justify-between items-center">
                   <span className="text-gray-900 dark:text-white font-semibold">{t('renew.summary_price')}</span>
                   <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">

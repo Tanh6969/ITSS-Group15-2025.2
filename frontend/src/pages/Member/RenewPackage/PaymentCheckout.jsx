@@ -217,17 +217,33 @@ const PaymentCheckout = () => {
               {isRenewal && (
                 <>
                   <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">{t('checkout.order_months')}</span>
-                    <span className="font-semibold text-gray-900 dark:text-white">{t('checkout.order_months_value', { count: selectedPkg.renewalMonths })}</span>
+                    <span className="text-gray-600 dark:text-gray-400">
+                      {selectedPkg.isSessionBased ? 'Số lượng gói gia hạn' : t('checkout.order_months')}
+                    </span>
+                    <span className="font-semibold text-gray-900 dark:text-white">
+                      {selectedPkg.isSessionBased ? `${selectedPkg.renewalMonths} gói` : t('checkout.order_months_value', { count: selectedPkg.renewalMonths })}
+                    </span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">{t('checkout.order_current_end')}</span>
-                    <span className="font-semibold text-gray-900 dark:text-white">{new Date(selectedPkg.currentEndDate).toLocaleDateString(locale)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">{t('checkout.order_new_end_renewal')}</span>
-                    <span className="font-semibold text-green-600 dark:text-green-400">{new Date(selectedPkg.newEndDate).toLocaleDateString(locale)}</span>
-                  </div>
+
+                  {!selectedPkg.isSessionBased && selectedPkg.newEndDate && (
+                    <>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600 dark:text-gray-400">{t('checkout.order_current_end')}</span>
+                        <span className="font-semibold text-gray-900 dark:text-white">{new Date(selectedPkg.currentEndDate).toLocaleDateString(locale)}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600 dark:text-gray-400">{t('checkout.order_new_end_renewal')}</span>
+                        <span className="font-semibold text-green-600 dark:text-green-400">{new Date(selectedPkg.newEndDate).toLocaleDateString(locale)}</span>
+                      </div>
+                    </>
+                  )}
+
+                  {selectedPkg.isSessionBased && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-600 dark:text-gray-400">Số buổi được thêm</span>
+                      <span className="font-semibold text-green-600 dark:text-green-400">+{selectedPkg.renewalMonths * (selectedPkg.totalSessions || 0)} buổi</span>
+                    </div>
+                  )}
                 </>
               )}
               <div className="flex justify-between">

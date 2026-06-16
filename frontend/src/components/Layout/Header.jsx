@@ -23,6 +23,7 @@ const Header = () => {
     } finally {
       logout();
       toast.success(t('logout_success'), { description: t('logout_desc') });
+      window.location.href = '/login';
     }
   };
 

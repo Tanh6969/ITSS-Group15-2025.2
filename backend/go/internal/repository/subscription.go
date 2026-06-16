@@ -86,7 +86,7 @@ func (r *subscriptionRepository) GetByMemberID(memberID int, page, limit int) ([
 	offset := (page - 1) * limit
 
 	query := `SELECT s.id, s.package_id, COALESCE(sc.id, 0), COALESCE(sc.category_name, ''), p.package_name,
-	          s.registration_date, s.start_date, s.end_date, s.status, COALESCE(p.price, 0)
+	          s.registration_date, s.start_date, s.end_date, s.status, COALESCE(p.price, 0), p.pricing_type, p.total_sessions
 	FROM "Subscription" s
 	LEFT JOIN "MembershipPackage" p ON s.package_id = p.id
 	LEFT JOIN "ServiceCategory" sc ON p.category_id = sc.id
@@ -103,7 +103,7 @@ func (r *subscriptionRepository) GetByMemberID(memberID int, page, limit int) ([
 		var history entity.SubscriptionHistory
 		err := rows.Scan(&history.ID, &history.PackageID, &history.CategoryID, &history.CategoryName,
 			&history.PackageName, &history.RegistrationDate, &history.StartDate, &history.EndDate,
-			&history.Status, &history.Price)
+			&history.Status, &history.Price, &history.PricingType, &history.TotalSessions)
 		if err != nil {
 			return nil, 0, err
 		}

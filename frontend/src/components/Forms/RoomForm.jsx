@@ -27,7 +27,6 @@ const RoomFormComponent = ({ initialData, onSubmit, isLoading }) => {
       facility_type: 'Gym',
       description: '',
       max_capacity: 30,
-      current_capacity: 0,
       amenities: '',
     }
   });
@@ -55,20 +54,13 @@ const RoomFormComponent = ({ initialData, onSubmit, isLoading }) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4">
         <Input
           label="Sức chứa tối đa (người) *"
           type="number"
           min="1"
           error={errors.max_capacity?.message}
           {...register('max_capacity')}
-        />
-        <Input
-          label="Số người hiện tại"
-          type="number"
-          min="0"
-          error={errors.current_capacity?.message}
-          {...register('current_capacity')}
         />
       </div>
 

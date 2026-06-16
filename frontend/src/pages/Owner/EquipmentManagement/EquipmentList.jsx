@@ -1,4 +1,4 @@
-﻿import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Plus, Edit, Trash2, PenTool, ChevronLeft, ChevronRight, Power, PowerOff } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -147,15 +147,12 @@ const EquipmentList = () => {
                             ? 'bg-blue-50 text-blue-700 ring-blue-600/20 dark:bg-blue-900/30 dark:text-blue-400'
                             : item.status === 'maintenance' || item.status === 'Maintenance'
                             ? 'bg-amber-50 text-amber-700 ring-amber-600/20 dark:bg-amber-900/30 dark:text-amber-400'
-                            : item.status === 'New'
-                            ? 'bg-green-50 text-green-700 ring-green-600/20 dark:bg-green-900/30 dark:text-green-400'
                             : item.status === 'Broken'
                             ? 'bg-red-50 text-red-700 ring-red-600/20 dark:bg-red-900/30 dark:text-red-400'
                             : 'bg-gray-50 text-gray-700 ring-gray-600/20 dark:bg-gray-900/30 dark:text-gray-400'
                         }`}>
                           {item.status === 'active' || item.status === 'Operating' ? t('equipment.status.operating')
                             : item.status === 'maintenance' || item.status === 'Maintenance' ? t('equipment.status.maintaining')
-                            : item.status === 'New' ? t('equipment.status.new')
                             : item.status === 'Broken' ? t('equipment.status.broken')
                             : item.status || 'N/A'}
                         </span>

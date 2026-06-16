@@ -63,7 +63,6 @@ const EquipmentForm = ({ initialData, onSubmit, isLoading }) => {
             className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:bg-gray-950 dark:border-gray-800 dark:text-white"
             {...register('status')}
           >
-            <option value="New">Mới nhập</option>
             <option value="Operating">Đang hoạt động tốt</option>
             <option value="Maintenance">Đang bảo trì định kỳ</option>
             <option value="Broken">Báo hỏng - Đang chờ sửa</option>

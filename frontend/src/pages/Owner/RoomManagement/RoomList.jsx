@@ -121,12 +121,6 @@ const RoomList = () => {
                 <Users className="h-4 w-4 mr-2" />
                 {t('room.capacity', { count: room.capacity })}
               </div>
-              <div className="flex items-center justify-between text-sm">
-                <span className="flex items-center text-gray-500 dark:text-gray-400"><MapPin className="h-4 w-4 mr-2" /> {t('room.current_label')}</span>
-                <span className={`font-semibold ${room.capacity > 0 && room.current / room.capacity > 0.8 ? 'text-red-500' : 'text-green-500'}`}>
-                  {t('room.person_unit', { count: room.current })}
-                </span>
-              </div>
             </div>
 
             <div className="mt-6 pt-4 border-t border-gray-100 dark:border-gray-800 flex justify-between items-center">
