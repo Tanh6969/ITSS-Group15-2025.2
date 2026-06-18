@@ -3,7 +3,9 @@ import { X, Calendar, Clock, Award, Phone, Mail, ChevronRight } from 'lucide-rea
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 
-const TrainerModal = ({ selectedTrainer, ptDetails = [], setSelectedTrainer, setBookingForm }) => {
+const DAY_MAP = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+const TrainerModal = ({ selectedTrainer, ptDetails = [], setSelectedTrainer, setBookingForm, selectedDate }) => {
   const { t } = useTranslation('member');
 
   const pt = ptDetails.find((p) => p.full_name === selectedTrainer);
@@ -18,6 +20,12 @@ const TrainerModal = ({ selectedTrainer, ptDetails = [], setSelectedTrainer, set
       return {};
     }
   }, [pt?.available_schedule]);
+
+  // Slots available specifically on the selected date's day-of-week
+  const todayDow = selectedDate
+    ? DAY_MAP[new Date(`${selectedDate}T00:00:00`).getDay()]
+    : null;
+  const slotsToday = todayDow ? (availability[todayDow] || []) : [];
 
   if (!selectedTrainer) return null;
   if (!pt) return null;
@@ -143,7 +151,11 @@ const TrainerModal = ({ selectedTrainer, ptDetails = [], setSelectedTrainer, set
               <div className="flex flex-col gap-3">
                 <button
                   onClick={() => {
-                    setBookingForm({ ptId: pt.employee_id, trainer: pt.full_name });
+                    setBookingForm({
+                      ptId: pt.employee_id,
+                      trainer: pt.full_name,
+                      ptSchedule: pt.available_schedule || null,
+                    });
                     setSelectedTrainer(null);
                   }}
                   className="w-full py-4 bg-blue-600 text-white rounded-2xl font-bold text-sm hover:bg-blue-700 transition-all shadow-xl shadow-blue-200 dark:shadow-none flex items-center justify-center gap-2 group"

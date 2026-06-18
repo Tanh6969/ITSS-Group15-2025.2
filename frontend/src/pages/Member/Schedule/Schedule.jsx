@@ -1,4 +1,6 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
+
+const DAY_MAP = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 import { format } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 
@@ -126,9 +128,19 @@ const Schedule = () => {
   }, [bookings, ptDetails, t]);
 
   const completedSessionsMap = useMemo(() => {
+    const now = new Date();
     const map = {};
     bookings
-      .filter((b) => b.status === 'Completed')
+      .filter((b) => {
+        if (b.status === 'Completed') return true;
+        // Cũng hiển thị booking Accepted mà đã có session thực tế (thời gian đã qua)
+        // → PT đã đánh giá nhưng status booking vẫn còn là Accepted
+        if (b.status === 'Accepted') {
+          const session = sessions.find((s) => s.booking_id === b.id);
+          return session != null && new Date(session.session_time) < now;
+        }
+        return false;
+      })
       .forEach((b) => {
         const dk = b.requested_start.slice(0, 10);
         const pt = ptDetails.find((p) => p.employee_id === b.pt_id);
@@ -154,10 +166,25 @@ const Schedule = () => {
     return map;
   }, [bookings, ptDetails, sessions]);
 
+  // Chỉ hiện PT làm việc vào thứ của ngày đang chọn
+  const availablePTsForDate = useMemo(() => {
+    if (!selectedDate) return ptDetails;
+    const dow = DAY_MAP[new Date(`${selectedDate}T00:00:00`).getDay()];
+    return ptDetails.filter((pt) => {
+      if (!pt.available_schedule) return false;
+      try {
+        const sched = JSON.parse(pt.available_schedule);
+        return (sched[dow]?.length ?? 0) > 0;
+      } catch {
+        return false;
+      }
+    });
+  }, [ptDetails, selectedDate]);
+
   const ptBookingData = useMemo(() => {
     if (!selectedDate) return {};
     return {
-      [selectedDate]: ptDetails.map((pt) => ({
+      [selectedDate]: availablePTsForDate.map((pt) => ({
         startTime: '',
         endTime: '',
         name: pt.full_name,
@@ -168,7 +195,7 @@ const Schedule = () => {
         ptId: pt.employee_id,
       })),
     };
-  }, [ptDetails, selectedDate]);
+  }, [availablePTsForDate, selectedDate]);
 
   const hasNavigated = useRef(false);
   useEffect(() => {
@@ -420,7 +447,8 @@ const Schedule = () => {
             <div className="flex-1 overflow-y-auto">
               {activeTab === 'booking' ? (
                 <PTCardList
-                  ptDetails={ptDetails}
+                  ptDetails={availablePTsForDate}
+                  allPtDetails={ptDetails}
                   setSelectedTrainer={setSelectedTrainer}
                   bookings={bookings}
                   selectedDate={selectedDate}
@@ -455,6 +483,7 @@ const Schedule = () => {
         ptDetails={ptDetails}
         setSelectedTrainer={setSelectedTrainer}
         setBookingForm={setBookingForm}
+        selectedDate={selectedDate}
       />
 
       <BookingModal
@@ -464,6 +493,7 @@ const Schedule = () => {
         formData={formData}
         setFormData={setFormData}
         isPending={isCreating}
+        bookings={bookings}
       />
 
       <WorkoutDetailModal

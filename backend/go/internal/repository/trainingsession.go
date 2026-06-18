@@ -185,7 +185,22 @@ func (r *trainingSessionRepository) GetMyHistory(memberID int) ([]*entity.CheckI
 		LEFT JOIN "Facility" f ON ch.facility_id = f.id
 		LEFT JOIN "Employee" e ON tb.pt_id = e.id
 		WHERE ch.member_id = $1
-		ORDER BY ch.check_in_time DESC
+		
+		UNION
+		
+		SELECT -ts.id, ts.booking_id, COALESCE(f.facility_name, ''), ts.session_time, ts.session_time, COALESCE(e.full_name, ''),
+		       COALESCE(ts.attendance_status, ''), COALESCE(ts.pt_feedback, ''), COALESCE(ts.physical_condition, ''), COALESCE(ts.session_result, ''), COALESCE(ts.nutrition_advice, ''),
+		       COALESCE(tb.training_plan_note, ''), COALESCE(tb.intensity, ''), tb.requested_start, tb.requested_end
+		FROM "TrainingSession" ts
+		JOIN "TrainingBooking" tb ON ts.booking_id = tb.id
+		LEFT JOIN "Facility" f ON ts.facility_id = f.id
+		LEFT JOIN "Employee" e ON tb.pt_id = e.id
+		WHERE tb.member_id = $1 
+		  AND (ts.pt_feedback IS NOT NULL OR ts.attendance_status = 'Present')
+		  AND NOT EXISTS (
+		      SELECT 1 FROM "CheckInHistory" ch2 WHERE ch2.booking_id = ts.booking_id
+		  )
+		ORDER BY 4 DESC
 	`
 	rows, err := r.db.Query(query, memberID)
 	if err != nil {

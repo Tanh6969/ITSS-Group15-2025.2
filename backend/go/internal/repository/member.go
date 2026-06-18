@@ -154,7 +154,10 @@ SELECT DISTINCT ON (m.id)
 FROM "Member" m
 LEFT JOIN "Subscription" s ON m.id = s.member_id
 LEFT JOIN "MembershipPackage" mp ON s.package_id = mp.id
-ORDER BY m.id DESC, s.registration_date DESC
+ORDER BY m.id DESC,
+  CASE WHEN mp.pricing_type = 'time_based' THEN 0 ELSE 1 END ASC,
+  s.end_date DESC,
+  s.registration_date DESC
 `
 
 	rows, err := r.db.Query(query)

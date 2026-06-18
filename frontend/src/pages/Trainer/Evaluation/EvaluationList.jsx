@@ -1,4 +1,4 @@
-﻿import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ClipboardList, CheckCircle2, Clock, Save, User, Building2, X } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -31,6 +31,8 @@ const EvaluationList = () => {
   const allFacilities = facilitiesRaw?.data ?? [];
 
   const [selectedId, setSelectedId] = useState(null);
+  const [activeTab, setActiveTab] = useState('pending'); // 'pending' | 'done'
+  const [editingId, setEditingId] = useState(null);
   const [forms, setForms] = useState({});
   const [facilityDropdownOpen, setFacilityDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -50,12 +52,23 @@ const EvaluationList = () => {
 
   const pastSessions = sessions
     .filter((s) => new Date(s.session_time) < new Date() && bookingMap[s.booking_id] !== undefined)
-    .sort((a, b) => new Date(b.session_time) - new Date(a.session_time))
+    .sort((a, b) => {
+      const aEvaluated = !!a.pt_feedback;
+      const bEvaluated = !!b.pt_feedback;
+      // Chưa đánh giá lên trước
+      if (aEvaluated !== bEvaluated) return aEvaluated ? 1 : -1;
+      // Trong cùng nhóm: mới nhất lên trước
+      return new Date(b.session_time) - new Date(a.session_time);
+    })
     .map((s) => {
       const booking = bookingMap[s.booking_id];
       const member = booking ? memberMap[booking.member_id] : null;
       return { ...s, memberName: member?.full_name || member?.name || t('evaluation.member_unknown') };
     });
+
+  const pendingSessions = pastSessions.filter((s) => !s.pt_feedback);
+  const doneSessions    = pastSessions.filter((s) => !!s.pt_feedback);
+  const visibleSessions = activeTab === 'pending' ? pendingSessions : doneSessions;
 
   const getForm = (session) => forms[session.id] ?? defaultForm(session);
 
@@ -92,8 +105,9 @@ const EvaluationList = () => {
     });
   };
 
-  const selectedSession = pastSessions.find((s) => s.id === selectedId) || null;
+  const selectedSession = visibleSessions.find((s) => s.id === selectedId) || null;
   const selectedForm = selectedSession ? getForm(selectedSession) : null;
+  const isReadOnly = selectedSession ? !!selectedSession.pt_feedback && editingId !== selectedSession.id : false;
 
   if (isLoading) {
     return (
@@ -121,20 +135,50 @@ const EvaluationList = () => {
             </p>
           </div>
 
+          {/* Tab bar */}
+          <div className="flex border-b border-gray-100 dark:border-gray-800 shrink-0">
+            {[
+              { key: 'pending', label: 'Chưa đánh giá', count: pendingSessions.length },
+              { key: 'done',    label: 'Đã đánh giá',   count: doneSessions.length },
+            ].map(({ key, label, count }) => (
+              <button
+                key={key}
+                onClick={() => { setActiveTab(key); setSelectedId(null); }}
+                className={cn(
+                  'flex-1 py-2.5 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors border-b-2',
+                  activeTab === key
+                    ? key === 'pending'
+                      ? 'border-amber-500 text-amber-600 dark:text-amber-400 bg-amber-50/50 dark:bg-amber-900/10'
+                      : 'border-green-500 text-green-600 dark:text-green-400 bg-green-50/50 dark:bg-green-900/10'
+                    : 'border-transparent text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50',
+                )}
+              >
+                {label}
+                <span className={cn(
+                  'inline-flex items-center justify-center w-4 h-4 rounded-full text-[10px] font-bold',
+                  activeTab === key
+                    ? key === 'pending' ? 'bg-amber-500 text-white' : 'bg-green-500 text-white'
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300',
+                )}>
+                  {count}
+                </span>
+              </button>
+            ))}
+          </div>
           <div className="flex-1 overflow-y-auto no-scrollbar">
-            {pastSessions.length === 0 ? (
+            {visibleSessions.length === 0 ? (
               <div className="text-center py-12 text-gray-400 dark:text-gray-500 text-sm">
-                {t('evaluation.no_sessions')}
+                {activeTab === 'pending' ? 'Không còn buổi chờ đánh giá 🎉' : t('evaluation.no_sessions')}
               </div>
             ) : (
-              pastSessions.map((session) => {
+              visibleSessions.map((session) => {
                 const evaluated = !!session.pt_feedback;
                 const isSelected = selectedId === session.id;
                 const sessionDate = new Date(session.session_time);
                 return (
                   <button
                     key={session.id}
-                    onClick={() => { setSelectedId(session.id); setFacilityDropdownOpen(false); }}
+                    onClick={() => { setSelectedId(session.id); setFacilityDropdownOpen(false); setEditingId(null); }}
                     className={cn(
                       'w-full flex items-center gap-3 p-3.5 border-b border-gray-50 dark:border-gray-800/50 text-left transition-colors',
                       isSelected
@@ -157,7 +201,7 @@ const EvaluationList = () => {
                       </div>
                       <div className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
                         {sessionDate.toLocaleDateString(locale, { weekday: 'short', day: '2-digit', month: '2-digit' })}
-                        {' Â· '}
+                        {' · '}
                         {sessionDate.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })}
                       </div>
                     </div>
@@ -223,6 +267,7 @@ const EvaluationList = () => {
                   {[{ value: 'Present', label: t('evaluation.attendance_present') }, { value: 'Absent', label: t('evaluation.attendance_absent') }].map(({ value, label }) => (
                     <button
                       key={value}
+                      disabled={isReadOnly}
                       onClick={() => setField(selectedSession.id, 'attendance_status', value)}
                       className={cn(
                         'flex-1 py-2 rounded-xl text-sm font-semibold border-2 transition-all',
@@ -231,6 +276,8 @@ const EvaluationList = () => {
                             ? 'bg-green-600 border-green-600 text-white'
                             : 'bg-red-500 border-red-500 text-white'
                           : 'bg-transparent border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-500',
+                        isReadOnly && selectedForm.attendance_status !== value && 'opacity-40 cursor-not-allowed hover:border-gray-200 dark:hover:border-gray-700',
+                        isReadOnly && selectedForm.attendance_status === value && 'cursor-default opacity-90'
                       )}
                     >
                       {label}
@@ -246,8 +293,13 @@ const EvaluationList = () => {
                 </label>
                 <div className="relative" ref={dropdownRef}>
                   <div
-                    className="min-h-10 border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-xl px-3 py-2 flex flex-wrap items-center gap-1.5 cursor-pointer hover:border-blue-400 dark:hover:border-blue-500 transition-colors"
-                    onClick={() => setFacilityDropdownOpen((p) => !p)}
+                    className={cn(
+                      'min-h-10 border rounded-xl px-3 py-2 flex flex-wrap items-center gap-1.5 transition-colors',
+                      isReadOnly
+                        ? 'border-transparent bg-gray-100 dark:bg-gray-800 cursor-default'
+                        : 'border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-900 cursor-pointer hover:border-blue-400 dark:hover:border-blue-500'
+                    )}
+                    onClick={() => !isReadOnly && setFacilityDropdownOpen((p) => !p)}
                   >
                     {selectedForm.facility_ids.map((fid) => {
                       const facility = allFacilities.find((f) => f.id === fid);
@@ -258,13 +310,15 @@ const EvaluationList = () => {
                           onClick={(e) => e.stopPropagation()}
                         >
                           {facility?.facility_name ?? t('evaluation.facility_fallback', { id: fid })}
-                          <button
-                            type="button"
-                            onClick={() => setField(selectedSession.id, 'facility_ids', selectedForm.facility_ids.filter((id) => id !== fid))}
-                            className="hover:text-red-500 transition-colors ml-0.5"
-                          >
-                            <X className="h-3 w-3" />
-                          </button>
+                          {!isReadOnly && (
+                            <button
+                              type="button"
+                              onClick={() => setField(selectedSession.id, 'facility_ids', selectedForm.facility_ids.filter((id) => id !== fid))}
+                              className="hover:text-red-500 transition-colors ml-0.5"
+                            >
+                              <X className="h-3 w-3" />
+                            </button>
+                          )}
                         </span>
                       );
                     })}
@@ -326,28 +380,44 @@ const EvaluationList = () => {
                     </label>
                     <textarea
                       value={selectedForm[key]}
+                      readOnly={isReadOnly}
                       onChange={(e) => setField(selectedSession.id, key, e.target.value)}
-                      placeholder={t(`evaluation.fields.${key}_placeholder`)}
+                      placeholder={isReadOnly ? '-' : t(`evaluation.fields.${key}_placeholder`)}
                       rows={4}
-                      className="w-full border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 rounded-xl p-3 text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-blue-400 dark:focus:border-blue-500 resize-none transition-colors"
+                      className={cn(
+                        'w-full border rounded-xl p-3 text-sm resize-none transition-colors',
+                        isReadOnly
+                          ? 'bg-gray-100 border-transparent text-gray-700 dark:bg-gray-800 dark:text-gray-400 focus:outline-none cursor-default'
+                          : 'bg-gray-50 border-gray-200 text-gray-900 dark:bg-gray-900 dark:border-gray-700 dark:text-white placeholder-gray-400 focus:outline-none focus:border-blue-400 dark:focus:border-blue-500'
+                      )}
                     />
                   </div>
                 ))}
               </div>
 
               {/* Save button */}
-              <button
-                onClick={() => handleSave(selectedSession)}
-                disabled={isPending}
-                className="w-full flex items-center justify-center gap-2 py-2.5 bg-blue-600 text-white rounded-xl font-semibold text-sm hover:bg-blue-700 transition-all disabled:opacity-50"
-              >
-                {isPending ? (
-                  <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                ) : (
-                  <Save className="h-4 w-4" />
-                )}
-                {t('evaluation.save_btn')}
-              </button>
+              {isReadOnly ? (
+                <button
+                  onClick={() => setEditingId(selectedSession.id)}
+                  className="w-full flex items-center justify-center gap-2 py-2.5 bg-gray-800 dark:bg-gray-700 text-white rounded-xl font-semibold text-sm hover:bg-gray-900 dark:hover:bg-gray-600 transition-all"
+                >
+                  <ClipboardList className="h-4 w-4" />
+                  Chỉnh sửa đánh giá
+                </button>
+              ) : (
+                <button
+                  onClick={() => { handleSave(selectedSession); setEditingId(null); }}
+                  disabled={isPending}
+                  className="w-full flex items-center justify-center gap-2 py-2.5 bg-blue-600 text-white rounded-xl font-semibold text-sm hover:bg-blue-700 transition-all disabled:opacity-50"
+                >
+                  {isPending ? (
+                    <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <Save className="h-4 w-4" />
+                  )}
+                  {!!selectedSession.pt_feedback ? 'Lưu cập nhật' : t('evaluation.save_btn')}
+                </button>
+              )}
             </div>
           )}
         </div>
