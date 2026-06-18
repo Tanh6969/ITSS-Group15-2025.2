@@ -11,12 +11,24 @@ const formatMonthHeading = (monthKey, locale) => {
   return d.toLocaleDateString(locale, { month: 'long', year: 'numeric' });
 };
 
-const formatDateTime = (isoString, locale) => {
-  const d = new Date(isoString);
+/* Extract date/time parts directly from ISO string to avoid timezone conversion */
+const getDatePart = (isoString) => {
+  if (!isoString) return '';
+  return (isoString.includes('T') ? isoString.split('T')[0] : isoString.split(' ')[0]);
+};
+
+const getTimePart = (isoString) => {
+  if (!isoString) return '--:--';
+  const s = isoString.includes('T') ? isoString.split('T')[1] : isoString.split(' ')[1];
+  return s ? s.slice(0, 5) : '--:--';
+};
+
+const formatDateDisplay = (dateStr, locale) => {
+  const d = new Date(`${dateStr}T00:00:00`);
   return {
     weekday: d.toLocaleDateString(locale, { weekday: 'short' }),
-    date: d.toLocaleDateString(locale, { day: '2-digit', month: '2-digit', year: 'numeric' }),
-    time: d.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' }),
+    day: d.toLocaleDateString(locale, { day: '2-digit' }),
+    monthYear: d.toLocaleDateString(locale, { month: '2-digit', year: 'numeric' }),
   };
 };
 
@@ -60,7 +72,10 @@ const MonthGroup = ({ monthKey, entries, locale, defaultOpen }) => {
       {open && (
         <div className="space-y-2">
           {entries.map((checkIn) => {
-            const { weekday, date, time } = formatDateTime(checkIn.member_confirmed_at || checkIn.session_time, locale);
+            const rawStr = (checkIn.member_confirmed_at || checkIn.session_time || '').toString();
+            const dateStr = getDatePart(rawStr);
+            const time = getTimePart(rawStr);
+            const { weekday, day, monthYear } = formatDateDisplay(dateStr, locale);
             const isPT = !!checkIn.pt_name;
 
             return (
@@ -71,12 +86,8 @@ const MonthGroup = ({ monthKey, entries, locale, defaultOpen }) => {
                 {/* Left: Date block */}
                 <div className="shrink-0 w-14 text-center">
                   <p className="text-xs text-gray-400 dark:text-gray-500">{weekday}</p>
-                  <p className="text-lg font-bold text-gray-800 dark:text-white leading-tight">
-                    {date.split('/')[0]}
-                  </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
-                    {date.split('/').slice(1).join('/')}
-                  </p>
+                  <p className="text-lg font-bold text-gray-800 dark:text-white leading-tight">{day}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">{monthYear}</p>
                 </div>
 
                 {/* Divider */}
@@ -134,12 +145,13 @@ const CheckInHistoryTimeline = ({ checkInHistories, locale }) => {
     let ptCount = 0;
 
     checkInHistories.forEach((checkIn) => {
-      const isoStr = (checkIn.member_confirmed_at || checkIn.session_time || '').toString();
-      if (!isoStr) return;
-      const mk = getMonthKey(isoStr);
+      const rawStr = (checkIn.member_confirmed_at || checkIn.session_time || '').toString();
+      const dateStr = getDatePart(rawStr);
+      if (!dateStr) return;
+      const mk = getMonthKey(dateStr);
       if (!grouped[mk]) grouped[mk] = [];
       grouped[mk].push(checkIn);
-      if (!lastD || isoStr > lastD) lastD = isoStr;
+      if (!lastD || dateStr > lastD) lastD = dateStr;
       if (checkIn.pt_name) ptCount++;
     });
 
@@ -172,7 +184,10 @@ const CheckInHistoryTimeline = ({ checkInHistories, locale }) => {
   }
 
   const lastDateDisplay = lastDate
-    ? new Date(lastDate).toLocaleDateString(locale, { weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric' })
+    ? (() => {
+        const d = new Date(`${lastDate}T00:00:00`);
+        return d.toLocaleDateString(locale, { weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric' });
+      })()
     : '—';
 
   return (
