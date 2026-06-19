@@ -66,7 +66,7 @@ const ScheduleCalendarView = () => {
     const mapStatusToUI = (apiStatus) => {
         switch (apiStatus?.toLowerCase()) {
             case 'accepted': return 'booked';
-            case 'pending': return 'available';
+            case 'pending': return 'pending';
             case 'rejected':
             case 'cancelled': return 'cancelled';
             default: return 'pending';
@@ -123,6 +123,7 @@ const ScheduleCalendarView = () => {
     const getStatusColor = (status) => {
         switch (status) {
             case 'booked': return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
+            case 'pending': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400';
             case 'available': return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400';
             case 'cancelled': return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400';
             default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400';
@@ -132,6 +133,7 @@ const ScheduleCalendarView = () => {
     const getStatusLabel = (status) => {
         switch (status) {
             case 'booked': return t('schedule.status_booked');
+            case 'pending': return t('schedule.status_pending');
             case 'available': return t('schedule.available');
             case 'cancelled': return t('schedule.status_cancelled');
             default: return t('schedule.status_pending');
@@ -248,10 +250,13 @@ const ScheduleCalendarView = () => {
                                 <span className="text-gray-600 dark:text-gray-400">{t('schedule.status_booked')}</span>
                             </div>
                             <div className="flex items-center gap-2">
-                                <div className="w-3 h-3 rounded bg-blue-500"></div>
-                                <span className="text-gray-600 dark:text-gray-400">{t('schedule.available')}</span>
+                                <div className="w-3 h-3 rounded bg-yellow-500"></div>
+                                <span className="text-gray-600 dark:text-gray-400">{t('schedule.status_pending')}</span>
                             </div>
-
+                            <div className="flex items-center gap-2">
+                                <div className="w-3 h-3 rounded bg-red-500"></div>
+                                <span className="text-gray-600 dark:text-gray-400">{t('schedule.status_cancelled')}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -294,10 +299,6 @@ const ScheduleCalendarView = () => {
                                                         <Badge className={getStatusColor(schedule.status)}>
                                                             {getStatusLabel(schedule.status)}
                                                         </Badge>
-                                                        <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
-                                                            <Users size={14} />
-                                                            {schedule.capacity}
-                                                        </span>
                                                     </div>
                                                 </div>
                                             </div>
