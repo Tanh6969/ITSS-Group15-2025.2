@@ -16,7 +16,7 @@ type SubscriptionRepository interface {
 	Delete(id int) error
 	GetActiveByMemberID(memberID int) (*entity.Subscription, error)
 	GetActiveByMemberIDAndCategoryID(memberID, categoryID int) (*entity.Subscription, error)
-	Renew(id int, newEndDate time.Time) error
+	Renew(id int, newEndDate *time.Time, renewalMonths int) error
 	Upgrade(id, newPackageID int, newEndDate time.Time) error
 }
 
@@ -86,7 +86,7 @@ func (r *subscriptionRepository) GetByMemberID(memberID int, page, limit int) ([
 	offset := (page - 1) * limit
 
 	query := `SELECT s.id, s.package_id, COALESCE(sc.id, 0), COALESCE(sc.category_name, ''), p.package_name,
-	          s.registration_date, s.start_date, s.end_date, s.status, COALESCE(p.price, 0), p.pricing_type, p.total_sessions
+	          s.registration_date, s.start_date, s.end_date, s.status, COALESCE(p.price, 0), p.pricing_type, p.total_sessions, s.remaining_sessions
 	FROM "Subscription" s
 	LEFT JOIN "MembershipPackage" p ON s.package_id = p.id
 	LEFT JOIN "ServiceCategory" sc ON p.category_id = sc.id
@@ -103,7 +103,7 @@ func (r *subscriptionRepository) GetByMemberID(memberID int, page, limit int) ([
 		var history entity.SubscriptionHistory
 		err := rows.Scan(&history.ID, &history.PackageID, &history.CategoryID, &history.CategoryName,
 			&history.PackageName, &history.RegistrationDate, &history.StartDate, &history.EndDate,
-			&history.Status, &history.Price, &history.PricingType, &history.TotalSessions)
+			&history.Status, &history.Price, &history.PricingType, &history.TotalSessions, &history.RemainingSessions)
 		if err != nil {
 			return nil, 0, err
 		}
@@ -119,9 +119,36 @@ func (r *subscriptionRepository) Delete(id int) error {
 	return err
 }
 
-func (r *subscriptionRepository) Renew(id int, newEndDate time.Time) error {
-	query := `UPDATE "Subscription" SET end_date = $1, status = 'active' WHERE id = $2`
-	result, err := r.db.Exec(query, newEndDate, id)
+func (r *subscriptionRepository) Renew(id int, newEndDate *time.Time, renewalMonths int) error {
+	if newEndDate != nil {
+		query := `UPDATE "Subscription" SET end_date = $1, status = 'active' WHERE id = $2`
+		result, err := r.db.Exec(query, newEndDate, id)
+		if err != nil {
+			return err
+		}
+		rows, _ := result.RowsAffected()
+		if rows == 0 {
+			return sql.ErrNoRows
+		}
+		return nil
+	}
+
+	// Session-based package
+	var totalSessions int
+	err := r.db.QueryRow(`
+		SELECT COALESCE(mp.total_sessions, 0)
+		FROM "Subscription" s
+		JOIN "MembershipPackage" mp ON s.package_id = mp.id
+		WHERE s.id = $1
+	`, id).Scan(&totalSessions)
+	if err != nil {
+		return err
+	}
+
+	sessionsToAdd := renewalMonths * totalSessions
+
+	query := `UPDATE "Subscription" SET remaining_sessions = COALESCE(remaining_sessions, 0) + $1, status = 'active' WHERE id = $2`
+	result, err := r.db.Exec(query, sessionsToAdd, id)
 	if err != nil {
 		return err
 	}

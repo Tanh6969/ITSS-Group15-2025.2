@@ -159,6 +159,12 @@ export const useRenewPackage = () => {
         const dataArray = Array.isArray(oldData) ? oldData : (oldData.data || []);
         const mapped = dataArray.map(pkg => {
           if (pkg.id === renewalData.packageId) {
+            const isSessionBased = pkg.pricing_type === 'session_based' || pkg.pricingType === 'session_based';
+            if (isSessionBased) {
+              const currentSessions = pkg.remaining_sessions ?? pkg.remainingSessions ?? pkg.total_sessions ?? 0;
+              const sessionsToAdd = (pkg.total_sessions ?? pkg.totalSessions ?? 0) * (renewalData.renewalMonths ?? 1);
+              return { ...pkg, remaining_sessions: currentSessions + sessionsToAdd, status: 'active' };
+            }
             return { ...pkg, end_date: renewalData.newEndDate, status: 'active' };
           }
           return pkg;
@@ -177,6 +183,7 @@ export const useRenewPackage = () => {
       toast.error(t('notifications.renew_package_error'));
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['memberPackages'] });
       toast.success(t('notifications.renew_package_success'));
     },
   });

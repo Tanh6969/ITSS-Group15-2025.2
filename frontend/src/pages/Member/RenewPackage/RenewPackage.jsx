@@ -152,7 +152,7 @@ const RenewPackage = () => {
                       <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                         {isPkgSessionBased ? (
                           <span className="text-green-600 dark:text-green-400 font-medium">
-                            Còn {pkg.total_sessions || pkg.totalSessions || 0} buổi
+                            Còn {pkg.remaining_sessions ?? pkg.remainingSessions ?? pkg.total_sessions ?? 0} buổi
                           </span>
                         ) : isExpired ? (
                           <span className="text-red-600 dark:text-red-400">

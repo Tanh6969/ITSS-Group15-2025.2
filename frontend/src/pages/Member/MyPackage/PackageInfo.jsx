@@ -147,7 +147,7 @@ const PackageInfo = () => {
                     ? 'text-emerald-900 dark:text-emerald-200'
                     : 'text-gray-900 dark:text-white'
                 }`}>
-                  {isSessionBased ? `${pkg.total_sessions || pkg.totalSessions || 0} buổi` : (endDate && !isNaN(endDate) ? endDate.toLocaleDateString(locale) : t('package.expiry_unknown'))}
+                  {isSessionBased ? `${pkg.remaining_sessions ?? pkg.remainingSessions ?? pkg.total_sessions ?? 0} buổi` : (endDate && !isNaN(endDate) ? endDate.toLocaleDateString(locale) : t('package.expiry_unknown'))}
                 </p>
                 <p className={`text-xs mt-1 ${
                   isActive ? 'text-emerald-600' : 'text-gray-500'

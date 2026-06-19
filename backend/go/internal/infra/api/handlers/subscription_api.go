@@ -336,8 +336,9 @@ func (h *SubscriptionHandler) Renew(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var body struct {
-		NewEndDate   time.Time `json:"new_end_date"`
-		RenewalPrice float64   `json:"renewal_price"`
+		NewEndDate    *time.Time `json:"new_end_date"`
+		RenewalPrice  float64    `json:"renewal_price"`
+		RenewalMonths int        `json:"renewal_months"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -364,7 +365,7 @@ func (h *SubscriptionHandler) Renew(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if err := h.usecase.RenewSubscription(id, body.NewEndDate); err != nil {
+	if err := h.usecase.RenewSubscription(id, body.NewEndDate, body.RenewalMonths); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
