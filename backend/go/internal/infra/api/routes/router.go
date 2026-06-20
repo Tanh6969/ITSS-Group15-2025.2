@@ -55,6 +55,7 @@ func NewRouter(
 	authenticated.Handle("/members", auth(isAnyRole, memberHandler.GetAll)).Methods("GET")
 	authenticated.Handle("/feedbacks", auth(isAnyRole, feedbackHandler.GetAll)).Methods("GET")
 	authenticated.Handle("/subscriptions", auth(isAnyRole, subscriptionHandler.Create)).Methods("POST")
+	authenticated.Handle("/subscriptions/{id}/renew", auth(isAnyRole, subscriptionHandler.Renew)).Methods("PATCH")
 	authenticated.Handle("/pt-details/me", auth(isAnyRole, ptDetailHandler.GetMe)).Methods("GET")
 	authenticated.Handle("/pt-details/me", auth(isAnyRole, ptDetailHandler.UpdateMe)).Methods("PUT")
 	authenticated.Handle("/members/me/subscriptions", auth(isAnyRole, subscriptionHandler.GetMySubscriptions)).Methods("GET")
@@ -177,7 +178,6 @@ func NewRouter(
 	// Subscription routes
 	allRoles.HandleFunc("/subscriptions", subscriptionHandler.Create).Methods("POST")
 	allRoles.HandleFunc("/subscriptions/{id}", subscriptionHandler.GetByID).Methods("GET")
-	allRoles.HandleFunc("/subscriptions/{id}/renew", subscriptionHandler.Renew).Methods("PATCH")
 	allRoles.HandleFunc("/subscriptions/{id}/upgrade", subscriptionHandler.Upgrade).Methods("PATCH")
 
 	// PT details (GET/PUT /pt-details/me registered early above to beat the wildcard)

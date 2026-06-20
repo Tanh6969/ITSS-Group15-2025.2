@@ -40,6 +40,7 @@ export const packageService = {
     axios.patch(`/subscriptions/${renewalData.packageId}/renew`, {
       new_end_date: renewalData.newEndDate,
       renewal_price: renewalData.renewalPrice,
+      renewal_months: renewalData.renewalMonths,
     }),
 
   upgradePackage: (upgradeData) =>

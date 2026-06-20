@@ -10,6 +10,7 @@ type Subscription struct {
 	StartDate        time.Time `json:"start_date"`
 	EndDate          time.Time `json:"end_date"`
 	Status           string    `json:"status"`
+	RemainingSessions *int     `json:"remaining_sessions"`
 }
 
 type SubscriptionHistory struct {
@@ -25,4 +26,5 @@ type SubscriptionHistory struct {
 	Price            float64   `json:"price"`
 	PricingType      string    `json:"pricing_type"`
 	TotalSessions    *int      `json:"total_sessions"`
+	RemainingSessions *int     `json:"remaining_sessions"`
 }

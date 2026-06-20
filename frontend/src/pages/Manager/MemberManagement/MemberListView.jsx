@@ -104,7 +104,17 @@ const MemberListView = () => {
     const getMemberName = (member) => member?.name || 'N/A';
     const getMemberPhone = (member) => member?.phone || 'N/A';
     const getMemberPackage = (member) => member?.package || 'Chưa đăng ký';
-    const getMemberSessions = (member) => member?.sessionsRemaining ?? 0;
+    const getMemberPricingType = (member) => member?.pricingType || 'time_based';
+    const getMemberSessions = (member) => {
+        if (getMemberPricingType(member) === 'time_based') {
+            if (!member?.expiryDate || member.expiryDate === 'N/A') return 0;
+            const expiry = new Date(member.expiryDate);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            return Math.max(0, Math.ceil((expiry - today) / (1000 * 60 * 60 * 24)));
+        }
+        return member?.sessionsRemaining ?? 0;
+    };
     const getMemberExpiry = (member) => member?.expiryDate || 'N/A';
     const getMemberStatus = (member) => member?.status || 'inactive';
 
@@ -202,7 +212,11 @@ const MemberListView = () => {
                                     <div className="hidden sm:flex sm:items-center sm:gap-4">
                                         <div className="text-right">
                                             <p className="text-sm font-medium text-gray-900 dark:text-white">{getMemberPackage(member)}</p>
-                                            <p className="text-xs text-gray-500 dark:text-gray-400">{getMemberSessions(member)} buổi còn lại</p>
+                                            {getMemberPricingType(member) === 'session_based' ? (
+                                                <p className="text-xs text-gray-500 dark:text-gray-400">{Math.max(0, getMemberSessions(member))} buổi còn lại</p>
+                                            ) : (
+                                                <p className="text-xs text-gray-500 dark:text-gray-400">{Math.max(0, getMemberSessions(member))} ngày còn lại</p>
+                                            )}
                                         </div>
 
                                         <div className="text-right">
