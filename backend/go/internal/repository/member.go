@@ -147,7 +147,7 @@ SELECT DISTINCT ON (m.id)
     END as status,
     COALESCE(TO_CHAR(s.end_date, 'YYYY-MM-DD'), '') as end_date,
     COALESCE(TO_CHAR(s.registration_date, 'YYYY-MM-DD'), '') as registration_date,
-    COALESCE(s.remaining_sessions, COALESCE((s.end_date::date - CURRENT_DATE), 0)) as sessions_remaining,
+    CASE WHEN mp.pricing_type = 'session_based' THEN COALESCE(s.remaining_sessions, 0) ELSE COALESCE((s.end_date::date - CURRENT_DATE), 0) END as sessions_remaining,
     COALESCE(mp.pricing_type, 'time_based') as pricing_type,
     COALESCE(m.roadmap_goal, '') as roadmap_goal,
     COALESCE(m.avatar, '') as avatar
@@ -223,7 +223,7 @@ func (r *memberRepository) GetMemberByIDWithDetails(id int) (*dto.MemberDetailDT
         COALESCE(m.roadmap_goal, ''),
         COALESCE(m.member_free_schedule, ''),
         COALESCE(sub.pricing_type, 'time_based'),
-        COALESCE(sub.remaining_sessions, COALESCE((sub.end_date::date - CURRENT_DATE), 0))
+        CASE WHEN sub.pricing_type = 'session_based' THEN COALESCE(sub.remaining_sessions, 0) ELSE COALESCE((sub.end_date::date - CURRENT_DATE), 0) END
     FROM "Member" m
     LEFT JOIN LATERAL (
         -- Lấy subscription có ngày kết thúc xa nhất hoặc số buổi còn lại nhiều nhất
