@@ -6,6 +6,7 @@ import Button from '@/components/Common/Button';
 import Input from '@/components/Common/Input';
 import Badge from '@/components/Common/Badge';
 import { useMembers } from '@/hooks/queries/useMembers';
+import { useTrainingBookings } from '@/hooks/queries/useTrainingBookings';
 import { slideUpVariants, cardVariants, staggerContainerVariants, sectionStaggerVariants } from '@/lib/animations';
 
 import { useTranslation } from 'react-i18next';
@@ -28,6 +29,7 @@ const MemberListView = () => {
 
     // Fetch all members from API to support search/filter across the full database
     const { data: memberResponse, isLoading, isError } = useMembers(1, 1000);
+    const { data: bookings } = useTrainingBookings();
 
     // Normalize response to an array of members safely
     const members = Array.isArray(memberResponse)
@@ -117,6 +119,18 @@ const MemberListView = () => {
     };
     const getMemberExpiry = (member) => member?.expiryDate || 'N/A';
     const getMemberStatus = (member) => member?.status || 'inactive';
+
+    const getMemberBookingStats = (memberId) => {
+        if (!bookings) return null;
+        const memberBookings = bookings.filter(b => b.member_id === memberId);
+        if (memberBookings.length === 0) return null;
+        
+        const accepted = memberBookings.filter(b => b.status === 'Accepted' || b.status === 'Completed').length;
+        const rejected = memberBookings.filter(b => b.status === 'Rejected').length;
+        const pending = memberBookings.filter(b => b.status === 'Pending').length;
+        
+        return { total: memberBookings.length, accepted, rejected, pending };
+    };
 
     return (
         <div className="space-y-6">
@@ -231,6 +245,35 @@ const MemberListView = () => {
 
                                     <ChevronRight className="ml-2 text-gray-400" size={20} />
                                 </div>
+                                
+                                {/* Thống kê đặt lịch PT */}
+                                {(() => {
+                                    const stats = getMemberBookingStats(member.id);
+                                    if (!stats) return null;
+                                    return (
+                                        <div className="mt-3 flex items-center gap-4 border-t border-gray-100 dark:border-gray-800 pt-3">
+                                            <span className="text-xs font-medium text-gray-500 dark:text-gray-400">Lịch PT:</span>
+                                            <div className="flex gap-3 text-xs">
+                                                <span className="text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-2 py-0.5 rounded-full" title="Tổng số yêu cầu">
+                                                    Tổng: <b>{stats.total}</b>
+                                                </span>
+                                                <span className="text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/30 px-2 py-0.5 rounded-full" title="Đã được chấp nhận">
+                                                    Được nhận: <b>{stats.accepted}</b>
+                                                </span>
+                                                {stats.rejected > 0 && (
+                                                    <span className="text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30 px-2 py-0.5 rounded-full" title="Bị từ chối">
+                                                        Bị từ chối: <b>{stats.rejected}</b>
+                                                    </span>
+                                                )}
+                                                {stats.pending > 0 && (
+                                                    <span className="text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/30 px-2 py-0.5 rounded-full" title="Đang chờ duyệt">
+                                                        Đang chờ: <b>{stats.pending}</b>
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </div>
+                                    );
+                                })()}
 
                                 {/* Mobile view */}
                                 <div className="mt-3 flex flex-wrap gap-3 sm:hidden">

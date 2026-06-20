@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Plus, Edit, Eye, EyeOff } from 'lucide-react';
+import { Plus, Edit, Eye, EyeOff, Search } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { usePackages } from '@/hooks/queries/usePackages';
 import { useUpdatePackageStatus } from '@/hooks/mutations/usePackageMutation';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/Common/Table';
 import Button from '@/components/Common/Button';
+import Input from '@/components/Common/Input';
 import Modal from '@/components/Common/Modal';
 import { formatPriceVND } from '@/utils/formatters';
 import { slideUpVariants, sectionStaggerVariants } from '@/lib/animations';
@@ -14,6 +15,7 @@ import { slideUpVariants, sectionStaggerVariants } from '@/lib/animations';
 const PackageList = () => {
   const { t } = useTranslation('owner');
   const { data: packages, isLoading, isError } = usePackages();
+  const [searchTerm, setSearchTerm] = useState('');
   const [toggleModal, setToggleModal] = useState({ isOpen: false, pkg: null });
   const statusMutation = useUpdatePackageStatus();
 
@@ -61,6 +63,12 @@ const PackageList = () => {
     { id: 4, name: t('package.mock.trial'), duration: 7, durationUnit: "Ngày", price: 100000, is_active: false, features: [t('package.mock.trial_feature_1', { defaultValue: "Dùng thử giới hạn" })] },
   ];
 
+  const filteredPackages = mockPackages.filter((pkg) => {
+    if (!searchTerm) return true;
+    const name = pkg.package_name || pkg.name || '';
+    return name.toLowerCase().includes(searchTerm.toLowerCase());
+  });
+
   return (
     <div className="space-y-6 relative">
       <motion.div variants={slideUpVariants} className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -73,6 +81,24 @@ const PackageList = () => {
             {t('package.add_btn')}
           </Button>
         </Link>
+      </motion.div>
+
+      {/* Filter Section */}
+      <motion.div variants={slideUpVariants} className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-950">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+          <div className="flex-1 max-w-md">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+              <Input
+                type="text"
+                placeholder="Tìm kiếm gói tập theo tên..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+          </div>
+        </div>
       </motion.div>
 
       <motion.div variants={slideUpVariants} className="rounded-xl overflow-hidden bg-white shadow-sm ring-1 ring-gray-900/5 dark:bg-gray-950 dark:ring-gray-800">
@@ -93,14 +119,14 @@ const PackageList = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {mockPackages.length === 0 ? (
+              {filteredPackages.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={6} className="text-center text-gray-500 h-24">
                     {t('package.no_data')}
                   </TableCell>
                 </TableRow>
               ) : (
-                mockPackages.map((pkg) => (
+                filteredPackages.map((pkg) => (
                   <TableRow key={pkg.id}>
                     <TableCell className="font-semibold text-gray-900 dark:text-gray-100">{pkg.package_name || pkg.name}</TableCell>
                     <TableCell className="text-gray-600 dark:text-gray-300">

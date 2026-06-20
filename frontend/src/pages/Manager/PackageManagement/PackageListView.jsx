@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Eye } from 'lucide-react';
+import { Eye, Search } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { usePackages } from '@/hooks/queries/usePackages';
 import { useServiceCategories } from '@/hooks/queries/useServiceCategories';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/Common/Table';
+import Input from '@/components/Common/Input';
 import { formatPriceVND } from '@/utils/formatters';
 import { slideUpVariants, sectionStaggerVariants } from '@/lib/animations';
 
@@ -12,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 const PackageList = () => {
     const { t } = useTranslation('manager');
   const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState('');
   const { data: packages, isLoading, isError } = usePackages();
   const { data: serviceCategories } = useServiceCategories();
 
@@ -25,7 +27,12 @@ const PackageList = () => {
   };
 
   // Transform backend data để phù hợp với table
-  const displayPackages = packages ? packages.map((pkg) => {
+  const displayPackages = packages ? packages
+    .filter(pkg => {
+      if (!searchTerm) return true;
+      return pkg.package_name?.toLowerCase().includes(searchTerm.toLowerCase());
+    })
+    .map((pkg) => {
     // Tìm category tương ứng từ serviceCategories
     const category = serviceCategories?.find(cat => cat.id === pkg.category_id);
 
@@ -54,6 +61,24 @@ const PackageList = () => {
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
             Xem các dịch vụ gói tập do Gym cung cấp.
           </p>
+        </div>
+      </motion.div>
+
+      {/* Filter Section */}
+      <motion.div variants={slideUpVariants} className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-950">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+          <div className="flex-1 max-w-md">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+              <Input
+                type="text"
+                placeholder="Tìm kiếm gói tập theo tên..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+          </div>
         </div>
       </motion.div>
 
