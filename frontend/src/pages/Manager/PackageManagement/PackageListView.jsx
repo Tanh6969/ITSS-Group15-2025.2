@@ -17,8 +17,12 @@ const PackageList = () => {
   const { data: packages, isLoading, isError } = usePackages();
   const { data: serviceCategories } = useServiceCategories();
 
-  // Hàm helper để chuyển đổi ngày thành "X tháng" hoặc "X ngày"
-  const getDurationDisplay = (days) => {
+  // Hàm helper để tính thời lượng hoặc số buổi
+  const getDurationDisplay = (pkg) => {
+    if (pkg.pricing_type === 'session_based') {
+      return `${pkg.total_sessions || 0} buổi`;
+    }
+    const days = pkg.duration_days || 0;
     if (days >= 30) {
       const months = Math.round(days / 30);
       return `${months} tháng`;
@@ -39,12 +43,12 @@ const PackageList = () => {
     return {
       id: pkg.id,
       name: pkg.package_name,
-      duration: getDurationDisplay(pkg.duration_days),
+      duration: getDurationDisplay(pkg),
       price: pkg.price,
       status: pkg.is_active ? 'active' : 'inactive',
       categoryId: pkg.category_id,
       categoryName: category?.category_name || 'N/A',
-      description: category?.benefits_description || 'Không có mô tả',
+      description: pkg.description || pkg.features?.join(", ") || category?.benefits_description || 'Không có mô tả',
     };
   }) : [];
 

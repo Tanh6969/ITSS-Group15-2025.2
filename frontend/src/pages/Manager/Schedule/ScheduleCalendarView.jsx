@@ -25,14 +25,11 @@ const ScheduleCalendarView = () => {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState(formatDate(new Date()));
     const [selectedSchedule, setSelectedSchedule] = useState(null);
-    const [showCancelConfirm, setShowCancelConfirm] = useState(null);
-    const [cancelError, setCancelError] = useState(null);
 
     // Fetch real data from API
     const { data: bookingsData, isLoading: bookingsLoading } = useTrainingBookings();
     const { data: employeesData, isLoading: employeesLoading } = useEmployees(1, 100);
     const { data: membersData, isLoading: membersLoading } = useMembers(1, 100);
-    const cancelBookingMutation = useCancelTrainingBooking();
 
     // Helper functions
     const getDaysInMonth = (date) => new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
@@ -138,39 +135,6 @@ const ScheduleCalendarView = () => {
             case 'cancelled': return t('schedule.status_cancelled');
             default: return t('schedule.status_pending');
         }
-    };
-
-    const handleCancelBooking = async (bookingId) => {
-        console.log('Opening cancel confirmation for booking:', bookingId);
-        setCancelError(null);
-        setShowCancelConfirm(bookingId);
-    };
-
-    const confirmCancel = async () => {
-        if (showCancelConfirm) {
-            try {
-                console.log('Confirming cancel for booking:', showCancelConfirm);
-                setCancelError(null);
-
-                const response = await cancelBookingMutation.mutateAsync({
-                    id: showCancelConfirm,
-                    reason: t('schedule.cancelled_by_manager', { defaultValue: 'Hủy bởi quản lý' })
-                });
-
-                console.log('Cancel successful:', response);
-                setShowCancelConfirm(null);
-                setSelectedSchedule(null);
-            } catch (error) {
-                const errorMsg = error?.response?.data?.message || error?.message || t('schedule.cancel_error', { defaultValue: 'Lỗi hủy lịch tập' });
-                console.error('Error canceling booking:', errorMsg, error);
-                setCancelError(errorMsg);
-            }
-        }
-    };
-
-    const cancelCancel = () => {
-        setShowCancelConfirm(null);
-        setCancelError(null);
     };
 
     return (
@@ -338,25 +302,6 @@ const ScheduleCalendarView = () => {
                                                         <p className="text-sm text-gray-700 dark:text-gray-300">{schedule.trainingPlanNote}</p>
                                                     </div>
                                                 )}
-
-                                                <div className="flex gap-2 pt-2 border-t border-gray-200 dark:border-gray-700">
-                                                    <Button
-                                                        variant="outline"
-                                                        size="sm"
-                                                        className={schedule.status === 'cancelled' ? 'text-red-600 dark:text-red-400' : 'text-red-600 dark:text-red-400'}
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            if (schedule.status !== 'cancelled') {
-                                                                handleCancelBooking(schedule.id);
-                                                            }
-                                                        }}
-                                                        disabled={schedule.status === 'cancelled' || cancelBookingMutation.isPending}
-                                                    >
-                                                        {schedule.status === 'cancelled'
-                                                            ? t('schedule.status_cancelled')
-                                                            : cancelBookingMutation.isPending ? t('schedule.processing') : t('schedule.cancel')}
-                                                    </Button>
-                                                </div>
                                             </div>
                                         )}
                                     </div>
@@ -366,44 +311,6 @@ const ScheduleCalendarView = () => {
                     </div>
                 </div>
             </div>
-
-            {/* Cancel Confirmation Modal */}
-            {showCancelConfirm && (
-                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-                    <div className="bg-white dark:bg-gray-900 rounded-lg shadow-lg p-6 max-w-sm mx-4">
-                        <div className="flex items-center gap-3 mb-4">
-                            <AlertCircle className="text-red-500" size={24} />
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{t('schedule.confirm_cancel')}</h3>
-                        </div>
-                        <p className="text-gray-600 dark:text-gray-300 mb-6">
-                            {t('schedule.confirm_cancel_msg')}
-                        </p>
-
-                        {cancelError && (
-                            <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded text-sm text-red-700 dark:text-red-400">
-                                {cancelError}
-                            </div>
-                        )}
-
-                        <div className="flex gap-3 justify-end">
-                            <Button
-                                variant="outline"
-                                onClick={cancelCancel}
-                                disabled={cancelBookingMutation.isPending}
-                            >
-                                {t('schedule.no')}
-                            </Button>
-                            <Button
-                                className="bg-red-600 hover:bg-red-700 text-white"
-                                onClick={confirmCancel}
-                                disabled={cancelBookingMutation.isPending}
-                            >
-                                {cancelBookingMutation.isPending ? t('schedule.processing') : t('schedule.yes')}
-                            </Button>
-                        </div>
-                    </div>
-                </div>
-            )}
         </div>
     );
 };
